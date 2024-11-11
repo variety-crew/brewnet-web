@@ -10,12 +10,19 @@ import { useUserStore } from '@/stores/user';
 
 const routes = [
   {
-    path: '/auth/login',
-    name: 'auth:login',
-    component: () => import('@/views/auth/LoginView.vue'),
+    path: '/auth',
+    name: 'auth:index',
+    component: () => import('@/views/AuthIndexView.vue'),
     meta: {
       guestOnly: true,
     },
+    children: [
+      {
+        path: 'login',
+        name: 'auth:login',
+        component: () => import('@/views/auth/LoginView.vue'),
+      },
+    ],
   },
 
   // 본사 화면
