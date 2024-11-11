@@ -1,19 +1,30 @@
-import js from '@eslint/js'
-import pluginVue from 'eslint-plugin-vue'
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import pluginVue from 'eslint-plugin-vue';
+import pluginPrettier from 'eslint-plugin-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
+  ...pluginVue.configs['flat/recommended'],
   {
-    name: 'app/files-to-lint',
-    files: ['**/*.{js,mjs,jsx,vue}'],
+    plugins: {
+      prettier: pluginPrettier,
+    },
+    rules: {
+      'prettier/prettier': [
+        'error',
+        {
+          $schema: 'https://json.schemastore.org/prettierrc',
+          singleQuote: true,
+          semi: true,
+          useTabs: false,
+          tabWidth: 2,
+          trailingComma: 'all',
+          printWidth: 120,
+          bracketSpacing: true,
+          arrowParens: 'avoid',
+          endOfLine: 'auto',
+        },
+      ],
+    },
   },
-
-  {
-    name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
-  },
-
-  js.configs.recommended,
-  ...pluginVue.configs['flat/essential'],
-  skipFormatting,
-]
+  eslintConfigPrettier,
+];
