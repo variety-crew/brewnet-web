@@ -11,7 +11,7 @@ import { useUserStore } from '@/stores/user';
 const routes = [
   {
     path: '/auth/login',
-    name: 'login',
+    name: 'Login',
     component: () => import('@/views/auth/LoginView.vue'),
     meta: {
       guestOnly: true,
@@ -19,17 +19,13 @@ const routes = [
   },
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
     component: () => import('@/views/HomeView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
   },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (About.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import('../views/AboutView.vue'),
-  },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('@/views/NotFound.vue') },
 ];
 
 const router = createRouter({
@@ -53,16 +49,17 @@ router.beforeEach((to, from) => {
 
   // 로그인이 완료된 유저라면
   if (to.meta.guestOnly && userStore.accessToken) {
+    // to.name !== 'Home'을 통해 무한 리다이렉션 방지
     return {
-      name: 'home',
+      name: 'Home',
     };
   }
 
-  // 나머지 라우터는 무조건 로그인 필수
-  if (to.name !== 'login' && !userStore.accessToken) {
-    // to.name !== 'login'을 통해 무한 리다이렉션 방지
+  // 인증이 필요한 페이지인지 확인
+  // (나머지 페이지는 모두 인증이 필요한 페이지)
+  if (to.meta.requiresAuth && !userStore.accessToken) {
     return {
-      name: 'login',
+      name: 'Login',
     };
   }
 });
