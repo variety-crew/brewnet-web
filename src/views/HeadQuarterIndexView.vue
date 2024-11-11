@@ -1,7 +1,21 @@
 <template>
-  <div>본사 페이지 기본 레이아웃</div>
+  <div>본사 기본 레이아웃 페이지</div>
+  <div>
+    <Button label="로그아웃" @click="clickLogout" />
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+
+const userStore = useUserStore();
+const router = useRouter();
+
+const clickLogout = () => {
+  userStore.logout();
+  router.replace({ name: 'auth:login' });
+};
+</script>
 
 <style scoped></style>
