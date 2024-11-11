@@ -8,7 +8,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import Tooltip from 'primevue/tooltip';
 
 import App from './App.vue';
-import router from '@/router/routes';
+import router from '@/router/router';
 import AppPreset from '@/assets/AppPreset';
 
 import './assets/main.css';
