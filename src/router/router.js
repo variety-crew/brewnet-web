@@ -11,21 +11,65 @@ import { useUserStore } from '@/stores/user';
 const routes = [
   {
     path: '/auth/login',
-    name: 'Login',
+    name: 'auth:login',
     component: () => import('@/views/auth/LoginView.vue'),
     meta: {
       guestOnly: true,
     },
   },
+
+  // 본사 화면
   {
-    path: '/',
-    name: 'Home',
-    component: () => import('@/views/HomeView.vue'),
+    path: '/hq',
+    name: 'hq:index',
+    component: () => import('@/views/HeadQuarterIndexView.vue'),
     meta: {
       requiresAuth: true,
     },
+    children: [
+      {
+        path: 'home',
+        name: 'hq:home',
+        component: () => import('@/views/headQuarter/HomeView.vue'),
+      },
+    ],
   },
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('@/views/NotFound.vue') },
+
+  // 가맹점 화면
+  {
+    path: '/fc',
+    name: 'fc:index',
+    component: () => import('@/views/FranchiseeIndexView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: 'home',
+        name: 'fc:home',
+        component: () => import('@/views/franchisee/HomeView.vue'),
+      },
+    ],
+  },
+
+  // 배송기사 화면
+  {
+    path: '/d',
+    name: 'd:index',
+    component: () => import('@/views/DeliveryIndexView.vue'),
+    meta: {
+      requiresAuth: true,
+    },
+    children: [
+      {
+        path: 'home',
+        name: 'd:home',
+        component: () => import('@/views/delivery/HomeView.vue'),
+      },
+    ],
+  },
+
+  { path: '/:pathMatch(.*)*', name: '404', component: () => import('@/views/NotFound.vue') },
 ];
 
 const router = createRouter({
@@ -47,19 +91,35 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const userStore = useUserStore();
 
-  // 로그인이 완료된 유저라면
-  if (to.meta.guestOnly && userStore.accessToken) {
-    // to.name !== 'Home'을 통해 무한 리다이렉션 방지
-    return {
-      name: 'Home',
-    };
+  // 로그인이 완료된 유저가 guestOnly에 접근한 경우
+  if (userStore.accessToken && to.meta.guestOnly) {
+    if (userStore.userType === 'hq') {
+      // 본사 계정이라면
+      return {
+        name: 'hq:home',
+      };
+    }
+
+    if (userStore.userType === 'fc') {
+      // 가맹점 계정이라면
+      return {
+        name: 'fc:home',
+      };
+    }
+
+    if (userStore.userType === 'd') {
+      // 배송 계정이라면
+      return {
+        name: 'd:home',
+      };
+    }
   }
 
   // 인증이 필요한 페이지인지 확인
   // (나머지 페이지는 모두 인증이 필요한 페이지)
   if (to.meta.requiresAuth && !userStore.accessToken) {
     return {
-      name: 'Login',
+      name: 'auth:login',
     };
   }
 });

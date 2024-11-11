@@ -7,13 +7,13 @@ export const useUserStore = defineStore(
     const loginId = ref('');
     const username = ref('');
     const accessToken = ref('');
-    const isHeadquarters = ref(false); // 본사 직원 계정인지?
+    const userType = ref(''); // hq: 본사, fc: 가맹점, d: 배송기사
 
     return {
       loginId,
       username,
       accessToken,
-      isHeadquarters,
+      userType,
     };
   },
   { persist: true },
