@@ -39,6 +39,9 @@
         <label for="onion4">Onion</label>
       </div>
     </div>
+
+    <h1>주문관리 하하하</h1>
+    <h2>가맹점 주문하라!! 하하하</h2>
   </div>
 </template>
 
