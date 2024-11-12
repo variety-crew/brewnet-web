@@ -1,5 +1,5 @@
 <template>
-  <div>본사 대시보드 페이지</div>
+  <div>발주내역 조회 페이지다!!</div>
 </template>
 
 <script setup></script>

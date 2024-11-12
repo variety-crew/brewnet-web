@@ -1,13 +1,15 @@
 <template>
-  <div>본사 기본 레이아웃 페이지</div>
-  <div>
-    <Button label="로그아웃" @click="clickLogout" />
+  <div class="hq-container">
+    <HeadQuarterTopBar />
+    <RouterView />
   </div>
 </template>
 
 <script setup>
+import HeadQuarterTopBar from '@/components/headQuarter/HeadQuarterTopBar.vue';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
+import { RouterView } from 'vue-router';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -18,4 +20,11 @@ const clickLogout = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.hq-container {
+  padding: 10px 10px 0 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+</style>

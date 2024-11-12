@@ -1,5 +1,7 @@
 @import './base.css';
 
 #app {
-    min-height: 100dvh;
+    height: 100dvh;
+    background-color: #f8f9fa;
+    overflow: hidden;
 }

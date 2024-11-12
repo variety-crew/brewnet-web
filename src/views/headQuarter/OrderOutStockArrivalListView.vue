@@ -1,5 +1,5 @@
 <template>
-  <div>본사 대시보드 페이지</div>
+  <div>~입고 확인 페이지</div>
 </template>
 
 <script setup></script>

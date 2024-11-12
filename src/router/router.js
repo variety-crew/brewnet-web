@@ -39,6 +39,65 @@ const routes = [
         name: 'hq:home',
         component: () => import('@/views/headQuarter/HomeView.vue'),
       },
+      {
+        path: 'order-out',
+        name: 'hq:order-out',
+        component: () => import('@/components/common/PageBody.vue'),
+        children: [
+          {
+            path: '',
+            name: 'hq:order-out:index',
+            redirect: {
+              name: 'hq:order-out:list',
+            },
+          },
+          {
+            path: 'list',
+            name: 'hq:order-out:list',
+            component: () => import('@/views/headQuarter/OrderOutListView.vue'),
+          },
+          {
+            path: 'form',
+            name: 'hq:order-out:form',
+            component: () => import('@/views/headQuarter/OrderOutFormView.vue'),
+          },
+          {
+            path: 'stock-arrival',
+            name: 'hq:order-out:stock-arrival',
+            component: () => import('@/views/headQuarter/OrderOutStockArrivalListView.vue'),
+          },
+        ],
+      },
+      {
+        path: 'order-in',
+        name: 'hq:order-in',
+        component: () => import('@/components/common/PageBody.vue'),
+      },
+      {
+        path: 'partner',
+        name: 'hq:partner',
+        component: () => import('@/components/common/PageBody.vue'),
+      },
+      {
+        path: 'stock',
+        name: 'hq:stock',
+        component: () => import('@/components/common/PageBody.vue'),
+      },
+      {
+        path: 'approval',
+        name: 'hq:approval',
+        component: () => import('@/components/common/PageBody.vue'),
+      },
+      {
+        path: 'board',
+        name: 'hq:board',
+        component: () => import('@/components/common/PageBody.vue'),
+      },
+      {
+        path: 'settings',
+        name: 'hq:settings',
+        component: () => import('@/components/common/PageBody.vue'),
+      },
     ],
   },
 
@@ -54,7 +113,7 @@ const routes = [
       {
         path: 'home',
         name: 'fc:home',
-        component: () => import('@/views/franchisee/HomeView.vue'),
+        component: () => import('@/components/common/PageBody.vue'),
       },
     ],
   },

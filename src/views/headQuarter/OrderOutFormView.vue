@@ -1,5 +1,5 @@
 <template>
-  <div>본사 대시보드 페이지</div>
+  <div>발주 입력 페이지입니다.</div>
 </template>
 
 <script setup></script>
