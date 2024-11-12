@@ -25,6 +25,7 @@
           plain
           as="router-link"
           :to="{ name: menu.routerName }"
+          active-class="topbar-link-active"
         />
       </nav>
       <!-- <SplitButton label="Save" :model="items"></SplitButton> -->
@@ -63,5 +64,10 @@ const menus = ref([
 <style scoped>
 .hq-topbar {
   margin-bottom: 10px;
+
+  a.topbar-link-active {
+    color: var(--p-primary-600);
+    border-bottom: 2px solid var(--p-primary-600);
+  }
 }
 </style>

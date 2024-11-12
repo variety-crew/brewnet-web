@@ -1,12 +1,12 @@
 <template>
   <div class="hq-container">
-    <HeadQuarterTopBar />
+    <TopBar />
     <RouterView />
   </div>
 </template>
 
 <script setup>
-import HeadQuarterTopBar from '@/components/headQuarter/HeadQuarterTopBar.vue';
+import TopBar from '@/components/common/TopBar.vue';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 import { RouterView } from 'vue-router';

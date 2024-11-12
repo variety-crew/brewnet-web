@@ -1,14 +1,17 @@
 <template>
   <aside class="side-menu">
-    <Menu :model="sideMenus">
-      <template #item="{ item, props }">
-        <router-link v-slot="{ href, navigate }" :to="{ name: item.routerName }" custom>
-          <a v-ripple :href="href" v-bind="props.action" aria-hidden="false" @click="navigate">
-            <span>{{ item.label }}</span>
-          </a>
-        </router-link>
-      </template>
-    </Menu>
+    <div v-for="menu in sideMenus" :key="menu.label" class="menu-group">
+      <h4>{{ menu.label }}</h4>
+      <nav>
+        <RouterLink
+          v-for="menuItem in menu.items"
+          :key="menuItem.label"
+          :to="{ name: menuItem.routerName }"
+          active-class="sidebar-link-active"
+          >{{ menuItem.label }}</RouterLink
+        >
+      </nav>
+    </div>
   </aside>
 </template>
 
@@ -33,5 +36,38 @@ const sideMenus = computed(() => {
 
 <style scoped>
 .side-menu {
+  height: fit-content;
+  border: 1px solid var(--p-content-border-color);
+  background-color: var(--p-content-background);
+  min-width: 150px;
+
+  .menu-group {
+    & + & {
+      margin-top: 32px;
+    }
+
+    h4 {
+      padding: 16px;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        color: var(--p-button-text-plain-color);
+        padding: 10px;
+
+        &.sidebar-link-active {
+          background-color: var(--p-primary-50);
+          color: var(--p-primary-600);
+        }
+
+        &:hover {
+          background-color: var(--p-button-text-plain-hover-background);
+        }
+      }
+    }
+  }
 }
 </style>
