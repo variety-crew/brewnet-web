@@ -7,17 +7,7 @@
 
 <script setup>
 import TopBar from '@/components/common/TopBar.vue';
-import { useUserStore } from '@/stores/user';
-import { useRouter } from 'vue-router';
 import { RouterView } from 'vue-router';
-
-const userStore = useUserStore();
-const router = useRouter();
-
-const clickLogout = () => {
-  userStore.logout();
-  router.replace({ name: 'auth:login' });
-};
 </script>
 
 <style scoped>

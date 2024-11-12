@@ -1,73 +1,135 @@
 <template>
   <Toolbar class="hq-topbar">
-    <template #start>
-      <!-- <Button icon="pi pi-plus" class="mr-2" severity="secondary" text />
-      <Button icon="pi pi-print" class="mr-2" severity="secondary" text />
-      <Button icon="pi pi-upload" severity="secondary" text /> -->
-    </template>
-
-    <template #center>
-      <!-- <IconField>
-        <InputIcon>
-          <i class="pi pi-search" />
-        </InputIcon>
-        <InputText placeholder="Search" />
-      </IconField> -->
+    <template v-if="logoMenu" #start>
+      <RouterLink :to="{ name: logoMenu }">
+        <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
+      </RouterLink>
     </template>
 
     <template #end>
       <nav>
-        <Button
-          v-for="menu in menus"
-          :key="menu.label"
-          :label="menu.label"
-          text
-          plain
-          as="router-link"
-          :to="{ name: menu.routerName }"
-          active-class="topbar-link-active"
-        />
+        <div class="menu-btn">
+          <Button
+            v-for="menu in topBarMenus"
+            :key="menu.label"
+            :label="menu.label"
+            variant="text"
+            severity="secondary"
+            as="router-link"
+            :to="{ name: menu.routerName }"
+            active-class="topbar-link-active"
+          />
+        </div>
+
+        <div class="user">
+          <p>{{ userStore.username }}</p>
+          <Button
+            type="button"
+            icon="pi pi-chevron-down"
+            aria-haspopup="true"
+            aria-controls="overlay_menu"
+            aria-label="User Menu"
+            variant="text"
+            raised
+            severity="secondary"
+            size="small"
+            @click="toggleUserMenu"
+          />
+
+          <Menu id="overlay_menu" ref="userMenu" :model="userMenus" :popup="true" />
+        </div>
+
+        <OverlayBadge severity="danger" value="4">
+          <Button icon="pi pi-bell" severity="secondary" variant="outlined" rounded aria-label="Notification" />
+        </OverlayBadge>
       </nav>
-      <!-- <SplitButton label="Save" :model="items"></SplitButton> -->
-      <div>마이페이지</div>
     </template>
   </Toolbar>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { useUserStore } from '@/stores/user';
+import AppMenu from '@/utils/AppMenu';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-const menus = ref([
-  { label: '대시보드', routerName: 'hq:home' },
+const appMenu = new AppMenu();
+
+const userStore = useUserStore();
+const router = useRouter();
+
+const userMenu = ref();
+const userMenus = ref([
   {
-    label: '발주',
-    routerName: 'hq:order-out',
+    label: '로그아웃',
+    icon: 'pi pi-sign-out',
+    command: clickLogout,
   },
-  {
-    label: '주문/교환/반품',
-    routerName: 'hq:order-in',
-  },
-  {
-    label: '가맹점/거래처',
-    routerName: 'hq:partner',
-  },
-  {
-    label: '창고/품목',
-    routerName: 'hq:stock',
-  },
-  { label: '전자결재', routerName: 'hq:approval' },
-  { label: '게시판', routerName: 'hq:board' },
-  { label: '시스템설정', routerName: 'hq:settings' },
 ]);
+const logoMenu = computed(() => {
+  if (userStore.userType === 'hq') {
+    return 'hq:home';
+  }
+
+  if (userStore.userType === 'fc') {
+    return 'fc:home';
+  }
+
+  return '';
+});
+const topBarMenus = computed(() => {
+  if (userStore.userType === 'hq') {
+    return appMenu.getHqTopBarMenus();
+  }
+
+  if (userStore.userType === 'fc') {
+    return [];
+  }
+
+  return [];
+});
+
+const toggleUserMenu = event => {
+  userMenu.value.toggle(event);
+};
+
+function clickLogout() {
+  userStore.logout();
+  router.replace({ name: 'auth:login' });
+}
 </script>
 
 <style scoped>
 .hq-topbar {
   margin-bottom: 10px;
+  padding: 0 20px;
 
-  a.topbar-link-active {
-    color: var(--p-primary-600);
-    border-bottom: 2px solid var(--p-primary-600);
+  .logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: contain;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    a.topbar-link-active {
+      color: var(--p-primary-600);
+      border-bottom: 2px solid var(--p-primary-600);
+    }
+
+    .user {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
   }
 }
 </style>
