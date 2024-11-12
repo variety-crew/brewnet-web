@@ -4,7 +4,7 @@
     <SideMenuBar />
 
     <main>
-      <Breadcrumb :home="home" :model="items" />
+      <Breadcrumb :home="home" :model="breadcrumbs" />
       <h2>{{ currentPageTitle }}</h2>
       <div class="content">
         <RouterView />
@@ -20,22 +20,24 @@ import AppMenu from '@/utils/AppMenu';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const appMenu = new AppMenu();
 
 const currentPageTitle = computed(() => {
-  const appMenu = new AppMenu();
   return appMenu.getPageTitle(route.name);
+});
+
+const breadcrumbs = computed(() => {
+  const matchedRoutes = route.matched;
+  return matchedRoutes
+    .filter(e => e.meta.breadcrumb)
+    .map(e => ({
+      label: e.meta.breadcrumb,
+    }));
 });
 
 const home = ref({
   icon: 'pi pi-home',
 });
-const items = ref([
-  { label: 'Electronics' },
-  { label: 'Computer' },
-  { label: 'Accessories' },
-  { label: 'Keyboard' },
-  { label: 'Wireless' },
-]);
 </script>
 
 <style scoped>
@@ -43,14 +45,23 @@ const items = ref([
   flex-grow: 1;
   display: flex;
   gap: 16px;
-  height: 100%;
 
   main {
     flex-grow: 1;
     height: 100%;
+    background-color: white;
+    overflow-y: auto;
+    border: 1px solid var(--p-content-border-color);
+
+    h2 {
+      margin: 0 14px;
+      padding-left: 10px;
+      border-left: 5px solid var(--p-primary-600);
+    }
 
     .content {
       margin-top: 24px;
+      padding: 0 14px;
     }
   }
 }

@@ -21,10 +21,9 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const appMenu = new AppMenu();
 
 const sideMenus = computed(() => {
-  const appMenu = new AppMenu();
-
   // 발주 Sub Menus
   if (route.name.includes('hq:order-out')) {
     return appMenu.getOrderOutSideMenus();

@@ -43,28 +43,33 @@ const routes = [
         path: 'order-out',
         name: 'hq:order-out',
         component: () => import('@/components/common/PageBody.vue'),
+        meta: {
+          breadcrumb: '발주',
+        },
         children: [
-          {
-            path: '',
-            name: 'hq:order-out:index',
-            redirect: {
-              name: 'hq:order-out:list',
-            },
-          },
           {
             path: 'list',
             name: 'hq:order-out:list',
             component: () => import('@/views/headQuarter/OrderOutListView.vue'),
+            meta: {
+              breadcrumb: '발주 내역 조회',
+            },
           },
           {
             path: 'form',
             name: 'hq:order-out:form',
             component: () => import('@/views/headQuarter/OrderOutFormView.vue'),
+            meta: {
+              breadcrumb: '발주 입력',
+            },
           },
           {
             path: 'stock-arrival',
             name: 'hq:order-out:stock-arrival',
             component: () => import('@/views/headQuarter/OrderOutStockArrivalListView.vue'),
+            meta: {
+              breadcrumb: '입고 확인',
+            },
           },
         ],
       },
@@ -193,6 +198,13 @@ router.beforeEach((to, from) => {
   if (to.meta.requiresAuth && !userStore.accessToken) {
     return {
       name: 'auth:login',
+    };
+  }
+
+  // 특정 페이지 리다이렉트 처리
+  if (to.name === 'hq:order-out') {
+    return {
+      name: 'hq:order-out:list',
     };
   }
 });

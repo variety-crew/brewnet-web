@@ -22,7 +22,7 @@ const clickLogout = () => {
 
 <style scoped>
 .hq-container {
-  padding: 10px 10px 0 10px;
+  padding: 10px 10px 10px 10px;
   display: flex;
   flex-direction: column;
   height: 100%;
