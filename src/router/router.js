@@ -76,6 +76,13 @@ const routes = [
     ],
   },
 
+  // 루트('/')로 접근 시 redirect
+  {
+    path: '/',
+    name: 'index',
+    redirect: { name: 'auth:login' },
+  },
+
   { path: '/:pathMatch(.*)*', name: '404', component: () => import('@/views/NotFound.vue') },
 ];
 
