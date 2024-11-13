@@ -1,21 +1,20 @@
 <template>
-  <div>가맹점 기본 레이아웃 페이지</div>
-  <div>
-    <Button label="로그아웃" @click="clickLogout" />
+  <div class="fc-container">
+    <FranchiseeTopBar />
+    <RouterView />
   </div>
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/user';
-import { useRouter } from 'vue-router';
-
-const userStore = useUserStore();
-const router = useRouter();
-
-const clickLogout = () => {
-  userStore.logout();
-  router.replace({ name: 'auth:login' });
-};
+import FranchiseeTopBar from '@/components/franchisee/FranchiseeTopBar.vue';
+import { RouterView } from 'vue-router';
 </script>
 
-<style scoped></style>
+<style scoped>
+.fc-container {
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+</style>

@@ -24,12 +24,7 @@ const route = useRoute();
 const appMenu = new AppMenu();
 
 const sideMenus = computed(() => {
-  // 발주 Sub Menus
-  if (route.name.includes('hq:purchase')) {
-    return appMenu.getPurchaseSideMenus();
-  }
-
-  return [];
+  return appMenu.getSideMenus(route.name);
 });
 </script>
 
@@ -42,11 +37,12 @@ const sideMenus = computed(() => {
 
   .menu-group {
     & + & {
-      margin-top: 32px;
+      margin-top: 16px;
     }
 
-    h4 {
-      padding: 16px;
+    h4,
+    a {
+      padding: 10px;
     }
 
     nav {
@@ -55,7 +51,6 @@ const sideMenus = computed(() => {
 
       a {
         color: var(--p-button-text-plain-color);
-        padding: 10px;
 
         &.sidebar-link-active {
           background-color: var(--p-primary-50);

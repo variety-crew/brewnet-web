@@ -116,9 +116,64 @@ const routes = [
     },
     children: [
       {
-        path: 'home',
+        path: 'transaction',
         name: 'fc:home',
-        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
+        component: () => import('@/components/franchisee/FranchiseePageBody.vue'),
+        children: [
+          {
+            path: 'order-list',
+            name: 'fc:home:order:list',
+            component: () => import('@/views/franchisee/OrderListView.vue'),
+            meta: {
+              breadcrumb: '주문 내역 조회',
+            },
+          },
+          {
+            path: 'order-form',
+            name: 'fc:home:order:form',
+            component: () => import('@/views/franchisee/OrderFormView.vue'),
+            meta: {
+              breadcrumb: '주문하기',
+            },
+          },
+          {
+            path: 'exchange-list',
+            name: 'fc:home:exchange:list',
+            component: () => import('@/views/franchisee/ExchangeListView.vue'),
+            meta: {
+              breadcrumb: '교환 내역 조회',
+            },
+          },
+          {
+            path: 'exchange-form',
+            name: 'fc:home:exchange:form',
+            component: () => import('@/views/franchisee/ExchangeFormView.vue'),
+            meta: {
+              breadcrumb: '교환신청',
+            },
+          },
+          {
+            path: 'return-list',
+            name: 'fc:home:return:list',
+            component: () => import('@/views/franchisee/ReturnListView.vue'),
+            meta: {
+              breadcrumb: '반품 내역 조회',
+            },
+          },
+          {
+            path: 'return-form',
+            name: 'fc:home:return:form',
+            component: () => import('@/views/franchisee/ReturnFormView.vue'),
+            meta: {
+              breadcrumb: '반품신청',
+            },
+          },
+        ],
+      },
+      {
+        path: 'other',
+        name: 'fc:other',
+        component: () => import('@/components/franchisee/FranchiseePageBody.vue'),
       },
     ],
   },
@@ -211,11 +266,16 @@ router.beforeEach((to, from) => {
     return { name: 'd:home' };
   }
 
-  // 대메뉴 눌렀을 때 default 서브메뉴 선택(리다이렉트 처리)
+  // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 본사
   if (to.name === 'hq:purchase') {
     return {
       name: 'hq:purchase:list',
     };
+  }
+
+  // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 가맹점
+  if (to.name === 'fc:home') {
+    return { name: 'fc:home:order:list' };
   }
 });
 
