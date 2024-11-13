@@ -15,8 +15,9 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import SideMenuBar from '../common/SideMenuBar.vue';
 import { useRoute } from 'vue-router';
+
+import SideMenuBar from '../common/SideMenuBar.vue';
 
 const route = useRoute();
 

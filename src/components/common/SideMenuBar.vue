@@ -16,9 +16,10 @@
 </template>
 
 <script setup>
-import AppMenu from '@/router/AppMenu';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+
+import AppMenu from '@/router/AppMenu';
 
 const route = useRoute();
 const appMenu = new AppMenu();

@@ -6,8 +6,9 @@
 </template>
 
 <script setup>
-import FranchiseeTopBar from '@/components/franchisee/FranchiseeTopBar.vue';
 import { RouterView } from 'vue-router';
+
+import FranchiseeTopBar from '@/components/franchisee/FranchiseeTopBar.vue';
 </script>
 
 <style scoped>

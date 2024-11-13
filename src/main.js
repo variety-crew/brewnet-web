@@ -1,15 +1,15 @@
-import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-
 import PrimeVue from 'primevue/config';
-import ToastService from 'primevue/toastservice';
 import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
 import Tooltip from 'primevue/tooltip';
+import { createApp } from 'vue';
 
 import App from './App.vue';
-import router from '@/router/router';
+
 import AppPreset from '@/assets/AppPreset';
+import router from '@/router/router';
 
 import './assets/main.css';
 import 'primeicons/primeicons.css';

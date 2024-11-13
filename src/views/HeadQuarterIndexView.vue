@@ -6,8 +6,9 @@
 </template>
 
 <script setup>
-import HeadQuarterTopBar from '@/components/headQuarter/HeadQuarterTopBar.vue';
 import { RouterView } from 'vue-router';
+
+import HeadQuarterTopBar from '@/components/headQuarter/HeadQuarterTopBar.vue';
 </script>
 
 <style scoped>

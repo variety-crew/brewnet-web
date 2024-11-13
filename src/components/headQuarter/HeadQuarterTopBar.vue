@@ -48,10 +48,11 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/user';
-import AppMenu from '@/router/AppMenu';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
+import AppMenu from '@/router/AppMenu';
+import { useUserStore } from '@/stores/user';
 
 const appMenu = new AppMenu();
 

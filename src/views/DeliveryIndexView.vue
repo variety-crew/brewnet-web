@@ -6,8 +6,9 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
+
+import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const router = useRouter();
