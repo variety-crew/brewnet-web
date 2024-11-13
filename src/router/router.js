@@ -119,6 +119,9 @@ const routes = [
         path: 'transaction',
         name: 'fc:home',
         component: () => import('@/components/franchisee/FranchiseePageBody.vue'),
+        meta: {
+          breadcrumb: '주문/교환/반품',
+        },
         children: [
           {
             path: 'order-list',
