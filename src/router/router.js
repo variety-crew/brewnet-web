@@ -194,11 +194,21 @@ router.beforeEach((to, from) => {
   }
 
   // 인증이 필요한 페이지인지 확인
-  // (나머지 페이지는 모두 인증이 필요한 페이지)
   if (to.meta.requiresAuth && !userStore.accessToken) {
     return {
       name: 'auth:login',
     };
+  }
+
+  // 맞지 않은 유저가 방문했을 때 처리
+  if (userStore.userType === 'hq' && !to.name.startsWith('hq:')) {
+    return { name: 'hq:home' };
+  }
+  if (userStore.userType === 'fc' && !to.name.startsWith('fc:')) {
+    return { name: 'fc:home' };
+  }
+  if (userStore.userType === 'd' && !to.name.startsWith('d:')) {
+    return { name: 'd:home' };
   }
 
   // 대메뉴 눌렀을 때 default 서브메뉴 선택(리다이렉트 처리)
