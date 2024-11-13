@@ -1,16 +1,36 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import PrimeVue from 'primevue/config';
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
+import Tooltip from 'primevue/tooltip';
+import { createApp } from 'vue';
 
-import App from './App.vue'
-import router from '@/router/routes'
+import App from './App.vue';
 
-import './assets/main.css'
+import AppPreset from '@/assets/AppPreset';
+import router from '@/router/router';
 
-const app = createApp(App)
+import './assets/main.css';
+import 'primeicons/primeicons.css';
+
+const app = createApp(App);
 
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 
-app.use(pinia)
-app.use(router)
+app.use(pinia);
+app.use(router);
 
-app.mount('#app')
+// Prime Vue 설정
+app.use(PrimeVue, {
+  // Default theme configuration
+  theme: {
+    preset: AppPreset,
+  },
+});
+app.use(ConfirmationService);
+app.directive('tooltip', Tooltip);
+app.use(ToastService);
+
+app.mount('#app');
