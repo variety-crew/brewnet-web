@@ -1,7 +1,7 @@
 <template>
   <div class="page-body">
     <!-- side bar -->
-    <SideMenuBar />
+    <HeadQuarterSideMenuBar />
 
     <main>
       <Breadcrumb :home="home" :model="breadcrumbs" />
@@ -15,7 +15,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import SideMenuBar from '../common/SideMenuBar.vue';
+import HeadQuarterSideMenuBar from './HeadQuarterSideMenuBar.vue';
 import AppMenu from '@/utils/AppMenu';
 import { useRoute } from 'vue-router';
 

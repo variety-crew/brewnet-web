@@ -1,7 +1,7 @@
 <template>
   <Toolbar class="hq-topbar">
-    <template v-if="logoMenu" #start>
-      <RouterLink :to="{ name: logoMenu }">
+    <template #start>
+      <RouterLink :to="{ name: 'hq:home' }">
         <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
       </RouterLink>
     </template>
@@ -66,27 +66,8 @@ const userMenus = ref([
     command: clickLogout,
   },
 ]);
-const logoMenu = computed(() => {
-  if (userStore.userType === 'hq') {
-    return 'hq:home';
-  }
-
-  if (userStore.userType === 'fc') {
-    return 'fc:home';
-  }
-
-  return '';
-});
 const topBarMenus = computed(() => {
-  if (userStore.userType === 'hq') {
-    return appMenu.getHqTopBarMenus();
-  }
-
-  if (userStore.userType === 'fc') {
-    return [];
-  }
-
-  return [];
+  return appMenu.getHqTopBarMenus();
 });
 
 const toggleUserMenu = event => {

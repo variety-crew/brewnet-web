@@ -42,7 +42,7 @@ const routes = [
       {
         path: 'order-out',
         name: 'hq:order-out',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
         meta: {
           breadcrumb: '발주',
         },
@@ -76,32 +76,32 @@ const routes = [
       {
         path: 'order-in',
         name: 'hq:order-in',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
       {
         path: 'partner',
         name: 'hq:partner',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
       {
         path: 'stock',
         name: 'hq:stock',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
       {
         path: 'approval',
         name: 'hq:approval',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
       {
         path: 'board',
         name: 'hq:board',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
       {
         path: 'settings',
         name: 'hq:settings',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
     ],
   },
@@ -118,7 +118,7 @@ const routes = [
       {
         path: 'home',
         name: 'fc:home',
-        component: () => import('@/components/common/PageBody.vue'),
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
     ],
   },
@@ -201,7 +201,7 @@ router.beforeEach((to, from) => {
     };
   }
 
-  // 특정 페이지 리다이렉트 처리
+  // 대메뉴 눌렀을 때 default 서브메뉴 선택(리다이렉트 처리)
   if (to.name === 'hq:order-out') {
     return {
       name: 'hq:order-out:list',
