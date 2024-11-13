@@ -49,7 +49,7 @@
 
 <script setup>
 import { useUserStore } from '@/stores/user';
-import AppMenu from '@/utils/AppMenu';
+import AppMenu from '@/router/AppMenu';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 

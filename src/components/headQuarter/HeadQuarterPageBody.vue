@@ -16,7 +16,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import HeadQuarterSideMenuBar from './HeadQuarterSideMenuBar.vue';
-import AppMenu from '@/utils/AppMenu';
+import AppMenu from '@/router/AppMenu';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();

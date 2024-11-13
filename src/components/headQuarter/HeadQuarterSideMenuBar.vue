@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import AppMenu from '@/utils/AppMenu';
+import AppMenu from '@/router/AppMenu';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -25,8 +25,8 @@ const appMenu = new AppMenu();
 
 const sideMenus = computed(() => {
   // 발주 Sub Menus
-  if (route.name.includes('hq:order-out')) {
-    return appMenu.getOrderOutSideMenus();
+  if (route.name.includes('hq:purchase')) {
+    return appMenu.getPurchaseSideMenus();
   }
 
   return [];

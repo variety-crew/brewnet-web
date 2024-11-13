@@ -3,11 +3,11 @@ export default class AppMenu {
     { label: '대시보드', routerName: 'hq:home' },
     {
       label: '발주',
-      routerName: 'hq:order-out',
+      routerName: 'hq:purchase',
     },
     {
       label: '주문/교환/반품',
-      routerName: 'hq:order-in',
+      routerName: 'hq:order',
     },
     {
       label: '가맹점/거래처',
@@ -22,22 +22,22 @@ export default class AppMenu {
     { label: '시스템설정', routerName: 'hq:settings' },
   ];
 
-  #orderOutMenus = [
+  #purchaseMenus = [
     {
       label: '발주 내역 조회',
-      routerName: 'hq:order-out:list',
+      routerName: 'hq:purchase:list',
     },
     {
       label: '발주 입력',
-      routerName: 'hq:order-out:form',
+      routerName: 'hq:purchase:form',
     },
     {
       label: '입고 확인',
-      routerName: 'hq:order-out:stock-arrival',
+      routerName: 'hq:purchase:stock-arrival',
     },
   ];
 
-  #allMenus = [...this.#orderOutMenus];
+  #allMenus = [...this.#purchaseMenus];
 
   // 화면 Title 가져오기
   getPageTitle(routerName) {
@@ -50,11 +50,11 @@ export default class AppMenu {
   }
 
   // 발주: side menu 목록
-  getOrderOutSideMenus() {
+  getPurchaseSideMenus() {
     return [
       {
         label: '발주',
-        items: this.#orderOutMenus,
+        items: this.#purchaseMenus,
       },
     ];
   }

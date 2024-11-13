@@ -40,8 +40,8 @@ const routes = [
         component: () => import('@/views/headQuarter/HomeView.vue'),
       },
       {
-        path: 'order-out',
-        name: 'hq:order-out',
+        path: 'purchase',
+        name: 'hq:purchase',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
         meta: {
           breadcrumb: '발주',
@@ -49,24 +49,24 @@ const routes = [
         children: [
           {
             path: 'list',
-            name: 'hq:order-out:list',
-            component: () => import('@/views/headQuarter/OrderOutListView.vue'),
+            name: 'hq:purchase:list',
+            component: () => import('@/views/headQuarter/PurchaseListView.vue'),
             meta: {
               breadcrumb: '발주 내역 조회',
             },
           },
           {
             path: 'form',
-            name: 'hq:order-out:form',
-            component: () => import('@/views/headQuarter/OrderOutFormView.vue'),
+            name: 'hq:purchase:form',
+            component: () => import('@/views/headQuarter/PurchaseFormView.vue'),
             meta: {
               breadcrumb: '발주 입력',
             },
           },
           {
             path: 'stock-arrival',
-            name: 'hq:order-out:stock-arrival',
-            component: () => import('@/views/headQuarter/OrderOutStockArrivalListView.vue'),
+            name: 'hq:purchase:stock-arrival',
+            component: () => import('@/views/headQuarter/PurchaseStockArrivalListView.vue'),
             meta: {
               breadcrumb: '입고 확인',
             },
@@ -74,8 +74,8 @@ const routes = [
         ],
       },
       {
-        path: 'order-in',
-        name: 'hq:order-in',
+        path: 'order',
+        name: 'hq:order',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
       },
       {
@@ -202,9 +202,9 @@ router.beforeEach((to, from) => {
   }
 
   // 대메뉴 눌렀을 때 default 서브메뉴 선택(리다이렉트 처리)
-  if (to.name === 'hq:order-out') {
+  if (to.name === 'hq:purchase') {
     return {
-      name: 'hq:order-out:list',
+      name: 'hq:purchase:list',
     };
   }
 });
