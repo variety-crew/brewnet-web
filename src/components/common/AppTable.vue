@@ -1,22 +1,12 @@
 <template>
   <div>
     <DataTable
-      :value="data"
+      :value="paginatedData"
       size="small"
-      paginator
-      :rows-per-page-options="[10, 15, 20]"
-      :rows="15"
       :pt="{
         header: {
           style: {
             'border-top': 'none',
-          },
-        },
-        pcPaginator: {
-          paginatorContainer: {
-            style: {
-              'border-bottom': 'none',
-            },
           },
         },
         column: {
@@ -38,7 +28,7 @@
     >
       <template #header>
         <div class="table-header">
-          <p>총 {{ data.length }}건</p>
+          <p>총 {{ totalElements || 0 }}건</p>
 
           <div class="right">
             <Button icon="pi pi-refresh" variant="outlined" aria-label="새로고침" severity="secondary" size="small" />
@@ -46,20 +36,36 @@
           </div>
         </div>
       </template>
-      <Column
-        v-for="col of columns"
-        :key="col.field"
-        :field="col.field"
-        :header="col.header"
-        :sortable="col.sortable"
-      />
+      <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" :sortable="col.sortable">
+        <!-- 태그로 표시할 경우 -->
+        <template v-if="col.template?.tag" #body="{ data }">
+          <Tag
+            :value="col.render ? col.render(data) : data[col.field]"
+            :severity="col.template.tag.getSeverity(data)"
+          />
+        </template>
+
+        <!-- 
+        
+        다른 템플릿을 넣고 싶으면 여기 사이에 넣어주세요
+        
+        -->
+
+        <!-- template은 따로 없지만 render가 있는 경우 -->
+        <template v-else-if="col.render" #body="{ data }">
+          {{ col.render(data) }}
+        </template>
+      </Column>
     </DataTable>
+
+    <!-- 페이지네이션 -->
+    <Paginator :rows="rowsPerPage" :total-records="totalElements" @page="emit('changePage', $event)"></Paginator>
   </div>
 </template>
 
 <script setup>
-const { data, columns } = defineProps({
-  data: {
+const { paginatedData, columns, rowsPerPage, totalElements } = defineProps({
+  paginatedData: {
     type: Array,
     required: true,
   },
@@ -67,7 +73,31 @@ const { data, columns } = defineProps({
     type: Array,
     required: true,
   },
+  /**
+   * columns: [{
+   *   field: string               // 테이블 데이터의 필드명
+   *   header: string              // 테이블 컬럼명
+   *   sortable: boolean           // 정렬(ASC/DESC) 가능 여부
+   *   render: (data: T) => string // render 될 내용 (서버에서 보낸 데이터와 표시할 데이터 형태가 다를 때 사용)
+   *   template: {                 // 다른 뷰를 띄울 경우 셋팅
+   *     tag: {                    // 태그 뷰를 사용할 경우 셋팅
+   *       getSeverity: (data: T) => string // 태그 뷰 색상 설정(메소드의 return 값은 프라임뷰 tag의 severity 값이어야 함)
+   *     }
+   *   }
+   * }]
+   */
+  rowsPerPage: {
+    type: Number,
+    required: false,
+    default: 15,
+  },
+  totalElements: {
+    type: Number,
+    required: true,
+  },
 });
+
+const emit = defineEmits(['changePage']);
 </script>
 
 <style scoped>
