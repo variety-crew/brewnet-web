@@ -22,27 +22,38 @@ import { useRouter } from 'vue-router';
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useInput } from '@/hooks/useInput';
 import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 import { mockupEmployees } from '@/utils/mockup';
 
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
 const employees = ref([]);
 const paginatedEmployees = computed(() => {
   return employees.value.slice(0, 15);
 });
 
-function onClickEdit(employee) {
-  console.log(employee.code);
-  router.push({ name: 'hq:settings:employee:edit', params: { memberId: employee.code } });
+function onClickEdit(data) {
+  console.log(data.code);
+  router.push({ name: 'hq:settings:employee:edit', params: { memberId: data.code } });
 }
 
-function onClickEditRole(employee) {
-  console.log(employee.code, '권한설정 클릭됨');
+function onClickEditRole(data) {
+  console.log(data.code, '권한설정 클릭됨');
 }
 
-function onClickRemove(employee) {
-  console.log(employee.code, '삭제 클릭됨');
+function onAcceptRemove() {
+  console.log('삭제 완료');
+}
+function onClickRemove(data) {
+  showConfirm({
+    header: '임직원 삭제',
+    message: `[${data.name}] 임직원을 삭제하시겠습니까?`,
+    acceptLabel: '네, 삭제합니다.',
+    danger: true,
+    onAccept: onAcceptRemove,
+  });
 }
 
 const columns = [
