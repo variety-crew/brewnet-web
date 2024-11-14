@@ -46,6 +46,7 @@ function onClickEditRole(data) {
 function onAcceptRemove() {
   console.log('삭제 완료');
 }
+
 function onClickRemove(data) {
   showConfirm({
     header: '임직원 삭제',
