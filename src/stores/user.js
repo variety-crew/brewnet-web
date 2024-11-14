@@ -15,7 +15,7 @@ export const useUserStore = defineStore(
       accessToken.value = 'faketoken1';
       userType.value = 'hq';
     };
-    const loginByFranchisee = () => {
+    const loginByFranchise = () => {
       loginId.value = 'iamfc';
       username.value = '나는야가맹점직원';
       accessToken.value = 'faketoken2';
@@ -41,7 +41,7 @@ export const useUserStore = defineStore(
       accessToken,
       userType,
       loginByHeadQuarter,
-      loginByFranchisee,
+      loginByFranchise,
       loginByDelivery,
       logout,
     };

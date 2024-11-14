@@ -1,6 +1,6 @@
 <template>
   <div class="fc-container">
-    <FranchiseeTopBar />
+    <FranchiseTopBar />
     <RouterView />
   </div>
 </template>
@@ -8,7 +8,7 @@
 <script setup>
 import { RouterView } from 'vue-router';
 
-import FranchiseeTopBar from '@/components/franchisee/FranchiseeTopBar.vue';
+import FranchiseTopBar from '@/components/franchise/FranchiseTopBar.vue';
 </script>
 
 <style scoped>
