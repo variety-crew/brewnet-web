@@ -42,10 +42,10 @@ export default class AppMenu {
     if (currentRouteName.includes('hq:settings')) {
       return [
         {
-          label: '사원 관리',
+          label: '임직원 관리',
           items: [
-            this.#makeMenu('사원 조회', 'hq:settings:employee:list'),
-            this.#makeMenu('사원 등록', 'hq:settings:employee:create'),
+            this.#makeMenu('임직원 조회', 'hq:settings:employee:list'),
+            this.#makeMenu('임직원 등록', 'hq:settings:employee:create'),
           ],
         },
       ];

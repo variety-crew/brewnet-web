@@ -11,13 +11,13 @@ export const useUserStore = defineStore(
 
     const loginByHeadQuarter = () => {
       loginId.value = 'iamhq';
-      username.value = '나는야본사직원';
+      username.value = '나는야본사';
       accessToken.value = 'faketoken1';
       userType.value = 'hq';
     };
     const loginByFranchise = () => {
       loginId.value = 'iamfc';
-      username.value = '나는야가맹점직원';
+      username.value = '나는야가맹점';
       accessToken.value = 'faketoken2';
       userType.value = 'fc';
     };

@@ -2,7 +2,7 @@
   <div>
     <!-- 검색 area -->
     <SearchArea>
-      <AppInputText id="input_name_keyword" label="사원명" :value="nameKeyword" @change-input="changeNameKeyword" />
+      <AppInputText id="input_name_keyword" label="임직원명" :value="nameKeyword" @change-input="changeNameKeyword" />
     </SearchArea>
 
     <AppTable
@@ -46,8 +46,8 @@ function onClickRemove(employee) {
 }
 
 const columns = [
-  { field: 'code', header: '사원코드' },
-  { field: 'name', header: '사원명', sortable: true },
+  { field: 'code', header: '임직원코드' },
+  { field: 'name', header: '임직원명', sortable: true },
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
@@ -94,7 +94,7 @@ onMounted(() => {
   employees.value = [...mockupEmployees];
 });
 
-// 직원명 변경되었을 때
+// 임직원명으로 검색
 watch(nameKeyword, newVal => {
   console.log(newVal);
 });

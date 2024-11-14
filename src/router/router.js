@@ -119,6 +119,14 @@ const routes = [
               breadcrumb: '가맹점 계정 등록',
             },
           },
+          {
+            path: 'franchise-account/:memberId/edit',
+            name: 'hq:partner:franchise-account:edit',
+            component: () => import('@/views/headQuarter/FranchiseAccountFormView.vue'),
+            meta: {
+              breadcrumb: '가맹점 계정 수정',
+            },
+          },
         ],
       },
       {
@@ -149,7 +157,7 @@ const routes = [
             name: 'hq:settings:employee:list',
             component: () => import('@/views/headQuarter/EmployeeListView.vue'),
             meta: {
-              breadcrumb: '사원 조회',
+              breadcrumb: '임직원 조회',
             },
           },
           {
@@ -157,7 +165,7 @@ const routes = [
             name: 'hq:settings:employee:create',
             component: () => import('@/views/headQuarter/EmployeeFormView.vue'),
             meta: {
-              breadcrumb: '사원 등록',
+              breadcrumb: '임직원 등록',
             },
           },
           {
@@ -165,7 +173,7 @@ const routes = [
             name: 'hq:settings:employee:edit',
             component: () => import('@/views/headQuarter/EmployeeFormView.vue'),
             meta: {
-              breadcrumb: '사원 수정',
+              breadcrumb: '임직원 수정',
             },
           },
         ],
