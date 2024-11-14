@@ -16,7 +16,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { useDialog } from 'primevue';
+import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -27,8 +28,12 @@ import { useInput } from '@/hooks/useInput';
 import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 import { mockupEmployees } from '@/utils/mockup';
 
+const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuarter/EditMemberRoleModalBody.vue'));
+
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
+const dialog = useDialog();
+
 const employees = ref([]);
 const paginatedEmployees = computed(() => {
   return employees.value.slice(0, 15);
@@ -40,7 +45,22 @@ function onClickEdit(data) {
 }
 
 function onClickEditRole(data) {
-  console.log(data.code, '권한설정 클릭됨');
+  dialog.open(EditMemberRole, {
+    props: {
+      header: '권한 설정',
+      style: {
+        width: '50vw',
+      },
+      breakpoints: {
+        '960px': '75vw',
+        '640px': '90vw',
+      },
+      modal: true,
+    },
+    data: {
+      member: data,
+    },
+  });
 }
 
 function onAcceptRemove() {

@@ -2,6 +2,7 @@
   <RouterView />
 
   <AppConfirmModal />
+  <DynamicDialog />
 </template>
 
 <script setup>

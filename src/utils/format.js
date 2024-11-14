@@ -1,5 +1,5 @@
-export const formatKoEmployeePosition = employee => {
-  switch (employee.position) {
+export const formatKoEmployeePosition = position => {
+  switch (position) {
     case 'STAFF':
       return '사원';
 
@@ -17,8 +17,8 @@ export const formatKoEmployeePosition = employee => {
   }
 };
 
-export const formatKoMemberRole = member => {
-  switch (member.role) {
+export const formatKoMemberRole = role => {
+  switch (role) {
     case 'ROLE_MASTER':
       return '마스터';
 
