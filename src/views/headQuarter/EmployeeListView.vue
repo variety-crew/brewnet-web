@@ -1,5 +1,10 @@
 <template>
   <div>
+    <!-- 검색 area -->
+    <SearchArea>
+      <AppInputText id="input_name_keyword" label="사원명" :value="nameKeyword" @change-input="changeNameKeyword" />
+    </SearchArea>
+
     <AppTable
       :paginated-data="paginatedEmployees"
       :columns="columns"
@@ -10,10 +15,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppInputText from '@/components/common/form/AppInputText.vue';
+import SearchArea from '@/components/common/SearchArea.vue';
+import { useInput } from '@/hooks/useInput';
 import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 
 const router = useRouter();
@@ -28,16 +36,16 @@ function onClickEdit(employee) {
 }
 
 function onClickEditRole(employee) {
-  console.log(employee.code);
+  console.log(employee.code, '권한설정 클릭됨');
 }
 
 function onClickRemove(employee) {
-  console.log(employee.code);
+  console.log(employee.code, '삭제 클릭됨');
 }
 
 const columns = [
-  { field: 'code', header: 'No.' },
-  { field: 'name', header: '직원명', sortable: true },
+  { field: 'code', header: '사원코드' },
+  { field: 'name', header: '사원명', sortable: true },
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
@@ -68,6 +76,8 @@ const columns = [
     },
   },
 ];
+
+const { value: nameKeyword, onChange: changeNameKeyword } = useInput('');
 
 function makeMockData(code, name, id, email, contact, position, role) {
   return { code, name, id, email, contact, position, role };
@@ -104,6 +114,11 @@ onMounted(() => {
     makeMockData(100, '홍길동', 'BN001', 'gdhong@bn.com', '010-1111-1111', 'MANAGER', 'ROLE_GENERAL_ADMIN'),
     makeMockData(100, '홍길동', 'BN001', 'gdhong@bn.com', '010-1111-1111', 'MANAGER', 'ROLE_RESPONSIBLE_ADMIN'),
   ];
+});
+
+// 직원명 변경되었을 때
+watch(nameKeyword, newVal => {
+  console.log(newVal);
 });
 </script>
 

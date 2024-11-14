@@ -32,7 +32,7 @@
 
           <div class="right">
             <Button icon="pi pi-refresh" variant="outlined" aria-label="새로고침" severity="secondary" size="small" />
-            <Button icon="pi pi-plus" label="직원 등록" size="small" />
+            <Button icon="pi pi-plus" label="사원 등록" size="small" />
           </div>
         </div>
       </template>
