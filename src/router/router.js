@@ -83,6 +83,51 @@ const routes = [
         path: 'partner',
         name: 'hq:partner',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
+        meta: {
+          breadcrumb: '가맹점/거래처',
+        },
+        children: [
+          {
+            path: 'franchise/list',
+            name: 'hq:partner:franchise:list',
+            component: () => import('@/views/headQuarter/FranchiseListView.vue'),
+            meta: {
+              breadcrumb: '가맹점 조회',
+            },
+          },
+          {
+            path: 'franchise/create',
+            name: 'hq:partner:franchise:create',
+            component: () => import('@/views/headQuarter/FranchiseFormView.vue'),
+            meta: {
+              breadcrumb: '가맹점 등록',
+            },
+          },
+          {
+            path: 'franchise-account/list',
+            name: 'hq:partner:franchise-account:list',
+            component: () => import('@/views/headQuarter/FranchiseAccountListView.vue'),
+            meta: {
+              breadcrumb: '가맹점 계정 조회',
+            },
+          },
+          {
+            path: 'franchise-account/create',
+            name: 'hq:partner:franchise-account:create',
+            component: () => import('@/views/headQuarter/FranchiseAccountFormView.vue'),
+            meta: {
+              breadcrumb: '가맹점 계정 등록',
+            },
+          },
+          {
+            path: 'franchise-account/:memberId/edit',
+            name: 'hq:partner:franchise-account:edit',
+            component: () => import('@/views/headQuarter/FranchiseAccountFormView.vue'),
+            meta: {
+              breadcrumb: '가맹점 계정 수정',
+            },
+          },
+        ],
       },
       {
         path: 'stock',
@@ -112,15 +157,23 @@ const routes = [
             name: 'hq:settings:employee:list',
             component: () => import('@/views/headQuarter/EmployeeListView.vue'),
             meta: {
-              breadcrumb: '사원 조회',
+              breadcrumb: '임직원 조회',
             },
           },
           {
-            path: 'employee/form',
-            name: 'hq:settings:employee:form',
+            path: 'employee/create',
+            name: 'hq:settings:employee:create',
             component: () => import('@/views/headQuarter/EmployeeFormView.vue'),
             meta: {
-              breadcrumb: '사원 등록',
+              breadcrumb: '임직원 등록',
+            },
+          },
+          {
+            path: 'employee/:memberId/edit',
+            name: 'hq:settings:employee:edit',
+            component: () => import('@/views/headQuarter/EmployeeFormView.vue'),
+            meta: {
+              breadcrumb: '임직원 수정',
             },
           },
         ],
@@ -146,7 +199,7 @@ const routes = [
         },
         children: [
           {
-            path: 'order-list',
+            path: 'order/list',
             name: 'fc:home:order:list',
             component: () => import('@/views/franchise/OrderListView.vue'),
             meta: {
@@ -154,7 +207,7 @@ const routes = [
             },
           },
           {
-            path: 'order-form',
+            path: 'order/form',
             name: 'fc:home:order:form',
             component: () => import('@/views/franchise/OrderFormView.vue'),
             meta: {
@@ -162,7 +215,7 @@ const routes = [
             },
           },
           {
-            path: 'exchange-list',
+            path: 'exchange/list',
             name: 'fc:home:exchange:list',
             component: () => import('@/views/franchise/ExchangeListView.vue'),
             meta: {
@@ -170,7 +223,7 @@ const routes = [
             },
           },
           {
-            path: 'exchange-form',
+            path: 'exchange/form',
             name: 'fc:home:exchange:form',
             component: () => import('@/views/franchise/ExchangeFormView.vue'),
             meta: {
@@ -178,7 +231,7 @@ const routes = [
             },
           },
           {
-            path: 'return-list',
+            path: 'return/list',
             name: 'fc:home:return:list',
             component: () => import('@/views/franchise/ReturnListView.vue'),
             meta: {
@@ -186,7 +239,7 @@ const routes = [
             },
           },
           {
-            path: 'return-form',
+            path: 'return/form',
             name: 'fc:home:return:form',
             component: () => import('@/views/franchise/ReturnFormView.vue'),
             meta: {
@@ -301,6 +354,12 @@ router.beforeEach((to, from) => {
   if (to.name === 'hq:settings') {
     return {
       name: 'hq:settings:employee:list',
+    };
+  }
+
+  if (to.name === 'hq:partner') {
+    return {
+      name: 'hq:partner:franchise:list',
     };
   }
 

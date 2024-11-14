@@ -42,10 +42,24 @@ export default class AppMenu {
     if (currentRouteName.includes('hq:settings')) {
       return [
         {
-          label: '사원 관리',
+          label: '임직원 관리',
           items: [
-            this.#makeMenu('사원 조회', 'hq:settings:employee:list'),
-            this.#makeMenu('사원 등록', 'hq:settings:employee:form'),
+            this.#makeMenu('임직원 조회', 'hq:settings:employee:list'),
+            this.#makeMenu('임직원 등록', 'hq:settings:employee:create'),
+          ],
+        },
+      ];
+    }
+
+    if (currentRouteName.includes('hq:partner')) {
+      return [
+        {
+          label: '가맹점',
+          items: [
+            this.#makeMenu('가맹점 조회', 'hq:partner:franchise:list'),
+            this.#makeMenu('가맹점 등록', 'hq:partner:franchise:create'),
+            this.#makeMenu('가맹점 계정 조회', 'hq:partner:franchise-account:list'),
+            this.#makeMenu('가맹점 계정 등록', 'hq:partner:franchise-account:create'),
           ],
         },
       ];
