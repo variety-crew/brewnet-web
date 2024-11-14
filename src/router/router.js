@@ -132,7 +132,7 @@ const routes = [
   {
     path: '/fc',
     name: 'fc:index',
-    component: () => import('@/views/FranchiseeIndexView.vue'),
+    component: () => import('@/views/FranchiseIndexView.vue'),
     meta: {
       requiresAuth: true,
     },
@@ -140,7 +140,7 @@ const routes = [
       {
         path: 'transaction',
         name: 'fc:home',
-        component: () => import('@/components/franchisee/FranchiseePageBody.vue'),
+        component: () => import('@/components/franchise/FranchisePageBody.vue'),
         meta: {
           breadcrumb: '주문/교환/반품',
         },
@@ -148,7 +148,7 @@ const routes = [
           {
             path: 'order-list',
             name: 'fc:home:order:list',
-            component: () => import('@/views/franchisee/OrderListView.vue'),
+            component: () => import('@/views/franchise/OrderListView.vue'),
             meta: {
               breadcrumb: '주문 내역 조회',
             },
@@ -156,7 +156,7 @@ const routes = [
           {
             path: 'order-form',
             name: 'fc:home:order:form',
-            component: () => import('@/views/franchisee/OrderFormView.vue'),
+            component: () => import('@/views/franchise/OrderFormView.vue'),
             meta: {
               breadcrumb: '주문하기',
             },
@@ -164,7 +164,7 @@ const routes = [
           {
             path: 'exchange-list',
             name: 'fc:home:exchange:list',
-            component: () => import('@/views/franchisee/ExchangeListView.vue'),
+            component: () => import('@/views/franchise/ExchangeListView.vue'),
             meta: {
               breadcrumb: '교환 내역 조회',
             },
@@ -172,7 +172,7 @@ const routes = [
           {
             path: 'exchange-form',
             name: 'fc:home:exchange:form',
-            component: () => import('@/views/franchisee/ExchangeFormView.vue'),
+            component: () => import('@/views/franchise/ExchangeFormView.vue'),
             meta: {
               breadcrumb: '교환신청',
             },
@@ -180,7 +180,7 @@ const routes = [
           {
             path: 'return-list',
             name: 'fc:home:return:list',
-            component: () => import('@/views/franchisee/ReturnListView.vue'),
+            component: () => import('@/views/franchise/ReturnListView.vue'),
             meta: {
               breadcrumb: '반품 내역 조회',
             },
@@ -188,7 +188,7 @@ const routes = [
           {
             path: 'return-form',
             name: 'fc:home:return:form',
-            component: () => import('@/views/franchisee/ReturnFormView.vue'),
+            component: () => import('@/views/franchise/ReturnFormView.vue'),
             meta: {
               breadcrumb: '반품신청',
             },
@@ -198,7 +198,7 @@ const routes = [
       {
         path: 'other',
         name: 'fc:other',
-        component: () => import('@/components/franchisee/FranchiseePageBody.vue'),
+        component: () => import('@/components/franchise/FranchisePageBody.vue'),
       },
     ],
   },
