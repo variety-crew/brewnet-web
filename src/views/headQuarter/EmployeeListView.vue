@@ -9,7 +9,9 @@
       :paginated-data="paginatedEmployees"
       :columns="columns"
       :total-elements="employees.length"
+      :add-button="{ label: '사원 등록', clickHandler: clickAdd }"
       @change-page="onChangePage"
+      @reload="reload"
     />
   </div>
 </template>
@@ -86,6 +88,14 @@ function makeMockData(code, name, id, email, contact, position, role) {
 const onChangePage = event => {
   const { page } = event;
   console.log(page, '페이지로 변경되었다!');
+};
+
+const reload = () => {
+  console.log('reload 테이블');
+};
+
+const clickAdd = () => {
+  router.push({ name: 'hq:settings:employee:form' });
 };
 
 onMounted(() => {

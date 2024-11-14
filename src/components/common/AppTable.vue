@@ -31,8 +31,21 @@
           <p>총 {{ totalElements || 0 }}건</p>
 
           <div class="right">
-            <Button icon="pi pi-refresh" variant="outlined" aria-label="새로고침" severity="secondary" size="small" />
-            <Button icon="pi pi-plus" label="사원 등록" size="small" />
+            <Button
+              icon="pi pi-refresh"
+              variant="outlined"
+              aria-label="새로고침"
+              severity="secondary"
+              size="small"
+              @click="emit('reload')"
+            />
+            <Button
+              v-if="addButton"
+              icon="pi pi-plus"
+              :label="addButton.label"
+              size="small"
+              @click="addButton.clickHandler"
+            />
           </div>
         </div>
       </template>
@@ -79,7 +92,7 @@
 </template>
 
 <script setup>
-const { paginatedData, columns, rowsPerPage, totalElements } = defineProps({
+const { paginatedData, columns, rowsPerPage, totalElements, addButton } = defineProps({
   paginatedData: {
     type: Array,
     required: true,
@@ -118,9 +131,22 @@ const { paginatedData, columns, rowsPerPage, totalElements } = defineProps({
     type: Number,
     required: true,
   },
+  addButton: {
+    type: Object,
+    required: false,
+    default: () => {
+      return undefined;
+    },
+  },
+  /**
+   * addButton: {
+   *   label: string             // 버튼 label
+   *   clickHandler: () => void  // 버튼 클릭 핸들러 메소드
+   * }
+   */
 });
 
-const emit = defineEmits(['changePage']);
+const emit = defineEmits(['changePage', 'reload']);
 </script>
 
 <style scoped>
