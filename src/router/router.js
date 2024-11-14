@@ -103,6 +103,27 @@ const routes = [
         path: 'settings',
         name: 'hq:settings',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
+        meta: {
+          breadcrumb: '시스템 설정',
+        },
+        children: [
+          {
+            path: 'employee/list',
+            name: 'hq:settings:employee:list',
+            component: () => import('@/views/headQuarter/EmployeeListView.vue'),
+            meta: {
+              breadcrumb: '사원 조회',
+            },
+          },
+          {
+            path: 'employee/form',
+            name: 'hq:settings:employee:form',
+            component: () => import('@/views/headQuarter/EmployeeFormView.vue'),
+            meta: {
+              breadcrumb: '사원 등록',
+            },
+          },
+        ],
       },
     ],
   },
@@ -274,6 +295,12 @@ router.beforeEach((to, from) => {
   if (to.name === 'hq:purchase') {
     return {
       name: 'hq:purchase:list',
+    };
+  }
+
+  if (to.name === 'hq:settings') {
+    return {
+      name: 'hq:settings:employee:list',
     };
   }
 

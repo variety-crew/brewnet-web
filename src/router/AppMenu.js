@@ -25,6 +25,7 @@ export default class AppMenu {
 
   // Side 메뉴 가져오기
   getSideMenus(currentRouteName = '') {
+    // 본사
     if (currentRouteName.includes('hq:purchase')) {
       return [
         {
@@ -38,6 +39,19 @@ export default class AppMenu {
       ];
     }
 
+    if (currentRouteName.includes('hq:settings')) {
+      return [
+        {
+          label: '사원 관리',
+          items: [
+            this.#makeMenu('사원 조회', 'hq:settings:employee:list'),
+            this.#makeMenu('사원 등록', 'hq:settings:employee:form'),
+          ],
+        },
+      ];
+    }
+
+    // 가맹점
     if (currentRouteName.includes('fc:home')) {
       return [
         {
