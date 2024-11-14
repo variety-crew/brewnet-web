@@ -45,7 +45,7 @@ export default class AppMenu {
           label: '사원 관리',
           items: [
             this.#makeMenu('사원 조회', 'hq:settings:employee:list'),
-            this.#makeMenu('사원 등록', 'hq:settings:employee:form'),
+            this.#makeMenu('사원 등록', 'hq:settings:employee:create'),
           ],
         },
       ];

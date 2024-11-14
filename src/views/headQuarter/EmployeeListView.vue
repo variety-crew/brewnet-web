@@ -33,7 +33,7 @@ const paginatedEmployees = computed(() => {
 
 function onClickEdit(employee) {
   console.log(employee.code);
-  router.push({ name: 'hq:settings:employee:form' });
+  router.push({ name: 'hq:settings:employee:edit', params: { memberId: employee.code } });
 }
 
 function onClickEditRole(employee) {
