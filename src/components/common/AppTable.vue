@@ -53,7 +53,7 @@
         <!-- 태그로 표시할 경우 -->
         <template v-if="col.template?.tag" #body="{ data }">
           <Tag
-            :value="col.render ? col.render(data) : data[col.field]"
+            :value="col.render ? col.render(data[col.field]) : data[col.field]"
             :severity="col.template.tag.getSeverity(data)"
           />
         </template>
@@ -81,7 +81,7 @@
 
         <!-- template은 따로 없지만 render가 있는 경우 -->
         <template v-else-if="col.render" #body="{ data }">
-          {{ col.render(data) }}
+          {{ col.render(data[col.field]) }}
         </template>
       </Column>
     </DataTable>
