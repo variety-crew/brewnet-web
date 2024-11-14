@@ -9,7 +9,6 @@
       :paginated-data="paginatedEmployees"
       :columns="columns"
       :total-elements="employees.length"
-      :add-button="{ label: '사원 등록', clickHandler: clickAdd }"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -92,10 +91,6 @@ const onChangePage = event => {
 
 const reload = () => {
   console.log('reload 테이블');
-};
-
-const clickAdd = () => {
-  router.push({ name: 'hq:settings:employee:form' });
 };
 
 onMounted(() => {
