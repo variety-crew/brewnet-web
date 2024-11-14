@@ -349,6 +349,12 @@ router.beforeEach((to, from) => {
     };
   }
 
+  if (to.name === 'hq:partner') {
+    return {
+      name: 'hq:partner:franchise:list',
+    };
+  }
+
   // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 가맹점
   if (to.name === 'fc:home') {
     return { name: 'fc:home:order:list' };

@@ -51,6 +51,20 @@ export default class AppMenu {
       ];
     }
 
+    if (currentRouteName.includes('hq:partner')) {
+      return [
+        {
+          label: '가맹점',
+          items: [
+            this.#makeMenu('가맹점 조회', 'hq:partner:franchise:list'),
+            this.#makeMenu('가맹점 등록', 'hq:partner:franchise:create'),
+            this.#makeMenu('가맹점 계정 조회', 'hq:partner:franchise-account:list'),
+            this.#makeMenu('가맹점 계정 등록', 'hq:partner:franchise-account:create'),
+          ],
+        },
+      ];
+    }
+
     // 가맹점
     if (currentRouteName.includes('fc:home')) {
       return [
