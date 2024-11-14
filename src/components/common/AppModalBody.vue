@@ -27,6 +27,7 @@ const emit = defineEmits(['clickActionButton']);
   .btn-area {
     display: flex;
     justify-content: flex-end;
+    margin-top: 16px;
   }
 }
 </style>
