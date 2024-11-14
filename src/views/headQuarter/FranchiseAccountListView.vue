@@ -15,9 +15,11 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { mockupFranchiseAccounts } from '@/utils/mockup';
 
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
 const accounts = ref([]);
 const paginatedAccounts = computed(() => {
   return accounts.value.slice(0, 15);
@@ -28,8 +30,18 @@ function onClickEdit(data) {
   router.push({ name: 'hq:partner:franchise-account:edit', params: { memberId: data.code } });
 }
 
+function onAcceptRemove() {
+  console.log('삭제 완료');
+}
+
 function onClickRemove(data) {
-  console.log(data.code, '삭제 클릭됨');
+  showConfirm({
+    header: '가맹점 계정 삭제',
+    message: `[${data.franchiseName}] 계정을 삭제하시겠습니까?`,
+    acceptLabel: '네, 삭제합니다.',
+    danger: true,
+    onAccept: onAcceptRemove,
+  });
 }
 
 const columns = [
