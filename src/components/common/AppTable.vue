@@ -45,6 +45,21 @@
           />
         </template>
 
+        <!-- 버튼 리스트를 표시할 경우 -->
+        <template v-else-if="col.template?.button" #body="{ data }">
+          <div>
+            <Button
+              v-for="button in col.template.button"
+              :key="button.label"
+              :label="button.label"
+              size="small"
+              :severity="button.severity || 'info'"
+              :variant="button.variant || 'text'"
+              @click="button.clickHandler(data)"
+            />
+          </div>
+        </template>
+
         <!-- 
         
         다른 템플릿을 넣고 싶으면 여기 사이에 넣어주세요
@@ -82,7 +97,15 @@ const { paginatedData, columns, rowsPerPage, totalElements } = defineProps({
    *   template: {                 // 다른 뷰를 띄울 경우 셋팅
    *     tag: {                    // 태그 뷰를 사용할 경우 셋팅
    *       getSeverity: (data: T) => string // 태그 뷰 색상 설정(메소드의 return 값은 프라임뷰 tag의 severity 값이어야 함)
-   *     }
+   *     },
+   *     button: {[
+   *       {
+   *         label: string                   // 버튼 label
+   *         clickHandler: (data: T) => void // 버튼 클릭 시 동작할 handler 메소드
+   *         severity: string                // 프라임뷰 버튼 severity 값
+   *         variant: string                 // 프라임뷰 버튼 variant 값
+   *       }
+   *     ]}
    *   }
    * }]
    */
