@@ -16,7 +16,6 @@
 </template>
 
 <script setup>
-import { useDialog } from 'primevue';
 import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -24,6 +23,7 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { useModal } from '@/hooks/useModal';
 import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 import { mockupEmployees } from '@/utils/mockup';
 
@@ -31,7 +31,7 @@ const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuart
 
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
-const dialog = useDialog();
+const { openDialog } = useModal();
 
 const nameKeyword = ref('');
 const employees = ref([]);
@@ -45,22 +45,7 @@ function onClickEdit(data) {
 }
 
 function onClickEditRole(data) {
-  dialog.open(EditMemberRole, {
-    props: {
-      header: '권한 설정',
-      style: {
-        width: '50vw',
-      },
-      breakpoints: {
-        '960px': '75vw',
-        '640px': '90vw',
-      },
-      modal: true,
-    },
-    data: {
-      member: data,
-    },
-  });
+  openDialog({ component: EditMemberRole, header: '권한 설정', data: { member: data } });
 }
 
 function onAcceptRemove() {
