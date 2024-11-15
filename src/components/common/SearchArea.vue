@@ -10,8 +10,7 @@
 .search-area {
   padding: 16px;
   border-radius: 5px;
-  border: 1px solid var(--p-content-border-color);
-  background-color: #fafafa;
+  border: 1px solid var(--p-surface-300);
   margin-bottom: 32px;
 }
 </style>
