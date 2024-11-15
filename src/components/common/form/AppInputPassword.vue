@@ -1,8 +1,16 @@
 <template>
   <AppFormContainer :label="label">
-    <InputText :value="modelValue" size="small" :name="name" :placeholder="placeholder" @input="onChangeInput" />
+    <Password
+      :value="modelValue"
+      :name="name"
+      :placeholder="placeholder"
+      :feedback="false"
+      toggle-mask
+      size="small"
+      @input="onChangeInput"
+    />
     <Message v-if="formSlot && formSlot[name]?.invalid" severity="error" size="small" variant="simple">{{
-      formSlot[name].error?.message
+      formSlot[name]?.error.message
     }}</Message>
   </AppFormContainer>
 </template>
@@ -13,7 +21,8 @@ import AppFormContainer from './AppFormContainer.vue';
 const { label, modelValue, name, formSlot, placeholder } = defineProps({
   label: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
   modelValue: {
     type: String,
