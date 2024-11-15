@@ -1,5 +1,5 @@
 <template>
-  <AppFormContainer :label="label">
+  <AppFormField :label="label">
     <Select
       :options="options"
       :value="modelValue"
@@ -16,11 +16,11 @@
     <Message v-if="formSlot && formSlot[name]?.invalid" severity="error" size="small" variant="simple">{{
       formSlot[name].error.message
     }}</Message>
-  </AppFormContainer>
+  </AppFormField>
 </template>
 
 <script setup>
-import AppFormContainer from './AppFormContainer.vue';
+import AppFormField from './AppFormField.vue';
 
 const { modelValue, options, initialValue, label, formSlot, name } = defineProps({
   // 부모로부터 현재 선택된 값을 받아옴

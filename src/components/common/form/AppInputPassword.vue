@@ -1,5 +1,5 @@
 <template>
-  <AppFormContainer :label="label">
+  <AppFormField :label="label">
     <Password
       :value="modelValue"
       :name="name"
@@ -12,11 +12,11 @@
     <Message v-if="formSlot && formSlot[name]?.invalid" severity="error" size="small" variant="simple">{{
       formSlot[name]?.error.message
     }}</Message>
-  </AppFormContainer>
+  </AppFormField>
 </template>
 
 <script setup>
-import AppFormContainer from './AppFormContainer.vue';
+import AppFormField from './AppFormField.vue';
 
 const { label, modelValue, name, formSlot, placeholder } = defineProps({
   label: {
