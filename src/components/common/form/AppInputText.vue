@@ -1,12 +1,12 @@
 <template>
   <div class="app-input-text-container">
     <label :for="id">{{ label }}</label>
-    <InputText :id="id" :value="value" size="small" @input="emit('changeInput', $event)" />
+    <InputText :id="id" :value="modelValue" size="small" v-bind="$attrs" @input="onChangeInput" />
   </div>
 </template>
 
 <script setup>
-const { label, id, value } = defineProps({
+const { label, id, modelValue } = defineProps({
   label: {
     type: String,
     required: true,
@@ -15,13 +15,17 @@ const { label, id, value } = defineProps({
     type: String,
     required: true,
   },
-  value: {
+  modelValue: {
     type: String,
     required: true,
   },
 });
 
-const emit = defineEmits(['changeInput']);
+const emit = defineEmits(['update:modelValue']);
+
+function onChangeInput(event) {
+  emit('update:modelValue', event.target.value);
+}
 </script>
 
 <style scoped>

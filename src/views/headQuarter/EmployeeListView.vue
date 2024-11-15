@@ -2,7 +2,7 @@
   <div>
     <!-- 검색 area -->
     <SearchArea>
-      <AppInputText id="input_name_keyword" label="임직원명" :value="nameKeyword" @change-input="changeNameKeyword" />
+      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
     </SearchArea>
 
     <AppTable
@@ -24,7 +24,6 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { useInput } from '@/hooks/useInput';
 import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 import { mockupEmployees } from '@/utils/mockup';
 
@@ -34,6 +33,7 @@ const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const dialog = useDialog();
 
+const nameKeyword = ref('');
 const employees = ref([]);
 const paginatedEmployees = computed(() => {
   return employees.value.slice(0, 15);
@@ -110,8 +110,6 @@ const columns = [
     },
   },
 ];
-
-const { value: nameKeyword, onChange: changeNameKeyword } = useInput('');
 
 const onChangePage = event => {
   const { page } = event;
