@@ -1,25 +1,28 @@
 <template>
-  <Select
-    :options="options"
-    :value="modelValue"
-    :default-value="initialValue"
-    option-label="label"
-    option-value="value"
-    v-bind="$attrs"
-    size="small"
-    checkmark
-    placeholder="===선택해주세요==="
-    :highlight-on-select="false"
-    @change="onSelectChange"
-  />
-
-  <!--   
-  v-bind="$attrs": 부모에게서 전달된 추가 속성을 수용
-   -->
+  <AppFormField :label="label">
+    <Select
+      :options="options"
+      :value="modelValue"
+      :default-value="initialValue"
+      option-label="label"
+      option-value="value"
+      size="small"
+      checkmark
+      placeholder="===선택해주세요==="
+      :highlight-on-select="false"
+      :name="name"
+      @change="onSelectChange"
+    />
+    <Message v-if="formSlot && formSlot[name]?.invalid" severity="error" size="small" variant="simple">{{
+      formSlot[name].error.message
+    }}</Message>
+  </AppFormField>
 </template>
 
 <script setup>
-const { modelValue, options, initialValue } = defineProps({
+import AppFormField from './AppFormField.vue';
+
+const { modelValue, options, initialValue, label, formSlot, name } = defineProps({
   // 부모로부터 현재 선택된 값을 받아옴
   modelValue: {
     type: String,
@@ -42,6 +45,24 @@ const { modelValue, options, initialValue } = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+
+  label: {
+    type: String,
+    required: false,
+    default: '',
+  },
+
+  formSlot: {
+    type: Object,
+    required: false,
+    default: () => null,
+  },
+
+  name: {
+    type: [String, null],
+    required: false,
+    default: null,
   },
 });
 
