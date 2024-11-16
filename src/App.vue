@@ -3,6 +3,7 @@
 
   <AppConfirmModal />
   <DynamicDialog />
+  <Toast position="top-center" />
 </template>
 
 <script setup>
