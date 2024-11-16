@@ -40,7 +40,6 @@ const paginatedEmployees = computed(() => {
 });
 
 function onClickEdit(data) {
-  console.log(data.code);
   router.push({ name: 'hq:settings:employee:edit', params: { memberId: data.code } });
 }
 

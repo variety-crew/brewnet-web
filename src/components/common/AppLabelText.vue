@@ -1,25 +1,28 @@
 <template>
-  <div class="app-input-container">
-    <label v-if="label">{{ label }}</label>
-    <slot></slot>
+  <div class="app-label-text-container">
+    <label>{{ label }}</label>
+    <p>{{ text }}</p>
   </div>
 </template>
 
 <script setup>
-const { label } = defineProps({
+const {} = defineProps({
   label: {
     type: String,
-    required: false,
-    default: '',
+    required: true,
+  },
+
+  text: {
+    type: String,
+    required: true,
   },
 });
 </script>
 
 <style scoped>
-.app-input-container {
+.app-label-text-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 5px;
 
   label {
