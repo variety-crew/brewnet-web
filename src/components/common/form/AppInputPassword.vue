@@ -9,16 +9,13 @@
       size="small"
       @input="onChangeInput"
     />
-    <Message v-if="formSlot && formSlot[name]?.invalid" severity="error" size="small" variant="simple">{{
-      formSlot[name]?.error.message
-    }}</Message>
   </AppFormField>
 </template>
 
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue, name, formSlot, placeholder } = defineProps({
+const { label, modelValue, name, placeholder } = defineProps({
   label: {
     type: String,
     required: false,
@@ -32,11 +29,6 @@ const { label, modelValue, name, formSlot, placeholder } = defineProps({
     type: [String, null],
     required: false,
     default: null,
-  },
-  formSlot: {
-    type: Object,
-    required: false,
-    default: () => null,
   },
   placeholder: {
     type: String,

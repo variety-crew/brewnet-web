@@ -13,16 +13,13 @@
       :name="name"
       @change="onSelectChange"
     />
-    <Message v-if="formSlot && formSlot[name]?.invalid" severity="error" size="small" variant="simple">{{
-      formSlot[name].error.message
-    }}</Message>
   </AppFormField>
 </template>
 
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { modelValue, options, initialValue, label, formSlot, name } = defineProps({
+const { modelValue, options, initialValue, label, name } = defineProps({
   // 부모로부터 현재 선택된 값을 받아옴
   modelValue: {
     type: String,
@@ -51,12 +48,6 @@ const { modelValue, options, initialValue, label, formSlot, name } = defineProps
     type: String,
     required: false,
     default: '',
-  },
-
-  formSlot: {
-    type: Object,
-    required: false,
-    default: () => null,
   },
 
   name: {
