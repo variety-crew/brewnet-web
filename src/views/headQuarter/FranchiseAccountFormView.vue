@@ -29,6 +29,7 @@
         :suggestions="franchiseSuggestions"
         size="small"
         complete-on-focus
+        name="franchise"
         @complete="search"
       >
         <template #option="slotProps">
@@ -48,6 +49,9 @@
           </div>
         </template>
       </AutoComplete>
+      <Message v-if="$form && $form.franchise?.invalid" severity="error" size="small" variant="simple">{{
+        $form.franchise.error?.message
+      }}</Message>
     </AppFormField>
 
     <Button type="submit" variant="outlined" label="저장" />
@@ -80,6 +84,7 @@ const initialValues = ref({
   confirmPassword: '',
   email: '',
   phone: '',
+  franchise: { label: '' },
 });
 
 const resolver = ref(
@@ -103,7 +108,12 @@ const resolver = ref(
 
         phone: z.string().min(1, { message: '휴대폰번호를 입력해주세요.' }),
 
-        position: z.string().min(1, '직급을 선택해주세요.'),
+        franchise: z.union([
+          z.object({
+            label: z.string().min(1, { message: '가맹점을 선택해주세요.' }),
+          }),
+          z.string().refine(val => false, { message: '가맹점을 선택해주세요.' }), // 옵션에 없는 다른 것을 입력했을 때
+        ]),
       })
       .refine(data => data.password === data.confirmPassword, {
         message: '비밀번호가 일치하지 않습니다.',
@@ -125,6 +135,7 @@ const onFormSubmit = ({ valid }) => {
 };
 
 const search = event => {
+  console.log(event.query);
   // 가맹점 검색
   filteredFranchises.value = [...mockupFranchises];
 };
