@@ -1,7 +1,8 @@
 <template>
   <AppFormContainer @on-submit="onFormSubmit">
     <!-- 아이디 -->
-    <AppInputText v-model="loginId" label="아이디" name="loginId" />
+    <AppInputText v-if="!editMode" v-model="loginId" label="아이디" name="loginId" />
+    <AppLabelText v-else label="아이디" :text="loginId" />
 
     <!-- 비밀번호 -->
     <div>
@@ -44,42 +45,78 @@
         </template>
       </AutoComplete>
     </AppFormField>
-
-    <Button type="submit" variant="outlined" label="저장" />
   </AppFormContainer>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useToast } from 'primevue';
+import { computed, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
+import AppLabelText from '@/components/common/AppLabelText.vue';
 import AppFormContainer from '@/components/common/form/AppFormContainer.vue';
 import AppFormField from '@/components/common/form/AppFormField.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
-import { mockupFranchises } from '@/utils/mockup';
-import { loginIdRegex } from '@/utils/regex';
+import { mockupFranchiseAccounts, mockupFranchises } from '@/utils/mockup';
+import { emailRegex, loginIdRegex } from '@/utils/regex';
 
 const router = useRouter();
+const route = useRoute();
+const toast = useToast();
 
 const loginId = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const email = ref('');
 const phone = ref('');
-
 const selectedFranchise = ref(null);
 const filteredFranchises = ref([]);
+const editMode = ref(false);
+
 const franchiseSuggestions = computed(() => {
   return filteredFranchises.value.map(e => ({ label: e.franchiseName, code: e.code }));
 });
 
+const checkForm = () => {
+  emailRegex.lastIndex = 0;
+  loginIdRegex.lastIndex = 0;
+
+  try {
+    if (!editMode.value) {
+      if (!loginId.value) throw new Error('아이디를 입력해주세요');
+      if (!loginIdRegex.test(loginId.value)) throw new Error('아이디는 영문, 숫자만 가능합니다.');
+
+      if (!password.value) throw new Error('비밀번호를 입력해주세요.');
+
+      if (!confirmPassword.value) throw new Error('비밀번호를 재입력해주세요.');
+      if (confirmPassword.value !== password.value) throw new Error('비밀번호가 일치하지 않습니다.');
+    }
+
+    if (!email.value) throw new Error('이메일을 입력해주세요.');
+    if (!emailRegex.test(email.value)) throw new Error('이메일 형식으로 입력해주세요.');
+
+    if (!phone.value) throw new Error('휴대폰번호를 입력해주세요.');
+
+    if (!selectedFranchise.value) throw new Error('가맹점을 선택해주세요');
+
+    return true;
+  } catch (e) {
+    toast.add({ severity: 'error', summary: '입력 확인', detail: e.message, life: 3000 });
+
+    return false;
+  }
+};
+
 const onFormSubmit = () => {
-  console.log('통과');
+  const isPass = checkForm();
+  if (isPass) {
+    console.log('통과');
+  }
 };
 
 const search = event => {
-  console.log(event.query);
+  console.log('auto complete 검색할 keyword:', event.query);
   // 가맹점 검색
   filteredFranchises.value = [...mockupFranchises];
 };
@@ -88,6 +125,33 @@ const clickAddFranchise = () => {
   const fullPath = router.resolve({ name: 'hq:partner:franchise:create' }).href;
   window.open(fullPath, '_blank');
 };
+
+watch(
+  () => route.params.memberId,
+  newVal => {
+    // 수정모드인 경우 기본 값 설정
+    if (newVal) {
+      editMode.value = true;
+
+      const foundEmployee = mockupFranchiseAccounts.find(e => e.code == route.params.memberId);
+      if (!foundEmployee) return;
+
+      loginId.value = foundEmployee.id;
+      email.value = foundEmployee.email;
+      phone.value = foundEmployee.contact;
+      selectedFranchise.value = { label: foundEmployee.franchiseName, code: 500 };
+    } else {
+      // 생성모드는 값 초기화
+      editMode.value = false;
+
+      loginId.value = '';
+      email.value = '';
+      phone.value = '';
+      selectedFranchise.value = null;
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped></style>

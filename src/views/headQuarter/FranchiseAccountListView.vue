@@ -26,7 +26,6 @@ const paginatedAccounts = computed(() => {
 });
 
 function onClickEdit(data) {
-  console.log(data.code);
   router.push({ name: 'hq:partner:franchise-account:edit', params: { memberId: data.code } });
 }
 

@@ -58,14 +58,19 @@ const positionOptions = computed(() => {
 });
 
 const checkForm = () => {
+  emailRegex.lastIndex = 0;
+  loginIdRegex.lastIndex = 0;
+
   try {
-    if (!loginId.value) throw new Error('아이디를 입력해주세요');
-    if (!loginIdRegex.test(loginId.value)) throw new Error('아이디는 영문, 숫자만 가능합니다.');
+    if (!editMode.value) {
+      if (!loginId.value) throw new Error('아이디를 입력해주세요');
+      if (!loginIdRegex.test(loginId.value)) throw new Error('아이디는 영문, 숫자만 가능합니다.');
 
-    if (!password.value) throw new Error('비밀번호를 입력해주세요.');
+      if (!password.value) throw new Error('비밀번호를 입력해주세요.');
 
-    if (!confirmPassword.value) throw new Error('비밀번호를 재입력해주세요.');
-    if (confirmPassword.value !== password.value) throw new Error('비밀번호가 일치하지 않습니다.');
+      if (!confirmPassword.value) throw new Error('비밀번호를 재입력해주세요.');
+      if (confirmPassword.value !== password.value) throw new Error('비밀번호가 일치하지 않습니다.');
+    }
 
     if (!username.value) throw new Error('성명을 입력해주세요.');
 
