@@ -14,6 +14,7 @@ import router from '@/router/router';
 
 import './assets/main.css';
 import 'primeicons/primeicons.css';
+import koreanLocale from './assets/KoreanLocale';
 
 const app = createApp(App);
 
@@ -29,6 +30,7 @@ app.use(PrimeVue, {
   theme: {
     preset: AppPreset,
   },
+  locale: koreanLocale
 });
 app.use(ConfirmationService);
 app.directive('tooltip', Tooltip);
