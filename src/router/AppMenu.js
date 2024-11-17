@@ -48,6 +48,7 @@ export default class AppMenu {
             this.#makeMenu('임직원 등록', 'hq:settings:employee:create'),
           ],
         },
+        { label: '기타', items: [this.#makeMenu('회사 정보', 'hq:settings:company')] },
       ];
     }
 

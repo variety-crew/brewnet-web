@@ -186,6 +186,14 @@ const routes = [
               breadcrumb: '임직원 수정',
             },
           },
+          {
+            path: 'company',
+            name: 'hq:settings:company',
+            component: () => import('@/views/headQuarter/CompanyInfoView.vue'),
+            meta: {
+              breadcrumb: '회사 정보',
+            },
+          },
         ],
       },
     ],
