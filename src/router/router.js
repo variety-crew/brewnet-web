@@ -194,6 +194,30 @@ const routes = [
               breadcrumb: '회사 정보',
             },
           },
+          {
+            path: 'company-seal',
+            name: 'hq:settings:company-seal',
+            component: () => import('@/views/headQuarter/CompanySealView.vue'),
+            meta: {
+              breadcrumb: '법인인감 조회',
+            },
+          },
+          {
+            path: 'company-seal/upload',
+            name: 'hq:settings:company-seal:upload',
+            component: () => import('@/views/headQuarter/CompanySealUploadView.vue'),
+            meta: {
+              breadcrumb: '법인인감 등록',
+            },
+          },
+          {
+            path: 'company-seal/history',
+            name: 'hq:settings:company-seal:history',
+            component: () => import('@/views/headQuarter/CompanySealHistoryView.vue'),
+            meta: {
+              breadcrumb: '법인인감 사용내역',
+            },
+          },
         ],
       },
     ],

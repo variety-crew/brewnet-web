@@ -35,6 +35,7 @@ const sideMenus = computed(() => {
   border: 1px solid var(--p-content-border-color);
   background-color: var(--p-content-background);
   min-width: 150px;
+  flex-shrink: 0;
 
   .menu-group {
     & + & {
