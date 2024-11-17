@@ -22,14 +22,15 @@
       <Button label="비밀번호 찾기" variant="text" size="small" />
     </div>
 
-    <Button label="본사 로그인" @click="clickLoginByHeadQuarter" />
-    <Button label="가맹점 로그인" @click="clickLoginByFranchise" />
-    <Button label="배송기사 로그인" @click="clickLoginByDelivery" />
+    <Button label="본사 로그인" @click="clickLogin('hq')" />
+    <Button label="가맹점 로그인" @click="clickLogin('fc')" />
+    <Button label="배송기사 로그인" @click="clickLogin('d')" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { useToast } from 'primevue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppCheck from '@/components/common/form/AppCheck.vue';
@@ -37,25 +38,53 @@ import { useUserStore } from '@/stores/user';
 
 const userStore = useUserStore();
 const router = useRouter();
+const toast = useToast();
 
 const id = ref('');
 const password = ref('');
 const saveAuth = ref(false);
 
-const clickLoginByHeadQuarter = () => {
-  userStore.loginByHeadQuarter();
-  router.replace({ name: 'hq:home' });
+const checkForm = () => {
+  try {
+    if (!id.value) throw new Error('아이디를 입력해주세요.');
+    if (!password.value) throw new Error('비밀번호를 입력해주세요.');
+  } catch (e) {
+    toast.add({ severity: 'error', summary: '입력 확인', detail: e.message, life: 3000 });
+    return false;
+  }
+
+  return true;
 };
 
-const clickLoginByFranchise = () => {
-  userStore.loginByFranchise();
-  router.replace({ name: 'fc:home' });
+const clickLogin = type => {
+  const isPass = checkForm();
+  if (!isPass) return;
+
+  if (type === 'hq') {
+    userStore.loginByHeadQuarter();
+  } else if (type === 'fc') {
+    userStore.loginByFranchise();
+  } else if (type === 'd') {
+    userStore.loginByDelivery();
+  }
+
+  // 로그인 정보 저장할건지?
+  if (saveAuth.value) {
+    localStorage.setItem('loginId', id.value);
+  } else {
+    localStorage.removeItem('loginId');
+  }
+
+  router.replace({ name: `${type}:home` });
 };
 
-const clickLoginByDelivery = () => {
-  userStore.loginByDelivery();
-  router.replace({ name: 'd:home' });
-};
+onMounted(() => {
+  // 저장된 로그인 아이디가 있다면 default 셋팅
+  const foundLoginId = localStorage.getItem('loginId');
+  if (foundLoginId) {
+    id.value = foundLoginId;
+  }
+});
 </script>
 
 <style scoped>
