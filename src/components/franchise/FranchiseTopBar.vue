@@ -51,6 +51,7 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import AppMenu from '@/router/AppMenu';
 import { useUserStore } from '@/stores/user';
 
@@ -58,6 +59,7 @@ const appMenu = new AppMenu();
 
 const userStore = useUserStore();
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
 
 const userMenu = ref();
 const userMenus = ref([
@@ -75,9 +77,18 @@ const toggleUserMenu = event => {
   userMenu.value.toggle(event);
 };
 
-function clickLogout() {
+const handleLogout = () => {
   userStore.logout();
   router.replace({ name: 'auth:login' });
+};
+
+function clickLogout() {
+  showConfirm({
+    header: '로그아웃',
+    message: `로그아웃을 진행합니다.`,
+    acceptLabel: '로그아웃',
+    onAccept: handleLogout,
+  });
 }
 </script>
 
