@@ -28,6 +28,11 @@ const routes = [
         name: 'auth:find-password',
         component: () => import('@/views/auth/FindPassword.vue'),
       },
+      {
+        path: 'reset-password',
+        name: 'auth:reset-password',
+        component: () => import('@/views/auth/ResetPassword.vue'),
+      },
     ],
   },
 

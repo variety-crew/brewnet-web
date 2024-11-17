@@ -1,18 +1,22 @@
 <template>
   <form class="find-password-container" @submit.prevent="onSubmit">
     <h2>비밀번호 찾기</h2>
-    <AppInputText v-model="id" label="아이디" full-width />
-    <div class="email-area">
-      <AppInputText v-model="email" label="이메일" full-width />
-      <Button
-        :label="isSend ? '재전송' : '인증번호 전송'"
-        variant="outlined"
-        severity="secondary"
-        size="small"
-        @click="clickSendVerifyCode"
-      />
+
+    <div>
+      <AppInputText v-model="id" label="아이디" class="mb-2" />
+      <div class="email-area mb-2">
+        <AppInputText v-model="email" label="이메일" full-width />
+        <Button
+          :label="isSend ? '재전송' : '인증번호 전송'"
+          variant="outlined"
+          severity="secondary"
+          size="small"
+          @click="clickSendVerifyCode"
+        />
+      </div>
+      <AppInputText v-model="verifyCode" label="인증번호 입력" />
     </div>
-    <AppInputText v-model="verifyCode" label="인증번호 입력" full-width />
+
     <div class="bottom-button-area">
       <Button label="돌아가기" variant="text" @click="goBack" />
       <Button label="확인" type="submit" />
@@ -75,6 +79,7 @@ const onSubmit = () => {
   const isPass = checkForm();
   if (isPass) {
     console.log('비밀번호 찾기 API 연동 필요');
+    router.replace({ name: 'auth:reset-password' });
   }
 };
 </script>
@@ -83,7 +88,7 @@ const onSubmit = () => {
 .find-password-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 
   .email-area {
     display: flex;

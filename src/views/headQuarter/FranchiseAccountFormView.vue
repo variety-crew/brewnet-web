@@ -25,6 +25,7 @@
         size="small"
         complete-on-focus
         name="franchise"
+        fluid
         @complete="search"
       >
         <template #option="slotProps">
