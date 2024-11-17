@@ -17,7 +17,8 @@ import AppFormField from './AppFormField.vue';
 const { label, modelValue, name, placeholder, fullWidth } = defineProps({
   label: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
   },
   modelValue: {
     type: String,
