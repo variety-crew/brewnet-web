@@ -1,10 +1,5 @@
 <template>
   <div class="login-container">
-    <div class="brand">
-      <img src="@/assets/images/logo_no_bg.png" alt="" />
-      <p class="desc">카페 물류 주문관리 시스템</p>
-    </div>
-
     <!-- 아이디 -->
     <IconField>
       <InputIcon class="pi pi-user" />
@@ -97,22 +92,6 @@ onMounted(() => {
 
   .input {
     text-align: center;
-  }
-
-  .brand {
-    margin-bottom: 70px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    img {
-      margin-bottom: 10px;
-    }
-
-    .desc {
-      text-align: center;
-      color: var(--p-inputtext-placeholder-color);
-    }
   }
 
   .middle {
