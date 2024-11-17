@@ -1,5 +1,5 @@
 <template>
-  <AppFormContainer @on-submit="onFormSubmit">
+  <form class="employee-form-container" @submit.prevent="onFormSubmit">
     <!-- 아이디 -->
     <AppInputText v-if="!editMode" v-model="loginId" label="아이디" />
     <AppLabelText v-else label="아이디" :text="loginId" />
@@ -21,7 +21,9 @@
 
     <!-- 직급 -->
     <AppSelect v-model="position" label="직급" :options="positionOptions" :initial-value="initialPosition" />
-  </AppFormContainer>
+
+    <Button type="submit" variant="outlined" label="저장" />
+  </form>
 </template>
 
 <script setup>
@@ -30,7 +32,6 @@ import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import AppLabelText from '@/components/common/AppLabelText.vue';
-import AppFormContainer from '@/components/common/form/AppFormContainer.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
@@ -128,4 +129,11 @@ watch(
 );
 </script>
 
-<style scoped></style>
+<style scoped>
+.employee-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: fit-content;
+}
+</style>

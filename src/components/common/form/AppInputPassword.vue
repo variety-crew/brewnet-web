@@ -7,6 +7,7 @@
       :feedback="false"
       toggle-mask
       size="small"
+      :fluid="fullWidth"
       @input="onChangeInput"
     />
   </AppFormField>
@@ -15,7 +16,7 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue, name, placeholder } = defineProps({
+const { label, modelValue, name, placeholder, fullWidth } = defineProps({
   label: {
     type: String,
     required: false,
@@ -34,6 +35,11 @@ const { label, modelValue, name, placeholder } = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  fullWidth: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 
