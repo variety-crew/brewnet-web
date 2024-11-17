@@ -1,13 +1,20 @@
 <template>
-  <AppFormField :label="label">
-    <InputText :value="modelValue" size="small" :name="name" :placeholder="placeholder" @input="onChangeInput" />
+  <AppFormField :label="label" :full-width="fullWidth">
+    <InputText
+      :value="modelValue"
+      size="small"
+      :name="name"
+      :placeholder="placeholder"
+      :fluid="fullWidth"
+      @input="onChangeInput"
+    />
   </AppFormField>
 </template>
 
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue, name, placeholder } = defineProps({
+const { label, modelValue, name, placeholder, fullWidth } = defineProps({
   label: {
     type: String,
     required: true,
@@ -25,6 +32,11 @@ const { label, modelValue, name, placeholder } = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  fullWidth: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

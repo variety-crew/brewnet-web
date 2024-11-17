@@ -29,14 +29,13 @@ main.auth-main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 70%;
 
     .brand {
       display: flex;
       flex-direction: column;
       align-items: center;
-      /* 가운데보다 위로 이동 */
-      position: relative;
-      bottom: 100px;
+      margin-bottom: 40px;
 
       img {
         margin-bottom: 10px;

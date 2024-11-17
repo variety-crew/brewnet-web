@@ -14,7 +14,7 @@
 
     <div class="middle">
       <AppCheck v-model="saveAuth" label="로그인 정보 저장" />
-      <Button label="비밀번호 찾기" variant="text" size="small" />
+      <Button label="비밀번호 찾기" variant="text" size="small" as="router-link" :to="{ name: 'auth:find-password' }" />
     </div>
 
     <Button label="본사 로그인" @click="clickLogin('hq')" />
