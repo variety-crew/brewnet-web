@@ -1,5 +1,5 @@
 <template>
-  <AppFormContainer @on-submit="onFormSubmit">
+  <form class="franchise-account-form-container" @submit.prevent="onFormSubmit">
     <!-- 아이디 -->
     <AppInputText v-if="!editMode" v-model="loginId" label="아이디" name="loginId" />
     <AppLabelText v-else label="아이디" :text="loginId" />
@@ -45,7 +45,9 @@
         </template>
       </AutoComplete>
     </AppFormField>
-  </AppFormContainer>
+
+    <Button type="submit" variant="outlined" label="저장" />
+  </form>
 </template>
 
 <script setup>
@@ -54,7 +56,6 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppLabelText from '@/components/common/AppLabelText.vue';
-import AppFormContainer from '@/components/common/form/AppFormContainer.vue';
 import AppFormField from '@/components/common/form/AppFormField.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
@@ -154,4 +155,11 @@ watch(
 );
 </script>
 
-<style scoped></style>
+<style scoped>
+.franchise-account-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: fit-content;
+}
+</style>
