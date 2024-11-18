@@ -17,6 +17,7 @@
       :paginated-data="paginatedFranchises"
       :columns="columns"
       :total-elements="franchises.length"
+      show-excel-export
       @change-page="onChangePage"
       @reload="reload"
     />
