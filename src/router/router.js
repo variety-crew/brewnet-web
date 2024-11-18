@@ -251,7 +251,7 @@ const routes = [
           {
             path: 'upload-signature',
             name: 'hq:my:upload-signature',
-            component: () => import('@/views/headQuarter/UploadSignatureView.vue'),
+            component: () => import('@/views/headQuarter/SignatureUploadView.vue'),
             meta: { breadcrumb: '서명 등록' },
           },
         ],
