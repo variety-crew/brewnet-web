@@ -31,7 +31,10 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppFormField from '@/components/common/form/AppFormField.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { mockupFranchises } from '@/utils/mockup';
+
+const { showConfirm } = useAppConfirmModal();
 
 const franchises = ref([]);
 const paginatedFranchises = computed(() => {
@@ -61,7 +64,20 @@ const allAddress = [
 const addressSuggestions = ref([]);
 
 const clickEdit = data => {};
-const clickRemove = data => {};
+
+const onRemove = targetCode => {
+  console.log(targetCode, '가맹점 삭제 API');
+};
+
+const clickRemove = data => {
+  showConfirm({
+    header: '가맹점 삭제',
+    message: `[${data.franchiseName}] 가맹점을 삭제하시겠습니까?`,
+    acceptLabel: '네, 삭제합니다.',
+    danger: true,
+    onAccept: () => onRemove(data.code),
+  });
+};
 
 const columns = [
   { field: 'code', header: '가맹점코드' },
