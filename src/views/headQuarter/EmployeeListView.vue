@@ -12,6 +12,8 @@
       @change-page="onChangePage"
       @reload="reload"
     />
+
+    <DynamicDialog />
   </div>
 </template>
 

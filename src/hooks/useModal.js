@@ -1,4 +1,4 @@
-import { useDialog } from 'primevue';
+import { useDialog } from 'primevue/usedialog';
 
 export function useModal() {
   const dialog = useDialog();

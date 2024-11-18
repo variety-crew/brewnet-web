@@ -35,13 +35,17 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 
 import { makeRadioOption } from '@/utils/helper';
 
 import AppModalBody from '../common/AppModalBody.vue';
 import AppInputText from '../common/form/AppInputText.vue';
 import AppRadioList from '../common/form/AppRadioList.vue';
+
+const emit = defineEmits(['callbackEvent', 'cancel']);
+
+const dialogRef = inject('dialogRef');
 
 const searchKeyword = ref('');
 const selectedAddress = ref();
@@ -66,7 +70,11 @@ const isLoading = ref(false);
 
 let debounce = null;
 
-const choose = () => {};
+const choose = () => {
+  // emit('cancel', selectedAddress);
+  // emit('cancel', { user: 'primetime' });
+  // dialogRef.value.close();
+};
 
 const searchAddress = async query => {
   const endpoint =

@@ -13,6 +13,8 @@
         </td>
       </tr>
     </table>
+
+    <DynamicDialog />
   </div>
 </template>
 

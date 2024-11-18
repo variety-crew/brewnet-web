@@ -2,7 +2,6 @@
   <RouterView />
 
   <AppConfirmModal />
-  <DynamicDialog />
   <Toast position="top-center" />
 </template>
 

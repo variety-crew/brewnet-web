@@ -21,6 +21,8 @@
     <AppInputText v-model="contact" label="가맹점 연락처" />
 
     <Button type="submit" label="저장" size="small" />
+
+    <DynamicDialog />
   </form>
 </template>
 
@@ -46,6 +48,10 @@ const address = ref('');
 const addressDetail = ref('');
 const contact = ref('');
 const editMode = ref(false);
+
+const choose = data => {
+  console.log('선택된 주소', data);
+};
 
 const onClickSearchAddress = () => {
   openModal({ component: SearchAddressModalBody, header: '주소 검색' });
