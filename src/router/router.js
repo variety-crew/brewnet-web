@@ -242,6 +242,12 @@ const routes = [
             component: () => import('@/views/headQuarter/MyInfoView.vue'),
             meta: { breadcrumb: '내 정보 조회' },
           },
+          {
+            path: 'change-password',
+            name: 'hq:my:change-password',
+            component: () => import('@/views/headQuarter/ChangePasswordView.vue'),
+            meta: { breadcrumb: '비밀번호 변경' },
+          },
         ],
       },
     ],
