@@ -26,6 +26,7 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppFormField from '@/components/common/form/AppFormField.vue';
@@ -35,6 +36,7 @@ import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { mockupFranchises } from '@/utils/mockup';
 
 const { showConfirm } = useAppConfirmModal();
+const router = useRouter();
 
 const franchises = ref([]);
 const paginatedFranchises = computed(() => {
@@ -63,7 +65,9 @@ const allAddress = [
 ];
 const addressSuggestions = ref([]);
 
-const clickEdit = data => {};
+const clickEdit = data => {
+  router.push({ name: 'hq:partner:franchise:edit', params: { franchiseCode: data.code } });
+};
 
 const onRemove = targetCode => {
   console.log(targetCode, '가맹점 삭제 API');

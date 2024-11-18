@@ -26,10 +26,12 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { defineAsyncComponent, ref } from 'vue';
+import { defineAsyncComponent, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import { useModal } from '@/hooks/useModal';
+import { mockupFranchises } from '@/utils/mockup';
 
 const SearchAddressModalBody = defineAsyncComponent(
   () => import('@/components/headQuarter/SearchAddressModalBody.vue'),
@@ -37,11 +39,13 @@ const SearchAddressModalBody = defineAsyncComponent(
 
 const toast = useToast();
 const { openModal } = useModal();
+const route = useRoute();
 
 const franchiseName = ref('');
+const address = ref('');
 const addressDetail = ref('');
 const contact = ref('');
-const address = ref('');
+const editMode = ref(false);
 
 const onClickSearchAddress = () => {
   openModal({ component: SearchAddressModalBody, header: '주소 검색' });
@@ -63,6 +67,33 @@ const checkForm = () => {
 const onSubmit = () => {
   const isPass = checkForm();
 };
+
+watch(
+  () => route.params.franchiseCode,
+  newVal => {
+    // 수정모드인 경우 기본 값 설정
+    if (newVal) {
+      editMode.value = true;
+
+      const foundFranchise = mockupFranchises.find(e => e.code == newVal);
+      if (!foundFranchise) return;
+
+      franchiseName.value = foundFranchise.franchiseName;
+      address.value = foundFranchise.address;
+      addressDetail.value = foundFranchise.address;
+      contact.value = foundFranchise.contact;
+    } else {
+      // 생성모드는 값 초기화
+      editMode.value = false;
+
+      franchiseName.value = '';
+      address.value = '';
+      addressDetail.value = '';
+      contact.value = '';
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
