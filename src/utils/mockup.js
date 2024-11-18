@@ -108,3 +108,33 @@ export const mockupFranchises = [
     '2024-01-05 12:00:00',
   ),
 ];
+
+// 법인인감 사용내역
+function makeMockCompanySealHistory(code, name, reason, useDate) {
+  return { code, name, reason, useDate };
+}
+export const mockupCompanySealHistory = [
+  makeMockCompanySealHistory(100, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(101, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(102, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(103, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(104, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(105, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(106, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(107, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(108, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(109, '홍길동', '발주서 출력을 위해 사용됨', '2024/10/21'),
+  makeMockCompanySealHistory(110, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/11'),
+  makeMockCompanySealHistory(111, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/11'),
+  makeMockCompanySealHistory(112, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/11'),
+  makeMockCompanySealHistory(113, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(114, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(115, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(116, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(117, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(118, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(119, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(120, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(121, '홍길동', '발주서 출력을 위해 사용됨', '2024/09/09'),
+  makeMockCompanySealHistory(122, '홍길동', '발주서 출력을 위해 사용됨', '2024/01/11'),
+];

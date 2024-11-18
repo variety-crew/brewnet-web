@@ -48,6 +48,14 @@ export default class AppMenu {
             this.#makeMenu('임직원 등록', 'hq:settings:employee:create'),
           ],
         },
+        {
+          label: '법인인감',
+          items: [
+            this.#makeMenu('법인인감 조회', 'hq:settings:company-seal'),
+            this.#makeMenu('법인인감 등록', 'hq:settings:company-seal:upload'),
+            this.#makeMenu('법인인감 사용내역', 'hq:settings:company-seal:history'),
+          ],
+        },
         { label: '기타', items: [this.#makeMenu('회사 정보', 'hq:settings:company')] },
       ];
     }
