@@ -13,18 +13,23 @@
         </td>
       </tr>
     </table>
+
+    <DynamicDialog />
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { defineAsyncComponent, onMounted, ref } from 'vue';
 
-import EditApprovalLineModalBody from '@/components/headQuarter/EditApprovalLineModalBody.vue';
 import { useModal } from '@/hooks/useModal';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { mockupApprovalLines } from '@/utils/mockup';
 
-const { openDialog } = useModal();
+const EditApprovalLineModalBody = defineAsyncComponent(
+  () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
+);
+
+const { openModal } = useModal();
 
 const approvalLines = ref([]);
 
@@ -32,7 +37,7 @@ let editingCode = null;
 
 const clickEdit = target => {
   editingCode = target.code;
-  openDialog({
+  openModal({
     component: EditApprovalLineModalBody,
     header: `${target.title} 수정`,
     data: {

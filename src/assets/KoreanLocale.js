@@ -5,7 +5,7 @@ const koreanLocale = {
   //   endsWith: '으로 끝남',
   //   equals: '같음',
   //   notEquals: '같지 않음',
-  //   noFilter: '필터 없음',
+  // noFilter: '필터 없음',
   //   lt: '보다 작음',
   //   lte: '보다 작거나 같음',
   //   gt: '보다 큼',
@@ -38,6 +38,7 @@ const koreanLocale = {
   //   medium: '보통',
   //   strong: '강함',
   //   passwordPrompt: '비밀번호를 입력하세요',
+  emptySearchMessage: '일치하는 결과 없음',
 };
 
 export default koreanLocale;

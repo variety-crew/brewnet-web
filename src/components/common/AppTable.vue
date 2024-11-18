@@ -1,6 +1,7 @@
 <template>
   <div>
     <DataTable
+      ref="dt"
       :value="paginatedData"
       size="small"
       :pt="{
@@ -38,6 +39,15 @@
               severity="secondary"
               size="small"
               @click="emit('reload')"
+            />
+            <Button
+              v-if="showExcelExport"
+              icon="pi pi-download"
+              label="엑셀 다운로드"
+              size="small"
+              variant="outlined"
+              severity="secondary"
+              @click="exportCSV($event)"
             />
             <Button
               v-if="addButton"
@@ -92,9 +102,15 @@
 </template>
 
 <script setup>
-const { paginatedData, columns, rowsPerPage, totalElements, addButton } = defineProps({
+import { ref } from 'vue';
+
+const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcelExport } = defineProps({
   paginatedData: {
     type: Array,
+    required: true,
+  },
+  totalElements: {
+    type: Number,
     required: true,
   },
   columns: {
@@ -127,10 +143,6 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton } = define
     required: false,
     default: 15,
   },
-  totalElements: {
-    type: Number,
-    required: true,
-  },
   addButton: {
     type: Object,
     required: false,
@@ -144,9 +156,19 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton } = define
    *   clickHandler: () => void  // 버튼 클릭 핸들러 메소드
    * }
    */
+  showExcelExport: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['changePage', 'reload']);
+
+const dt = ref();
+const exportCSV = () => {
+  dt.value.exportCSV();
+};
 </script>
 
 <style scoped>

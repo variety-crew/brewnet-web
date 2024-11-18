@@ -114,6 +114,14 @@ const routes = [
             },
           },
           {
+            path: 'franchise/:franchiseCode/edit',
+            name: 'hq:partner:franchise:edit',
+            component: () => import('@/views/headQuarter/FranchiseFormView.vue'),
+            meta: {
+              breadcrumb: '가맹점 수정',
+            },
+          },
+          {
             path: 'franchise-account/list',
             name: 'hq:partner:franchise-account:list',
             component: () => import('@/views/headQuarter/FranchiseAccountListView.vue'),

@@ -12,6 +12,8 @@
       @change-page="onChangePage"
       @reload="reload"
     />
+
+    <DynamicDialog />
   </div>
 </template>
 
@@ -31,7 +33,7 @@ const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuart
 
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
-const { openDialog } = useModal();
+const { openModal } = useModal();
 
 const nameKeyword = ref('');
 const employees = ref([]);
@@ -44,7 +46,7 @@ function onClickEdit(data) {
 }
 
 function onClickEditRole(data) {
-  openDialog({ component: EditMemberRole, header: '권한 설정', data: { member: data } });
+  openModal({ component: EditMemberRole, header: '권한 설정', data: { member: data } });
 }
 
 function onAcceptRemove() {
