@@ -9,7 +9,7 @@
           </p>
         </td>
         <td>
-          <Button label="수정" size="small" />
+          <Button label="수정" size="small" @click="clickEdit(approvalLine)" />
         </td>
       </tr>
     </table>
@@ -19,10 +19,27 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
+import EditApprovalLineModalBody from '@/components/headQuarter/EditApprovalLineModalBody.vue';
+import { useModal } from '@/hooks/useModal';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { mockupApprovalLines } from '@/utils/mockup';
 
+const { openDialog } = useModal();
+
 const approvalLines = ref([]);
+
+let editingCode = null;
+
+const clickEdit = target => {
+  editingCode = target.code;
+  openDialog({
+    component: EditApprovalLineModalBody,
+    header: `${target.title} 수정`,
+    data: {
+      targetApprovalLine: target,
+    },
+  });
+};
 
 onMounted(() => {
   approvalLines.value = [...mockupApprovalLines];
