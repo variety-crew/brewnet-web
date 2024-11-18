@@ -1,7 +1,7 @@
 <template>
   <div>
     <SearchArea>
-      <AppDateRangePicker v-model="searchDates" label="사용일자" />
+      <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="사용일자" />
     </SearchArea>
 
     <AppTable
@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { computed, onMounted, ref } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -26,7 +27,8 @@ const histories = ref([]);
 const paginatedHistories = computed(() => {
   return histories.value.slice(0, 15);
 });
-const searchDates = ref([]);
+const startDate = ref(dayjs().subtract(1, 'year').toDate());
+const endDate = ref(new Date());
 
 const onClickSign = data => {
   console.log(data);

@@ -1,40 +1,54 @@
 <template>
   <AppFormField :label="label">
-    <div class="date-range-wrapper"></div>
+    <div class="app-date-range-picker-wrapper">
+      <DatePicker
+        :model-value="start"
+        :max-date="end"
+        show-icon
+        icon-display="input"
+        show-button-bar
+        @update:model-value="onChangeStart"
+      />
+      <i class="pi pi-arrow-right"></i>
+      <DatePicker
+        :model-value="end"
+        :min-date="start"
+        show-icon
+        icon-display="input"
+        show-button-bar
+        @update:model-value="onChangeEnd"
+      />
+    </div>
   </AppFormField>
 </template>
 
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue } = defineProps({
+const { label } = defineProps({
   label: {
     type: String,
     required: false,
     default: '',
   },
-  modelValue: {
-    type: Array,
-    required: true,
-    default: () => [null, null],
-  },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const start = defineModel('start', { type: Date });
+const end = defineModel('end', { type: Date });
 
-const onChangeStart = event => {
-  console.log(event);
-  // emit('update:modelValue', )
+const onChangeStart = newValue => {
+  start.value = newValue;
 };
 
-const onChangeEnd = event => {
-  console.log(event);
+const onChangeEnd = newValue => {
+  end.value = newValue;
 };
 </script>
 
 <style scoped>
-.date-range-wrapper {
-  border: 1px solid var(--p-surface-200);
-  width: fit-content;
+.app-date-range-picker-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 </style>
