@@ -1,5 +1,5 @@
 <template>
-  <AppFormField :label="label">
+  <AppFormField :label="label" :full-width="fullWidth">
     <Password
       :value="modelValue"
       :name="name"
