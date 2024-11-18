@@ -12,7 +12,7 @@
         class="mb-2"
         icon="pi pi-search"
         full-width
-        @on-focus="onFocusInput"
+        @on-click="onClickSearchAddress"
       />
       <AppInputText v-model="addressDetail" placeholder="상세주소 입력" />
     </div>
@@ -25,26 +25,25 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { ref } from 'vue';
+import { defineAsyncComponent, ref } from 'vue';
 
-import AppFormField from '@/components/common/form/AppFormField.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import { useModal } from '@/hooks/useModal';
+
+const SearchAddressModalBody = defineAsyncComponent(
+  () => import('@/components/headQuarter/SearchAddressModalBody.vue'),
+);
 
 const toast = useToast();
+const { openModal } = useModal();
 
 const franchiseName = ref('');
 const addressDetail = ref('');
 const contact = ref('');
 const address = ref('');
-const addressKeyword = ref('');
-const addressSuggestions = ref([]);
 
-const onChangeAddressKeyword = event => {
-  addressSuggestions.value = [];
-};
-
-const onFocusInput = () => {
-  console.log('주소검색 진행');
+const onClickSearchAddress = () => {
+  openModal({ component: SearchAddressModalBody, header: '주소 검색' });
 };
 
 const checkForm = () => {

@@ -1,7 +1,7 @@
 <template>
   <AppFormField :label="label" :full-width="fullWidth">
     <IconField v-if="icon">
-      <InputIcon :class="icon" />
+      <InputIcon v-if="iconPosition === 'start'" :class="icon" />
       <InputText
         :value="modelValue"
         size="small"
@@ -10,8 +10,9 @@
         :fluid="fullWidth"
         :readonly="readOnly"
         @input="onChangeInput"
-        @focus="onFocusInput"
+        @click="onClickInput"
       />
+      <InputIcon v-if="iconPosition === 'end'" :class="icon" />
     </IconField>
     <template v-else>
       <InputText
@@ -30,7 +31,7 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue, name, placeholder, fullWidth, readOnly, icon } = defineProps({
+const { label, modelValue, name, placeholder, fullWidth, readOnly, icon, iconPosition } = defineProps({
   label: {
     type: String,
     required: false,
@@ -65,16 +66,21 @@ const { label, modelValue, name, placeholder, fullWidth, readOnly, icon } = defi
     required: false,
     default: null,
   },
+  iconPosition: {
+    type: String, // start, end
+    required: false,
+    default: 'start',
+  },
 });
 
-const emit = defineEmits(['update:modelValue', 'onFocus']);
+const emit = defineEmits(['update:modelValue', 'onClick']);
 
 function onChangeInput(event) {
   emit('update:modelValue', event.target.value);
 }
 
-function onFocusInput() {
-  emit('onFocus');
+function onClickInput() {
+  emit('onClick');
 }
 </script>
 
