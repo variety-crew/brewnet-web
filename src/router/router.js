@@ -218,6 +218,14 @@ const routes = [
               breadcrumb: '법인인감 사용내역',
             },
           },
+          {
+            path: 'approval-line',
+            name: 'hq:settings:approval-line',
+            component: () => import('@/views/headQuarter/ApprovalLineView.vue'),
+            meta: {
+              breadcrumb: '결재라인 조회',
+            },
+          },
         ],
       },
     ],

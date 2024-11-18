@@ -5,17 +5,27 @@
 
     <!-- footer -->
     <div v-if="actionButtonLabel" class="btn-area">
-      <Button :label="actionButtonLabel" size="small" @click="emit('clickActionButton')" />
+      <Button
+        :label="actionButtonLabel"
+        size="small"
+        :disabled="disabledActionButton"
+        @click="emit('clickActionButton')"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-const { actionButtonLabel } = defineProps({
+const { actionButtonLabel, disabledActionButton } = defineProps({
   actionButtonLabel: {
     type: String,
     required: false,
     default: '',
+  },
+  disabledActionButton: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 
