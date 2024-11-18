@@ -1,4 +1,5 @@
 @import './base.css';
+@import './custom-primevue.css';
 
 #app {
     height: 100dvh;
