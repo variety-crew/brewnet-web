@@ -30,7 +30,7 @@ const paginatedHistories = computed(() => {
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
 
-const onClickSign = data => {
+const onClickUploadSignature = data => {
   console.log(data);
 };
 
@@ -43,7 +43,7 @@ const columns = [
     field: '',
     header: '서명',
     template: {
-      button: [{ label: '보기', clickHandler: onClickSign }],
+      button: [{ label: '보기', clickHandler: onClickUploadSignature }],
     },
   },
 ];

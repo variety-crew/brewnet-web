@@ -248,6 +248,12 @@ const routes = [
             component: () => import('@/views/headQuarter/ChangePasswordView.vue'),
             meta: { breadcrumb: '비밀번호 변경' },
           },
+          {
+            path: 'upload-signature',
+            name: 'hq:my:upload-signature',
+            component: () => import('@/views/headQuarter/UploadSignatureView.vue'),
+            meta: { breadcrumb: '서명 등록' },
+          },
         ],
       },
     ],

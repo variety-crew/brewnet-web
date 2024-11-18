@@ -11,7 +11,7 @@ export const useUserStore = defineStore(
     const email = ref('');
     const phone = ref('');
     const position = ref('');
-    const signUrl = ref('');
+    const signature = ref('');
 
     const loginByHeadQuarter = () => {
       loginId.value = 'iamhq';
@@ -47,7 +47,7 @@ export const useUserStore = defineStore(
       email.value = '';
       phone.value = '';
       position.value = '';
-      signUrl.value = '';
+      signature.value = '';
     };
 
     return {
@@ -58,7 +58,7 @@ export const useUserStore = defineStore(
       email,
       phone,
       position,
-      signUrl,
+      signature,
       loginByHeadQuarter,
       loginByFranchise,
       loginByDelivery,

@@ -76,7 +76,16 @@ export default class AppMenu {
     }
 
     if (currentRouteName.includes('hq:my')) {
-      return [{ label: 'My', items: [this.#makeMenu('내 정보 조회', 'hq:my:info')] }];
+      return [
+        {
+          label: 'My',
+          items: [
+            this.#makeMenu('내 정보 조회', 'hq:my:info'),
+            this.#makeMenu('비밀번호 변경', 'hq:my:change-password'),
+            this.#makeMenu('서명 등록', 'hq:my:upload-signature'),
+          ],
+        },
+      ];
     }
 
     // 가맹점
