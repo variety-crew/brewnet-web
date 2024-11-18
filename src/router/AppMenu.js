@@ -75,6 +75,10 @@ export default class AppMenu {
       ];
     }
 
+    if (currentRouteName.includes('hq:my')) {
+      return [{ label: 'My', items: [this.#makeMenu('내 정보 조회', 'hq:my:info')] }];
+    }
+
     // 가맹점
     if (currentRouteName.includes('fc:home')) {
       return [

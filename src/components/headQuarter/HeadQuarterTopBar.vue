@@ -63,6 +63,7 @@ const { showConfirm } = useAppConfirmModal();
 
 const userMenu = ref();
 const userMenus = ref([
+  { label: '내 정보', icon: 'pi pi-user', command: clickMyPage },
   {
     label: '로그아웃',
     icon: 'pi pi-sign-out',
@@ -89,6 +90,10 @@ function clickLogout() {
     acceptLabel: '로그아웃',
     onAccept: handleLogout,
   });
+}
+
+function clickMyPage() {
+  router.push({ name: 'hq:my' });
 }
 </script>
 
