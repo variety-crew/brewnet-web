@@ -48,6 +48,7 @@ export default class AppMenu {
             this.#makeMenu('임직원 등록', 'hq:settings:employee:create'),
           ],
         },
+        { label: '결재라인', items: [this.#makeMenu('결재라인 조회', 'hq:settings:approval-line')] },
         {
           label: '법인인감',
           items: [
