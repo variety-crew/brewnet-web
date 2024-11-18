@@ -228,6 +228,34 @@ const routes = [
           },
         ],
       },
+      {
+        path: 'my',
+        name: 'hq:my',
+        component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
+        meta: {
+          breadcrumb: '마이페이지',
+        },
+        children: [
+          {
+            path: 'info',
+            name: 'hq:my:info',
+            component: () => import('@/views/headQuarter/MyInfoView.vue'),
+            meta: { breadcrumb: '내 정보 조회' },
+          },
+          {
+            path: 'change-password',
+            name: 'hq:my:change-password',
+            component: () => import('@/views/headQuarter/ChangePasswordView.vue'),
+            meta: { breadcrumb: '비밀번호 변경' },
+          },
+          {
+            path: 'upload-signature',
+            name: 'hq:my:upload-signature',
+            component: () => import('@/views/headQuarter/UploadSignatureView.vue'),
+            meta: { breadcrumb: '서명 등록' },
+          },
+        ],
+      },
     ],
   },
 
@@ -411,6 +439,10 @@ router.beforeEach((to, from) => {
     return {
       name: 'hq:partner:franchise:list',
     };
+  }
+
+  if (to.name === 'hq:my') {
+    return { name: 'hq:my:info' };
   }
 
   // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 가맹점
