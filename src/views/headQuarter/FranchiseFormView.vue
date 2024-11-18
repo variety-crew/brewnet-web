@@ -12,6 +12,7 @@
         class="mb-2"
         icon="pi pi-search"
         full-width
+        icon-position="end"
         @on-click="onClickSearchAddress"
       />
       <AppInputText v-model="addressDetail" placeholder="상세주소 입력" />
