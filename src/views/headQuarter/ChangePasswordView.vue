@@ -1,27 +1,25 @@
 <template>
-  <div class="change-password-container">
-    <AuthorizationRequiredArea v-model="isAuthorized">
-      <form class="change-password-form-container" @submit.prevent="onSubmit">
-        <AppInputPassword
-          v-model="password"
-          placeholder="새로운 비밀번호 입력"
-          name="password"
-          class="mb-2"
-          full-width
-          label="새 비밀번호"
-        />
-        <AppInputPassword
-          v-model="confirmPassword"
-          placeholder="비밀번호 재입력"
-          name="confirmPassword"
-          full-width
-          class="mb-5"
-        />
+  <AuthorizationRequiredArea v-model="isAuthorized">
+    <form class="change-password-form-container" @submit.prevent="onSubmit">
+      <AppInputPassword
+        v-model="password"
+        placeholder="새로운 비밀번호 입력"
+        name="password"
+        class="mb-2"
+        full-width
+        label="새 비밀번호"
+      />
+      <AppInputPassword
+        v-model="confirmPassword"
+        placeholder="비밀번호 재입력"
+        name="confirmPassword"
+        full-width
+        class="mb-5"
+      />
 
-        <Button type="submit" label="비밀번호 변경" size="small" fluid />
-      </form>
-    </AuthorizationRequiredArea>
-  </div>
+      <Button type="submit" label="비밀번호 변경" size="small" fluid />
+    </form>
+  </AuthorizationRequiredArea>
 </template>
 
 <script setup>
