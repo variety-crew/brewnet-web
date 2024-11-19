@@ -1,5 +1,10 @@
 <template>
   <div>
+    <SearchArea>
+      <AppInputText v-model="titleKeyword" label="제목" />
+      <AppInputText v-model="authorKeyword" label="작성자" />
+    </SearchArea>
+
     <AppTable
       :columns="columns"
       :paginated-data="paginatedNotices"
@@ -14,6 +19,8 @@
 import { computed, onMounted, ref } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppInputText from '@/components/common/form/AppInputText.vue';
+import SearchArea from '@/components/common/SearchArea.vue';
 import { mockupNotices } from '@/utils/mockup';
 
 const notices = ref([]);
