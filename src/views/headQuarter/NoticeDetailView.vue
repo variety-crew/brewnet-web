@@ -66,13 +66,15 @@ const clickDelete = () => {
   });
 };
 
+const clickEdit = () => {
+  router.push({ name: 'hq:board:notice:edit', params: { noticeCode: route.params.noticeCode } });
+};
+
 const items = ref([
   {
     label: '수정',
     icon: 'pi pi-pen-to-square',
-    command: () => {
-      toast.add({ severity: 'success', summary: 'Update', detail: 'Data Updated', life: 3000 });
-    },
+    command: clickEdit,
   },
   {
     label: '삭제',
