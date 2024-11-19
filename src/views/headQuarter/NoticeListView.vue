@@ -16,15 +16,19 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { mockupNotices } from '@/utils/mockup';
 
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
+const toast = useToast();
 
 const notices = ref([]);
 const paginatedNotices = computed(() => {
@@ -40,6 +44,20 @@ const clickDetail = data => {
 
 const clickEdit = data => {
   router.push({ name: 'hq:board:notice:edit', params: { noticeCode: data.code } });
+};
+
+const onDelete = () => {
+  router.replace({ name: 'hq:board:notice:list' });
+  toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항 글이 삭제되었습니다.', life: 3000 });
+};
+const clickDelete = () => {
+  showConfirm({
+    header: '글 삭제',
+    message: '공지사항 글을 삭제하시겠습니까?',
+    acceptLabel: '글 삭제',
+    danger: true,
+    onAccept: onDelete,
+  });
 };
 
 const columns = [
@@ -59,6 +77,10 @@ const columns = [
         {
           label: '수정',
           clickHandler: clickEdit,
+        },
+        {
+          label: '삭제',
+          clickHandler: clickDelete,
         },
       ],
     },

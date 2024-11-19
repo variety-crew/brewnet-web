@@ -36,17 +36,35 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppImageList from '@/components/common/AppImageList.vue';
 import EmptyContent from '@/components/common/EmptyContent.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { mockupNotices } from '@/utils/mockup';
 
 const route = useRoute();
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
+const toast = useToast();
 
 const notice = ref(null);
+
+const onDelete = () => {
+  router.replace({ name: 'hq:board:notice:list' });
+  toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항 글이 삭제되었습니다.', life: 3000 });
+};
+const clickDelete = () => {
+  showConfirm({
+    header: '글 삭제',
+    message: '공지사항 글을 삭제하시겠습니까?',
+    acceptLabel: '글 삭제',
+    danger: true,
+    onAccept: onDelete,
+  });
+};
 
 const items = ref([
   {
@@ -59,9 +77,7 @@ const items = ref([
   {
     label: '삭제',
     icon: 'pi pi-trash',
-    command: () => {
-      toast.add({ severity: 'error', summary: 'Delete', detail: 'Data Deleted', life: 3000 });
-    },
+    command: clickDelete,
   },
 ]);
 
