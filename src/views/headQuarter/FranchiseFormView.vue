@@ -19,6 +19,8 @@
     </div>
 
     <AppInputText v-model="contact" label="가맹점 연락처" />
+    <AppInputText v-model="businessNumber" label="사업자등록번호" placeholder="-없이 숫자만 입력" />
+    <AppInputText v-model="ceo" label="대표자명" />
 
     <Button type="submit" label="저장" size="small" />
 
@@ -47,6 +49,8 @@ const franchiseName = ref('');
 const address = ref('');
 const addressDetail = ref('');
 const contact = ref('');
+const businessNumber = ref('');
+const ceo = ref('');
 const editMode = ref(false);
 
 const choose = data => {
@@ -62,6 +66,8 @@ const checkForm = () => {
     if (!franchiseName.value) throw new Error('지점명을 입력해주세요.');
     if (!address.value) throw new Error('주소검색을 통해 가맹점 주소를 입력해주세요.');
     if (!contact.value) throw new Error('가맹점 연락처를 입력해주세요.');
+    if (!businessNumber.value) throw new Error('사업자등록번호를 입력해주세요.');
+    if (!ceo.value) throw new Error('대표자명을 입력해주세요.');
 
     return true;
   } catch (e) {
@@ -86,8 +92,10 @@ watch(
 
       franchiseName.value = foundFranchise.franchiseName;
       address.value = foundFranchise.address;
-      addressDetail.value = foundFranchise.address;
+      addressDetail.value = foundFranchise.detailAddress;
       contact.value = foundFranchise.contact;
+      businessNumber.value = foundFranchise.businessNumber;
+      ceo.value = foundFranchise.ceo;
     } else {
       // 생성모드는 값 초기화
       editMode.value = false;
@@ -96,6 +104,8 @@ watch(
       address.value = '';
       addressDetail.value = '';
       contact.value = '';
+      businessNumber.value = '';
+      ceo.value = '';
     }
   },
   { immediate: true },

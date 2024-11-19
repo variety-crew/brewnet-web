@@ -47,18 +47,18 @@ export const mockupFranchiseAccounts = [
 ];
 
 // 가맹점
-function makeMockFranchise(code, franchiseName, address, city, province, businessNumber, ceo, contact, createdAt) {
-  return { code, franchiseName, address, city, province, businessNumber, ceo, contact, createdAt };
+function makeMockFranchise(code, franchiseName, city, address, detailAddress, businessNumber, ceo, contact, createdAt) {
+  return { code, franchiseName, city, address, detailAddress, businessNumber, ceo, contact, createdAt };
 }
 
 export const mockupFranchises = [
   makeMockFranchise(
     1,
     'CoffeeHouse A',
+    '서울',
     '123 Main St',
-    'Seoul',
-    'Seoul',
-    '111-111-111',
+    '111번지',
+    '111-11-11111',
     '노다민',
     '010-1234-5678',
     '2024-01-01 08:00:00',
@@ -66,10 +66,10 @@ export const mockupFranchises = [
   makeMockFranchise(
     2,
     'CoffeeHouse B',
+    '부산',
     '456 Maple St',
-    'Busan',
-    'Busan',
-    '111-111-222',
+    '222번지',
+    '111-11-22222',
     '양현진',
     '010-2345-6789',
     '2024-01-02 09:00:00',
@@ -77,10 +77,10 @@ export const mockupFranchises = [
   makeMockFranchise(
     3,
     'CoffeeHouse C',
+    '인천',
     '789 Oak St',
-    'Incheon',
-    'Incheon',
-    '111-111-333',
+    '333번지',
+    '111-11-33333',
     '용길한',
     '010-3456-7890',
     '2024-01-03 10:00:00',
@@ -88,10 +88,10 @@ export const mockupFranchises = [
   makeMockFranchise(
     4,
     'CoffeeHouse D',
+    '대구',
     '101 Pine St',
-    'Daegu',
-    'Gyeongsang',
-    '111-111-444',
+    '444번지',
+    '111-11-44444',
     '장호정',
     '010-4567-8901',
     '2024-01-04 11:00:00',
@@ -99,10 +99,10 @@ export const mockupFranchises = [
   makeMockFranchise(
     5,
     'CoffeeHouse E',
+    '전라남도',
     '202 Cedar St',
-    'Gwangju',
-    'Jeolla',
-    '111-111-555',
+    '555번지',
+    '111-11-55555',
     '정준서',
     '010-5678-9012',
     '2024-01-05 12:00:00',
