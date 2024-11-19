@@ -1,18 +1,83 @@
 <template>
   <div>
-    교환요청 목록
-    <Button label="상세보기(디자인 마음대로 수정해주세요!!)" @click="goToDetail" />
+    <!-- 검색 area -->
+    <SearchArea>
+      <!-- <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" /> -->
+    </SearchArea>
+
+    <AppTable
+      :paginated-data="paginatedExchanges"
+      :columns="columns"
+      :total-elements="exchanges.length"
+      @change-page="onChangePage"
+      @reload="reload"
+    />
+
+    <DynamicDialog />
   </div>
 </template>
 
 <script setup>
+import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
+import AppTable from '@/components/common/AppTable.vue';
+import AppInputText from '@/components/common/form/AppInputText.vue';
+import SearchArea from '@/components/common/SearchArea.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { useModal } from '@/hooks/useModal';
+import { formatKoExchangeReason } from '@/utils/format';
+import { mockupExchanges } from '@/utils/mockup';
+
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
+const { openModal } = useModal();
+
+const nameKeyword = ref('');
+const exchanges = ref([]);
+const paginatedExchanges = computed(() => {
+  return exchanges.value.slice(0, 15);
+});
 
 const goToDetail = () => {
   router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode: 'dddd' } });
 };
+
+const columns = [
+  { field: 'exchangeCode', header: '교환번호', sortable: true },
+  { field: 'franchiseName', header: '교환요청지점' },
+  { field: 'itemName', header: '교환품목명' },
+  { field: 'reason', header: '교환사유', render: formatKoExchangeReason, sortable: true },
+  { field: 'status', header: '교환상태' },
+  { field: 'memberCode', header: '교환담당자' },
+  { field: 'createdAt', header: '교환요청일자' },
+  // { field: 'approved', header: '교환승인여부' },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
+        {
+          label: '상세보기',
+          clickHandler: goToDetail,
+        },
+      ],
+    },
+  },
+];
+
+const onChangePage = event => {
+  const { page } = event;
+  console.log(page, '페이지로 변경되었다!');
+};
+
+const reload = () => {
+  console.log('reload 테이블');
+};
+
+onMounted(() => {
+  exchanges.value = [...mockupExchanges];
+});
 </script>
 
 <style scoped></style>

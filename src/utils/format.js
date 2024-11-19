@@ -38,3 +38,19 @@ export const formatKoMemberRole = role => {
       return '';
   }
 };
+
+export const formatKoExchangeReason = reason => {
+  switch (reason) {
+    case 'DAMAGED':
+      return '파손';
+
+    case 'DEFECTIVE':
+      return '품질불량';
+
+    case 'OTHER':
+      return '기타';
+
+    default:
+      return '';
+  }
+};
