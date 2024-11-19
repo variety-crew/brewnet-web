@@ -75,6 +75,18 @@ export default class AppMenu {
       ];
     }
 
+    if (currentRouteName.includes('hq:board')) {
+      return [
+        {
+          label: '공지사항',
+          items: [
+            this.#makeMenu('공지사항 조회', 'hq:board:notice:list'),
+            this.#makeMenu('공지사항 등록', 'hq:board:notice:create'),
+          ],
+        },
+      ];
+    }
+
     if (currentRouteName.includes('hq:my')) {
       return [
         {
