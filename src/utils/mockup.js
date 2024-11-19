@@ -153,7 +153,10 @@ function makeMockNotice(code, title, content, createdAt, author, images) {
 }
 
 export const mockupNotices = [
-  makeMockNotice(1, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(1, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', [
+    'https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg',
+    'https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg',
+  ]),
   makeMockNotice(2, '주문 시 공지사항 업데이트', '내용', '2024-11-10 11:11:11', '홍길동', []),
   makeMockNotice(3, '주문 시 공지사항 업데이트', '내용', '2024-11-09 11:11:11', '홍길동', []),
   makeMockNotice(4, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),

@@ -33,8 +33,9 @@ const paginatedNotices = computed(() => {
 const titleKeyword = ref('');
 const authorKeyword = ref('');
 
-const clickDetail = () => {
+const clickDetail = data => {
   // 공지사항 상세보기
+  router.push({ name: 'hq:board:notice:detail', params: { noticeCode: data.code } });
 };
 
 const clickEdit = data => {

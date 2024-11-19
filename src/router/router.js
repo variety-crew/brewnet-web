@@ -211,6 +211,14 @@ const routes = [
             },
           },
           {
+            path: 'notice/:noticeCode/detail',
+            name: 'hq:board:notice:detail',
+            component: () => import('@/views/headQuarter/NoticeDetailView.vue'),
+            meta: {
+              breadcrumb: '공지사항 상세',
+            },
+          },
+          {
             path: 'notice/create',
             name: 'hq:board:notice:create',
             component: () => import('@/views/headQuarter/NoticeFormView.vue'),
