@@ -2,7 +2,9 @@
   <div>
     <!-- 검색 area -->
     <SearchArea>
-      <!-- <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" /> -->
+      <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="사용일자" />
+      <!-- <AppSelect v-model="position" label="직급" :options="positionOptions" :initial-value="initialPosition" /> -->
+      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
     </SearchArea>
 
     <AppTable
@@ -39,8 +41,8 @@ const paginatedExchanges = computed(() => {
   return exchanges.value.slice(0, 15);
 });
 
-const goToDetail = () => {
-  router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode: 'dddd' } });
+const goToDetail = exchangeCode => {
+  router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode } });
 };
 
 const columns = [
@@ -51,7 +53,6 @@ const columns = [
   { field: 'status', header: '교환상태', render: formatKoExchangeStatus },
   { field: 'memberCode', header: '교환담당자' },
   { field: 'createdAt', header: '교환요청일자' },
-  // { field: 'approved', header: '교환승인여부' },
   {
     field: '',
     header: '',
@@ -59,7 +60,7 @@ const columns = [
       button: [
         {
           label: '상세보기',
-          clickHandler: goToDetail,
+          clickHandler: rowData => goToDetail(rowData.exchangeCode),
         },
       ],
     },
