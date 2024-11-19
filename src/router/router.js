@@ -88,6 +88,43 @@ const routes = [
         path: 'order',
         name: 'hq:order',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
+        meta: {
+          breadcrumb: '주문/교환/반품',
+        },
+        children: [
+          {
+            path: 'exchange/list',
+            name: 'hq:order:exchange:list',
+            component: () => import('@/views/headQuarter/ExchangeListView.vue'),
+            meta: {
+              breadcrumb: '교환요청 관리',
+            },
+          },
+          {
+            path: 'exchange/:exchangeCode/detail',
+            name: 'hq:order:exchange:detail',
+            component: () => import('@/views/headQuarter/ExchangeDetailView.vue'),
+            meta: {
+              breadcrumb: '교환요청 상세',
+            },
+          },
+          {
+            path: 'return/list',
+            name: 'hq:order:return:list',
+            component: () => import('@/views/headQuarter/ReturnListView.vue'),
+            meta: {
+              breadcrumb: '반품요청 관리',
+            },
+          },
+          {
+            path: 'return/:returnCode/detail',
+            name: 'hq:order:return:detail',
+            component: () => import('@/views/headQuarter/ReturnDetailView.vue'),
+            meta: {
+              breadcrumb: '반품요청 상세',
+            },
+          },
+        ],
       },
       {
         path: 'partner',
