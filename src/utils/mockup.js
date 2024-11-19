@@ -146,3 +146,27 @@ export const mockupApprovalLines = [
   { code: 'exchange', title: '교환 결재라인', positions: ['MANAGER'] },
   { code: 'return', title: '반품 결재라인', positions: [] },
 ];
+
+// 공지사항
+function makeMockNotice(code, title, content, createdAt, author, images) {
+  return { code, title, content, createdAt, author, images };
+}
+
+export const mockupNotices = [
+  makeMockNotice(1, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', [
+    'https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg',
+    'https://primefaces.org/cdn/primevue/images/galleria/galleria10.jpg',
+  ]),
+  makeMockNotice(2, '주문 시 공지사항 업데이트', '내용', '2024-11-10 11:11:11', '홍길동', []),
+  makeMockNotice(3, '주문 시 공지사항 업데이트', '내용', '2024-11-09 11:11:11', '홍길동', []),
+  makeMockNotice(4, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(5, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(6, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(7, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(8, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(9, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(10, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(11, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(12, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+  makeMockNotice(13, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
+];
