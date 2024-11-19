@@ -5,7 +5,7 @@
 
     <main>
       <Breadcrumb :home="home" :model="breadcrumbs" />
-      <h2>{{ currentPageTitle }}</h2>
+      <h3 class="page-title">{{ currentPageTitle }}</h3>
       <div class="content">
         <RouterView />
       </div>
@@ -52,7 +52,7 @@ const home = ref({
     overflow-y: auto;
     border: 1px solid var(--p-content-border-color);
 
-    h2 {
+    .page-title {
       margin: 0 14px;
       padding-left: 10px;
       border-left: 5px solid var(--p-primary-600);
