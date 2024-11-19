@@ -10,9 +10,9 @@
       </button>
       <input ref="inputRef" type="file" accept="image/*" multiple style="display: none" @change="changeFile" />
 
-      <ul v-if="uploadImages.length > 0" class="upload-image-list">
+      <ul v-if="noticeImages.length > 0" class="upload-image-list">
         <li
-          v-for="(uploadImage, i) in uploadImages"
+          v-for="(uploadImage, i) in noticeImages"
           :key="uploadImage"
           :style="{ backgroundImage: `url(${uploadImage})` }"
           class="upload-image-item"
@@ -35,18 +35,20 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { onUnmounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { onUnmounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import { mockupNotices } from '@/utils/mockup';
 
 const toast = useToast();
 const router = useRouter();
+const route = useRoute();
 
 const title = ref('');
 const content = ref('');
 const inputRef = ref();
-const uploadImages = ref([]);
+const noticeImages = ref([]);
 
 const checkForm = () => {
   try {
@@ -77,17 +79,44 @@ const changeFile = event => {
   const { files } = event.target;
   if (files.length > 0) {
     const newImages = Array.from(files).map(e => URL.createObjectURL(e));
-    uploadImages.value = uploadImages.value.concat(newImages);
+    noticeImages.value = noticeImages.value.concat(newImages);
   }
 };
 
 const clickRemoveImage = targetIndex => {
-  uploadImages.value = uploadImages.value.filter((e, i) => i !== targetIndex);
+  noticeImages.value = noticeImages.value.filter((e, i) => i !== targetIndex);
 };
+
+watch(
+  () => route.params.noticeCode,
+  newVal => {
+    if (newVal) {
+      // 수정모드
+      const foundNotice = mockupNotices.find(e => e.code == newVal);
+      if (!foundNotice) {
+        toast.add({ severity: 'error', summary: '처리 실패', detail: '공지사항 글을 찾을 수 없습니다.', life: 3000 });
+        router.back();
+        return;
+      }
+
+      title.value = foundNotice.title;
+      content.value = foundNotice.content;
+      noticeImages.value = [...foundNotice.images];
+    } else {
+      // 등록모드
+      title.value = '';
+      content.value = '';
+      noticeImages.value = [];
+    }
+  },
+  { immediate: true },
+);
 
 onUnmounted(() => {
   // 남아있는 리소스 정리
-  uploadImages.value.forEach(e => URL.revokeObjectURL(e));
+  noticeImages.value.forEach(e => {
+    URL.revokeObjectURL(e);
+  });
 });
 </script>
 
