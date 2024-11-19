@@ -39,6 +39,19 @@ export default class AppMenu {
       ];
     }
 
+    if (currentRouteName.includes('hq:order')) {
+      return [
+        {
+          label: '교환',
+          items: [this.#makeMenu('교환요청 관리', 'hq:order:exchange:list')],
+        },
+        {
+          label: '반품',
+          items: [this.#makeMenu('반품요청 관리', 'hq:order:return:list')],
+        },
+      ];
+    }
+
     if (currentRouteName.includes('hq:settings')) {
       return [
         {
