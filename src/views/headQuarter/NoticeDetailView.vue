@@ -27,11 +27,10 @@
       </SpeedDial>
     </div>
 
-    <Divider />
-
-    <p>{{ notice.content }}</p>
-
-    <AppImageList :images="notice.images" />
+    <div class="bottom">
+      <p class="content">{{ notice.content }}</p>
+      <AppImageList :images="notice.images" vertical />
+    </div>
   </div>
   <EmptyContent v-else text="공지사항 글을 찾을 수 없습니다." fallback-label="돌아가기" @fallback="goBack" />
 </template>
@@ -81,11 +80,27 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    background-color: var(--p-primary-50);
 
     .left {
       .small {
         color: var(--p-surface-600);
       }
+    }
+  }
+
+  .top,
+  .bottom {
+    padding: 20px;
+  }
+
+  .bottom {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    .content {
+      flex-grow: 1;
     }
   }
 }

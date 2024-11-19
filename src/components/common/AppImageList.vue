@@ -1,5 +1,5 @@
 <template>
-  <ul class="app-image-list-container">
+  <ul class="app-image-list-container" :class="{ vertical }">
     <li v-for="(image, index) in images" :key="image" @click="clickImage(index)">
       <img :src="image" alt="이미지" />
       <div class="overlay"></div>
@@ -17,10 +17,16 @@
 <script setup>
 import { computed, ref } from 'vue';
 
-const { images } = defineProps({
+const { images, vertical } = defineProps({
   images: {
     type: Array,
     required: true,
+  },
+
+  vertical: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 
@@ -45,9 +51,12 @@ const closeModal = () => {
 .app-image-list-container {
   list-style-type: none;
   padding: 0;
-  margin-top: 32px;
   display: flex;
   gap: 10px;
+
+  &.vertical {
+    flex-direction: column;
+  }
 
   li {
     position: relative;
@@ -60,8 +69,8 @@ const closeModal = () => {
 
   img,
   .overlay {
-    width: 150px;
-    height: 150px;
+    width: 100px;
+    height: 100px;
   }
 
   .overlay {
