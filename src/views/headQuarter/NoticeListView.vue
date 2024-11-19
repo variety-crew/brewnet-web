@@ -27,12 +27,30 @@ const notices = ref([]);
 const paginatedNotices = computed(() => {
   return notices.value.slice(0, 15);
 });
+const titleKeyword = ref('');
+const authorKeyword = ref('');
+
+const clickDetail = () => {
+  // 공지사항 상세보기
+};
 
 const columns = [
   { field: 'code', header: '공지사항 코드' },
   { field: 'title', header: '제목' },
   { field: 'author', header: '작성자' },
   { field: 'createdAt', header: '작성일시', sortable: true },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
+        {
+          label: '상세보기',
+          clickHandler: clickDetail,
+        },
+      ],
+    },
+  },
 ];
 
 const onChangePage = event => {
