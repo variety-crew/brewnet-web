@@ -87,7 +87,10 @@ const columns = [
   { field: 'code', header: '가맹점코드' },
   { field: 'franchiseName', header: '지점명', sortable: true },
   { field: 'address', header: '주소' },
+  { field: 'detailAddress', header: '상세주소' },
   { field: 'contact', header: '연락처' },
+  { field: 'businessNumber', header: '사업자등록번호' },
+  { field: 'ceo', header: '대표자명' },
   {
     field: '',
     header: '',
