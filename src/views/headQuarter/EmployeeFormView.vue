@@ -98,13 +98,13 @@ const onFormSubmit = () => {
 };
 
 watch(
-  () => route.params.memberId,
+  () => route.params.memberCode,
   newVal => {
     // 수정모드인 경우 기본 값 설정
     if (newVal) {
       editMode.value = true;
 
-      const foundEmployee = mockupEmployees.find(e => e.code == route.params.memberId);
+      const foundEmployee = mockupEmployees.find(e => e.code == route.params.memberCode);
       if (!foundEmployee) return;
 
       loginId.value = foundEmployee.id;
