@@ -26,7 +26,7 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
-import { formatKoExchangeReason } from '@/utils/format';
+import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
 import { mockupExchanges } from '@/utils/mockup';
 
 const router = useRouter();
@@ -47,8 +47,8 @@ const columns = [
   { field: 'exchangeCode', header: '교환번호', sortable: true },
   { field: 'franchiseName', header: '교환요청지점' },
   { field: 'itemName', header: '교환품목명' },
-  { field: 'reason', header: '교환사유', render: formatKoExchangeReason, sortable: true },
-  { field: 'status', header: '교환상태' },
+  { field: 'reason', header: '교환사유', render: formatKoExchangeReason },
+  { field: 'status', header: '교환상태', render: formatKoExchangeStatus },
   { field: 'memberCode', header: '교환담당자' },
   { field: 'createdAt', header: '교환요청일자' },
   // { field: 'approved', header: '교환승인여부' },
