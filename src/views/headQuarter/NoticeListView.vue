@@ -17,11 +17,14 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { mockupNotices } from '@/utils/mockup';
+
+const router = useRouter();
 
 const notices = ref([]);
 const paginatedNotices = computed(() => {
@@ -32,6 +35,10 @@ const authorKeyword = ref('');
 
 const clickDetail = () => {
   // 공지사항 상세보기
+};
+
+const clickEdit = data => {
+  router.push({ name: 'hq:board:notice:edit', params: { noticeCode: data.code } });
 };
 
 const columns = [
@@ -47,6 +54,10 @@ const columns = [
         {
           label: '상세보기',
           clickHandler: clickDetail,
+        },
+        {
+          label: '수정',
+          clickHandler: clickEdit,
         },
       ],
     },
