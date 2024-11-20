@@ -38,3 +38,53 @@ export const formatKoMemberRole = role => {
       return '';
   }
 };
+
+export const formatKoExchangeReason = reason => {
+  switch (reason) {
+    case 'DAMAGED':
+      return '파손';
+
+    case 'DEFECTIVE':
+      return '품질불량';
+
+    case 'OTHER':
+      return '기타';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoExchangeStatus = status => {
+  switch (status) {
+    case 'REQUESTED':
+      return '교환요청';
+
+    case 'CANCELED':
+      return '교환취소';
+
+    case 'APPROVED':
+      return '교환승인';
+
+    case 'REJECTED':
+      return '교환반려';
+
+    case 'PICKING':
+      return '수거중';
+
+    case 'PICKED':
+      return '수거완료';
+
+    case 'SHIPPING':
+      return '배송중';
+
+    case 'SHIPPED':
+      return '배송완료';
+
+    case 'COMPLETED':
+      return '배송완료';
+
+    default:
+      return '';
+  }
+};
