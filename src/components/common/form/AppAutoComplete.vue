@@ -9,6 +9,7 @@
       :suggestions="suggestions"
       :placeholder="placeholder"
       @complete="emit('completeInput', $event)"
+      @item-select="itemSelected"
     >
       <template #option="slotProps">
         <div>{{ slotProps.option.label }}</div>
@@ -61,7 +62,11 @@ const { label, modelValue, fullWidth, suggestions, placeholder } = defineProps({
     default: undefined,
   },
 });
-const emit = defineEmits(['completeInput']);
+const emit = defineEmits(['completeInput', 'update:modelValue']);
+
+const itemSelected = e => {
+  emit('update:modelValue', e.value);
+};
 </script>
 
 <style scoped></style>
