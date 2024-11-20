@@ -1,5 +1,5 @@
 <template>
-  <Toolbar class="fc-topbar">
+  <AppNavbar class="fc-navbar">
     <template #start>
       <RouterLink :to="{ name: 'fc:home' }">
         <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
@@ -44,7 +44,7 @@
         </OverlayBadge>
       </nav>
     </template>
-  </Toolbar>
+  </AppNavbar>
 </template>
 
 <script setup>
@@ -54,6 +54,8 @@ import { useRouter } from 'vue-router';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import AppMenu from '@/router/AppMenu';
 import { useUserStore } from '@/stores/user';
+
+import AppNavbar from '../common/AppNavbar.vue';
 
 const appMenu = new AppMenu();
 
@@ -93,19 +95,12 @@ function clickLogout() {
 </script>
 
 <style scoped>
-.fc-topbar {
-  margin-bottom: 10px;
-  padding: 0 20px;
-
+.fc-navbar {
   .logo {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: contain;
-
-    &:hover {
-      opacity: 0.6;
-    }
   }
 
   nav {

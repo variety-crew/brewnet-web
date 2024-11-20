@@ -59,7 +59,25 @@
           </div>
         </div>
       </template>
-      <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" :sortable="col.sortable">
+      <Column
+        v-for="col of columns"
+        :key="col.field"
+        :field="col.field"
+        :header="col.header"
+        :sortable="col.sortable"
+        :pt="{
+          columnHeaderContent: {
+            style: {
+              'justify-content': 'center',
+            },
+          },
+          bodyCell: {
+            style: {
+              'text-align': col.alignment || 'center',
+            },
+          },
+        }"
+      >
         <!-- 태그로 표시할 경우 -->
         <template v-if="col.template?.tag" #body="{ data }">
           <Tag
@@ -136,6 +154,7 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *       }
    *     ]}
    *   }
+   *   alignment: string            // 정렬 ('left', 'center', 'right')
    * }]
    */
   rowsPerPage: {

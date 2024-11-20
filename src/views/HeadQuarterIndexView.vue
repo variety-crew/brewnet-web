@@ -13,7 +13,6 @@ import HeadQuarterTopBar from '@/components/headQuarter/HeadQuarterTopBar.vue';
 
 <style scoped>
 .hq-container {
-  padding: 10px 10px 10px 10px;
   display: flex;
   flex-direction: column;
   height: 100dvh;

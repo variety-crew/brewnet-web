@@ -175,7 +175,7 @@ const routes = [
             },
           },
           {
-            path: 'franchise-account/:memberId/edit',
+            path: 'franchise-account/:memberCode/edit',
             name: 'hq:partner:franchise-account:edit',
             component: () => import('@/views/headQuarter/FranchiseAccountFormView.vue'),
             meta: {
@@ -198,6 +198,43 @@ const routes = [
         path: 'board',
         name: 'hq:board',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
+        meta: {
+          breadcrumb: '게시판',
+        },
+        children: [
+          {
+            path: 'notice/list',
+            name: 'hq:board:notice:list',
+            component: () => import('@/views/headQuarter/NoticeListView.vue'),
+            meta: {
+              breadcrumb: '공지사항 조회',
+            },
+          },
+          {
+            path: 'notice/:noticeCode/detail',
+            name: 'hq:board:notice:detail',
+            component: () => import('@/views/headQuarter/NoticeDetailView.vue'),
+            meta: {
+              breadcrumb: '공지사항 상세',
+            },
+          },
+          {
+            path: 'notice/create',
+            name: 'hq:board:notice:create',
+            component: () => import('@/views/headQuarter/NoticeFormView.vue'),
+            meta: {
+              breadcrumb: '공지사항 등록',
+            },
+          },
+          {
+            path: 'notice/:noticeCode/edit',
+            name: 'hq:board:notice:edit',
+            component: () => import('@/views/headQuarter/NoticeFormView.vue'),
+            meta: {
+              breadcrumb: '공지사항 수정',
+            },
+          },
+        ],
       },
       {
         path: 'settings',
@@ -224,7 +261,7 @@ const routes = [
             },
           },
           {
-            path: 'employee/:memberId/edit',
+            path: 'employee/:memberCode/edit',
             name: 'hq:settings:employee:edit',
             component: () => import('@/views/headQuarter/EmployeeFormView.vue'),
             meta: {
@@ -483,6 +520,12 @@ router.beforeEach((to, from) => {
   if (to.name === 'hq:partner') {
     return {
       name: 'hq:partner:franchise:list',
+    };
+  }
+
+  if (to.name === 'hq:board') {
+    return {
+      name: 'hq:board:notice:list',
     };
   }
 

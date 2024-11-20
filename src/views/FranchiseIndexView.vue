@@ -13,7 +13,6 @@ import FranchiseTopBar from '@/components/franchise/FranchiseTopBar.vue';
 
 <style scoped>
 .fc-container {
-  padding: 10px 10px 10px 10px;
   display: flex;
   flex-direction: column;
   height: 100%;
