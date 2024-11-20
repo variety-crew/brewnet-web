@@ -67,6 +67,14 @@ const routes = [
             },
           },
           {
+            path: ':purchaseCode/detail',
+            name: 'hq:purchase:detail',
+            component: () => import('@/views/headQuarter/PurchaseDetailView.vue'),
+            meta: {
+              breadcrumb: '발주 상세',
+            },
+          },
+          {
             path: 'form',
             name: 'hq:purchase:form',
             component: () => import('@/views/headQuarter/PurchaseFormView.vue'),

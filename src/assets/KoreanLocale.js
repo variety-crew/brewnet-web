@@ -39,6 +39,7 @@ const koreanLocale = {
   //   strong: '강함',
   //   passwordPrompt: '비밀번호를 입력하세요',
   emptySearchMessage: '일치하는 결과 없음',
+  emptyMessage: '선택가능한 옵션 없음',
 };
 
 export default koreanLocale;

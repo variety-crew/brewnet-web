@@ -390,3 +390,14 @@ export const mockupItems = [
     '원두',
   ),
 ];
+
+// 창고
+function makeMockStorage(code, name, address, contact) {
+  return { code, name, address, contact };
+}
+export const mockupStorages = [
+  makeMockStorage(1, '센트럴 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+  makeMockStorage(2, '동부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+  makeMockStorage(3, '서부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+  makeMockStorage(4, '남부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+];
