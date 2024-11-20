@@ -1,6 +1,6 @@
 <template>
   <div class="approval-line-container">
-    <AppTableStyled>
+    <AppTableStyled full-width>
       <tr v-for="approvalLine in approvalLines" :key="approvalLine.code">
         <th>{{ approvalLine.title }}</th>
         <td>
@@ -55,7 +55,6 @@ onMounted(() => {
 <style scoped>
 .approval-line-container {
   table {
-    width: 100%;
     margin-top: 20px;
 
     tr > td:nth-child(3) {

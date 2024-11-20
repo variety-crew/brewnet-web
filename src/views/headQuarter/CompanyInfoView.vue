@@ -8,7 +8,7 @@
       </template>
     </div>
 
-    <AppTableStyled>
+    <AppTableStyled full-width>
       <tbody>
         <tr>
           <th>상호명</th>
@@ -134,7 +134,6 @@ watch(editMode, newVal => {
   }
 
   table {
-    width: 100%;
     margin-top: 20px;
   }
 }
