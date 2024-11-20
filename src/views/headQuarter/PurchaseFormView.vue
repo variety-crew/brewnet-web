@@ -14,7 +14,7 @@
       <thead>
         <tr>
           <th>
-            <AppCheck v-model="allCheck" />
+            <CheckBox v-model="allCheck" binary />
           </th>
           <th v-for="header in tableHeader" :key="header">{{ header }}</th>
         </tr>
@@ -22,18 +22,18 @@
       <tbody>
         <template v-if="selectedSupplier">
           <tr v-for="item in items" :key="item.code">
-            <td>
-              <AppCheck v-model="item.checked" />
+            <td class="align-center">
+              <Checkbox v-model="checkedItems" name="itemByPurchase" :value="item.code" />
             </td>
             <td class="align-center">{{ item.uniqueCode }}</td>
             <td>{{ item.name }}</td>
             <td>
               <AppInputText
                 v-model="item.quantity"
-                :disabled="!item.checked"
-                :placeholder="item.checked ? undefined : '발주를 원하시면 체크 선택을 해주세요.'"
+                :disabled="!checkedItems.includes(item.code)"
+                :placeholder="checkedItems.includes(item.code) ? undefined : '발주를 원하시면 체크 선택을 해주세요.'"
                 number-mode
-                :text-align="item.checked ? 'right' : 'center'"
+                :text-align="checkedItems.includes(item.code) ? 'right' : 'center'"
               />
             </td>
             <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
@@ -65,7 +65,6 @@ import { computed, ref, watch } from 'vue';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
-import AppCheck from '@/components/common/form/AppCheck.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
 import { mockupItems, mockupSuppliers } from '@/utils/mockup';
@@ -78,9 +77,7 @@ const supplierSuggestions = computed(() => {
 const allCheck = ref(false);
 const tableHeader = ref(['품목코드', '품목명', '수량', '단가', '공급가액', '부가세']);
 const items = ref([]);
-const checkedItems = computed(() => {
-  return items.value.filter(e => e.checked);
-});
+const checkedItems = ref([]); // 체크박스 선택된 상품(코드)들
 const totalSupplyValue = ref(0);
 const totalTaxValue = ref(0);
 const total = computed(() => totalSupplyValue.value + totalTaxValue.value);
@@ -95,6 +92,7 @@ const onCompleteInput = event => {
 };
 
 const calculateSum = (price, quantity) => {
+  if (!price || !quantity) return 0;
   return price * quantity;
 };
 
@@ -105,12 +103,12 @@ const calculateTax = sum => {
 // 선택된 거래처가 변경된 경우, 아이템 목록 셋팅
 watch(selectedSupplier, newVal => {
   if (!newVal) return;
-  items.value = mockupItems.map(e => ({ ...e, checked: false, quantity: null }));
+  items.value = mockupItems.map(e => ({ ...e, quantity: null }));
 });
 
-// items가 변하면 총합 계산
+// items가 변하면(items 안의 quantity가 변하면면) 총합 계산
 watch(
-  checkedItems,
+  items,
   newItems => {
     // 공급가액 총액 계산
     totalSupplyValue.value = newItems
@@ -124,6 +122,24 @@ watch(
   },
   { deep: true }, // items 내용이 변하면 watch 되도록 설정
 );
+
+// allCheck가 변하면 item 체크박스 조정
+watch(allCheck, newAllCheck => {
+  if (newAllCheck) {
+    checkedItems.value = items.value.map(e => e.code);
+  } else {
+    checkedItems.value = [];
+  }
+});
+
+// item의 check 상태가 변하면 입력한 수량 조정
+watch(checkedItems, newCheckedItems => {
+  const clearTargetItems = items.value.map(e => ({
+    ...e,
+    quantity: newCheckedItems.includes(e.code) ? e.quantity : null,
+  }));
+  items.value = clearTargetItems;
+});
 </script>
 
 <style scoped>
