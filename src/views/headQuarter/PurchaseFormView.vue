@@ -1,35 +1,143 @@
 <template>
-  <div>
+  <div class="purchase-form-container">
     <AppAutoComplete
       v-model="selectedSupplier"
       label="거래처 선택"
       :suggestions="supplierSuggestions"
-      placeholder="거래처명이나 거래처 코드로 검색"
+      placeholder="거래처명이나 거래처코드로 검색"
       full-width
+      class="mb-4"
       @complete-input="onCompleteInput"
     />
+
+    <AppTableStyled full-width>
+      <thead>
+        <tr>
+          <th>
+            <AppCheck v-model="allCheck" />
+          </th>
+          <th v-for="header in tableHeader" :key="header">{{ header }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-if="selectedSupplier">
+          <tr v-for="item in items" :key="item.code">
+            <td>
+              <AppCheck v-model="item.checked" />
+            </td>
+            <td class="align-center">{{ item.uniqueCode }}</td>
+            <td>{{ item.name }}</td>
+            <td>
+              <AppInputText
+                v-model="item.quantity"
+                :disabled="!item.checked"
+                :placeholder="item.checked ? undefined : '발주를 원하시면 체크 선택을 해주세요.'"
+                number-mode
+                :text-align="item.checked ? 'right' : 'center'"
+              />
+            </td>
+            <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
+            <td class="align-right">{{ calculateSum(item.purchasePrice, item.quantity).toLocaleString() }}</td>
+            <td class="align-right">
+              {{ calculateTax(calculateSum(item.purchasePrice, item.quantity)).toLocaleString() }}
+            </td>
+          </tr>
+        </template>
+        <template v-else>
+          <tr>
+            <td colspan="7" class="empty-td">거래처를 선택해주세요.</td>
+          </tr>
+        </template>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">총 합계 {{ total.toLocaleString() }}</td>
+          <td class="align-right">{{ totalSupplyValue.toLocaleString() }}</td>
+          <td class="align-right">{{ totalTaxValue.toLocaleString() }}</td>
+        </tr>
+      </tfoot>
+    </AppTableStyled>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
+import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
+import AppCheck from '@/components/common/form/AppCheck.vue';
+import AppInputText from '@/components/common/form/AppInputText.vue';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupSuppliers } from '@/utils/mockup';
+import { mockupItems, mockupSuppliers } from '@/utils/mockup';
 
 const selectedSupplier = ref(null);
 const filteredSuppliers = ref([]);
 const supplierSuggestions = computed(() => {
   return filteredSuppliers.value.map(e => makeAutocompleteSuggestion(e.code, `#${e.code} ${e.name}`));
 });
+const allCheck = ref(false);
+const tableHeader = ref(['품목코드', '품목명', '수량', '단가', '공급가액', '부가세']);
+const items = ref([]);
+const checkedItems = computed(() => {
+  return items.value.filter(e => e.checked);
+});
+const totalSupplyValue = ref(0);
+const totalTaxValue = ref(0);
+const total = computed(() => totalSupplyValue.value + totalTaxValue.value);
 
 const onCompleteInput = event => {
-  if (!event.query) return;
-  filteredSuppliers.value = mockupSuppliers.filter(
-    e => e.code.toString().includes(event.query) || e.name.includes(event.query),
-  );
+  // if (!event.query) return;
+  // filteredSuppliers.value = mockupSuppliers.filter(
+  //   e => e.code.toString().includes(event.query) || e.name.includes(event.query),
+  // );
+
+  filteredSuppliers.value = [...mockupSuppliers];
 };
+
+const calculateSum = (price, quantity) => {
+  return price * quantity;
+};
+
+const calculateTax = sum => {
+  return sum * 0.1;
+};
+
+// 선택된 거래처가 변경된 경우, 아이템 목록 셋팅
+watch(selectedSupplier, newVal => {
+  if (!newVal) return;
+  items.value = mockupItems.map(e => ({ ...e, checked: false, quantity: null }));
+});
+
+// items가 변하면 총합 계산
+watch(
+  checkedItems,
+  newItems => {
+    // 공급가액 총액 계산
+    totalSupplyValue.value = newItems
+      .map(e => calculateSum(e.purchasePrice, e.quantity))
+      .reduce((prev, current) => prev + current, 0);
+
+    // 부가세 총액 계산
+    totalTaxValue.value = newItems
+      .map(e => calculateTax(calculateSum(e.purchasePrice, e.quantity)))
+      .reduce((prev, current) => prev + current, 0);
+  },
+  { deep: true }, // items 내용이 변하면 watch 되도록 설정
+);
 </script>
 
-<style scoped></style>
+<style scoped>
+.purchase-form-container {
+  .empty-td {
+    text-align: center;
+  }
+
+  td.align-right {
+    text-align: right;
+  }
+
+  td.align-center {
+    text-align: center;
+  }
+}
+</style>

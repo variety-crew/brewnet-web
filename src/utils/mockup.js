@@ -205,3 +205,40 @@ export const mockupSuppliers = [
     'gdhong@company.com',
   ),
 ];
+
+// 상품
+function makeMockItem(code, name, purchasePrice, sellingPrice, imageUrl, safetyStock, uniqueCode, category) {
+  return { code, name, purchasePrice, sellingPrice, imageUrl, safetyStock, uniqueCode, category };
+}
+export const mockupItems = [
+  makeMockItem(
+    1,
+    '산토스',
+    20000,
+    30000,
+    'https://media.istockphoto.com/id/2158812697/ko/%EC%82%AC%EC%A7%84/%EC%B0%BD%EA%B0%80-%EC%98%86-%EB%82%98%EB%AC%B4-%ED%83%81%EC%9E%90-%EC%9C%84%EC%97%90-%EB%86%93%EC%9D%B8-%EB%B8%94%EB%9E%99-%EC%BB%A4%ED%94%BC-%ED%95%9C-%EC%9E%94%EC%9D%98-%ED%95%98%EC%9D%B4-%EC%95%B5%EA%B8%80-%EB%B7%B0.jpg?s=2048x2048&w=is&k=20&c=_qrZuDASfDBr70l-C0I6wLs03vRwZhlBkyx3d4nSUc4=',
+    100,
+    'C10',
+    '원두',
+  ),
+  makeMockItem(
+    2,
+    '산토스 디카페인',
+    20000,
+    30000,
+    'https://media.istockphoto.com/id/2158812697/ko/%EC%82%AC%EC%A7%84/%EC%B0%BD%EA%B0%80-%EC%98%86-%EB%82%98%EB%AC%B4-%ED%83%81%EC%9E%90-%EC%9C%84%EC%97%90-%EB%86%93%EC%9D%B8-%EB%B8%94%EB%9E%99-%EC%BB%A4%ED%94%BC-%ED%95%9C-%EC%9E%94%EC%9D%98-%ED%95%98%EC%9D%B4-%EC%95%B5%EA%B8%80-%EB%B7%B0.jpg?s=2048x2048&w=is&k=20&c=_qrZuDASfDBr70l-C0I6wLs03vRwZhlBkyx3d4nSUc4=',
+    100,
+    'C101',
+    '원두',
+  ),
+  makeMockItem(
+    3,
+    '슈프리모',
+    20000,
+    30000,
+    'https://media.istockphoto.com/id/2158812697/ko/%EC%82%AC%EC%A7%84/%EC%B0%BD%EA%B0%80-%EC%98%86-%EB%82%98%EB%AC%B4-%ED%83%81%EC%9E%90-%EC%9C%84%EC%97%90-%EB%86%93%EC%9D%B8-%EB%B8%94%EB%9E%99-%EC%BB%A4%ED%94%BC-%ED%95%9C-%EC%9E%94%EC%9D%98-%ED%95%98%EC%9D%B4-%EC%95%B5%EA%B8%80-%EB%B7%B0.jpg?s=2048x2048&w=is&k=20&c=_qrZuDASfDBr70l-C0I6wLs03vRwZhlBkyx3d4nSUc4=',
+    100,
+    'C111',
+    '원두',
+  ),
+];
