@@ -2,8 +2,8 @@
   <div class="app-check-container">
     <template v-if="!name">
       <!-- 싱글 체크박스 -->
-      <Checkbox :checked="modelValue" input-id="ingredient1" :name="name" binary size="small" @change="onChangeCheck" />
-      <label for="ingredient1">{{ label }}</label>
+      <Checkbox :checked="modelValue" :input-id="id" :name="name" binary size="small" @change="onChangeCheck" />
+      <label v-if="label" :for="id">{{ label }}</label>
     </template>
     <template v-else>
       <!-- 체크박스 여러개 -->
@@ -12,12 +12,7 @@
 </template>
 
 <script setup>
-const { label, name, modelValue } = defineProps({
-  label: {
-    type: String,
-    required: true,
-  },
-
+const { label, name, modelValue, id } = defineProps({
   // v-model로 넘겨주면 알아서 셋팅되는 값
   modelValue: {
     type: Boolean,
@@ -32,6 +27,18 @@ const { label, name, modelValue } = defineProps({
     type: String,
     required: false,
     default: undefined,
+  },
+
+  id: {
+    type: String,
+    required: false,
+    default: undefined,
+  },
+
+  label: {
+    type: String,
+    required: false,
+    default: null,
   },
 });
 
