@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -40,6 +41,8 @@ const exchanges = ref([]);
 const paginatedExchanges = computed(() => {
   return exchanges.value.slice(0, 15);
 });
+const startDate = ref(dayjs().subtract(1, 'year').toDate());
+const endDate = ref(new Date());
 
 const goToDetail = exchangeCode => {
   router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode } });
