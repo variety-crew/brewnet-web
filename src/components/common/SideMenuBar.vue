@@ -1,17 +1,15 @@
 <template>
   <aside class="side-menu">
-    <div v-for="menu in sideMenus" :key="menu.label" class="menu-group">
-      <h4>{{ menu.label }}</h4>
-      <nav>
-        <RouterLink
-          v-for="menuItem in menu.items"
-          :key="menuItem.label"
-          :to="{ name: menuItem.routerName }"
-          active-class="sidebar-link-active"
-          >{{ menuItem.label }}</RouterLink
-        >
-      </nav>
-    </div>
+    <nav>
+      <ul v-for="menu in sideMenus" :key="menu.label" class="menu-group">
+        <h4 class="group-title">{{ menu.label }}</h4>
+        <li v-for="menuItem in menu.items" :key="menuItem.label">
+          <RouterLink :to="{ name: menuItem.routerName }" active-class="sidebar-link-active">{{
+            menuItem.label
+          }}</RouterLink>
+        </li>
+      </ul>
+    </nav>
   </aside>
 </template>
 
@@ -31,37 +29,39 @@ const sideMenus = computed(() => {
 
 <style scoped>
 .side-menu {
-  height: fit-content;
-  border: 1px solid var(--p-content-border-color);
+  height: 100%;
   background-color: var(--p-content-background);
   min-width: 150px;
   flex-shrink: 0;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 0px 3px 0px;
+  z-index: 2;
+  padding: 20px 0;
 
   .menu-group {
+    list-style-type: none;
+    padding: 0;
+
     & + & {
       margin-top: 16px;
     }
 
-    h4,
-    a {
-      padding: 10px;
+    .group-title {
+      padding: 10px 14px;
     }
 
-    nav {
-      display: flex;
-      flex-direction: column;
+    a {
+      color: var(--p-button-text-plain-color);
+      display: block;
+      transition: background-color 0.2s;
+      padding: 5px 14px;
 
-      a {
-        color: var(--p-button-text-plain-color);
+      &.sidebar-link-active {
+        background-color: var(--p-primary-50);
+        color: var(--p-primary-600);
+      }
 
-        &.sidebar-link-active {
-          background-color: var(--p-primary-50);
-          color: var(--p-primary-600);
-        }
-
-        &:hover {
-          background-color: var(--p-button-text-plain-hover-background);
-        }
+      &:hover {
+        background-color: var(--p-button-text-plain-hover-background);
       }
     }
   }

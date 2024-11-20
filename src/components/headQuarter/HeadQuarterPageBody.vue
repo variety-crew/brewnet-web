@@ -43,14 +43,12 @@ const home = ref({
 .page-body {
   flex-grow: 1;
   display: flex;
-  gap: 16px;
 
   main {
     flex-grow: 1;
     height: 100%;
-    background-color: white;
     overflow-y: auto;
-    border: 1px solid var(--p-content-border-color);
+    padding: 5px;
 
     .page-title {
       margin: 0 14px;
