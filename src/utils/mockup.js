@@ -170,3 +170,38 @@ export const mockupNotices = [
   makeMockNotice(12, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
   makeMockNotice(13, '주문 시 공지사항 업데이트', '내용', '2024-11-11 11:11:11', '홍길동', []),
 ];
+
+// 거래처
+function makeMockCorrespondent(code, name, managerName, address, detailAddress, contact, email) {
+  return { code, name, managerName, address, detailAddress, contact, email };
+}
+
+export const mockupCorrespondent = [
+  makeMockCorrespondent(
+    99,
+    '원두A공장',
+    '홍길동',
+    '서울 관악구 난곡로 367',
+    '상세주소',
+    '010-1111-1111',
+    'gdhong@company.com',
+  ),
+  makeMockCorrespondent(
+    98,
+    '원두B공장',
+    '용길한',
+    '서울 관악구 난곡로 367',
+    '상세주소',
+    '010-1111-1111',
+    'gdhong@company.com',
+  ),
+  makeMockCorrespondent(
+    97,
+    '원두C공장',
+    '정준서',
+    '서울 관악구 난곡로 367',
+    '상세주소',
+    '010-1111-1111',
+    'gdhong@company.com',
+  ),
+];
