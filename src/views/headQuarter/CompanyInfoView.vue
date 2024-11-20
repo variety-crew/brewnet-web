@@ -8,7 +8,7 @@
       </template>
     </div>
 
-    <table>
+    <AppTableStyled>
       <tbody>
         <tr>
           <th>상호명</th>
@@ -55,13 +55,14 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    </AppTableStyled>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 
+import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 
 const companyInfo = ref({
@@ -135,18 +136,6 @@ watch(editMode, newVal => {
   table {
     width: 100%;
     margin-top: 20px;
-    border-spacing: 0;
-    border-collapse: collapse;
-
-    th {
-      background-color: var(--p-surface-100);
-    }
-
-    th,
-    td {
-      padding: 5px 10px;
-      border: 1px solid var(--p-surface-200);
-    }
   }
 }
 </style>

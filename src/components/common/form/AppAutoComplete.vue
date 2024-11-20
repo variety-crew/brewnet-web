@@ -7,6 +7,7 @@
       complete-on-focus
       :fluid="fullWidth"
       :suggestions="suggestions"
+      :placeholder="placeholder"
       @complete="emit('completeInput', $event)"
     >
       <template #option="slotProps">
@@ -22,7 +23,7 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue, fullWidth, suggestions } = defineProps({
+const { label, modelValue, fullWidth, suggestions, placeholder } = defineProps({
   modelValue: {
     type: [Object, null],
     required: true,
@@ -52,6 +53,12 @@ const { label, modelValue, fullWidth, suggestions } = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+
+  placeholder: {
+    type: String,
+    required: false,
+    default: undefined,
   },
 });
 const emit = defineEmits(['completeInput']);

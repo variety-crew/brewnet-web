@@ -172,12 +172,12 @@ export const mockupNotices = [
 ];
 
 // 거래처
-function makeMockCorrespondent(code, name, managerName, address, detailAddress, contact, email) {
+function makeMockSupplier(code, name, managerName, address, detailAddress, contact, email) {
   return { code, name, managerName, address, detailAddress, contact, email };
 }
 
-export const mockupCorrespondent = [
-  makeMockCorrespondent(
+export const mockupSuppliers = [
+  makeMockSupplier(
     99,
     '원두A공장',
     '홍길동',
@@ -186,7 +186,7 @@ export const mockupCorrespondent = [
     '010-1111-1111',
     'gdhong@company.com',
   ),
-  makeMockCorrespondent(
+  makeMockSupplier(
     98,
     '원두B공장',
     '용길한',
@@ -195,7 +195,7 @@ export const mockupCorrespondent = [
     '010-1111-1111',
     'gdhong@company.com',
   ),
-  makeMockCorrespondent(
+  makeMockSupplier(
     97,
     '원두C공장',
     '정준서',
