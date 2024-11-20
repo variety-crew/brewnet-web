@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="company-seal-history-container">
     <SearchArea>
-      <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="사용일자" />
+      <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="사용일자" class="search-date" />
     </SearchArea>
 
     <AppTable
@@ -62,4 +62,10 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.company-seal-history-container {
+  .search-date {
+    grid-column: 1 / 6;
+  }
+}
+</style>

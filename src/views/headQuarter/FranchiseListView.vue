@@ -8,6 +8,7 @@
           :suggestions="addressSuggestions"
           size="small"
           complete-on-focus
+          fluid
           @complete="onChangeAddressKeyword"
         />
       </AppFormField>
