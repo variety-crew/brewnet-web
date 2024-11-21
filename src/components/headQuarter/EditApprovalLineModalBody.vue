@@ -7,7 +7,9 @@
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue';
 
-import { POSITIONS } from '@/utils/constant';
+import DocumentApi from '@/utils/api/DocumentApi';
+import { APPROVAL_POSITIONS } from '@/utils/constant';
+import DOMEvent from '@/utils/domEvent';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
 
@@ -18,15 +20,20 @@ const dialogRef = inject('dialogRef');
 
 const position = ref('');
 const initialPosition = ref('');
-
-let approvalLine = null;
-
 const positionOptions = computed(() => {
-  return POSITIONS.map(e => makeSelectOption(formatKoEmployeePosition(e), e));
+  return APPROVAL_POSITIONS.map(e => makeSelectOption(formatKoEmployeePosition(e), formatKoEmployeePosition(e)));
 });
 
+let approvalLine = null;
+const documentApi = new DocumentApi();
+
 const save = () => {
-  console.log(approvalLine.code, position.value, '으로 수정');
+  if (!approvalLine) return;
+
+  documentApi.setApprovalLine({ ...approvalLine, positionName: position.value }).then(() => {
+    DOMEvent.dispatchApiSuccess('결재라인이 수정되었습니다.');
+    dialogRef.value.close();
+  });
 };
 
 onMounted(() => {
@@ -34,8 +41,9 @@ onMounted(() => {
   approvalLine = targetApprovalLine;
 
   // 현재 설정된 결재라인이 있다면
-  if (targetApprovalLine.positions.length > 0) {
-    initialPosition.value = targetApprovalLine.positions[0];
+  if (targetApprovalLine.positionName) {
+    initialPosition.value = targetApprovalLine.positionName;
+    position.value = targetApprovalLine.positionName;
   }
 });
 </script>

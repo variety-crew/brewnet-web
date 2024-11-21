@@ -32,14 +32,12 @@ const { openModal } = useModal();
 
 const approvalLines = ref([]);
 
-let editingCode = null;
 const documentApi = new DocumentApi();
 
 const clickEdit = target => {
-  editingCode = target.code;
   openModal({
     component: EditApprovalLineModalBody,
-    header: `${target.title} 수정`,
+    header: `${formatKoApprovalKind(target.kind)} 결재라인 수정`,
     data: {
       targetApprovalLine: target,
     },
@@ -47,7 +45,7 @@ const clickEdit = target => {
 };
 
 onMounted(() => {
-  documentApi.getApproval().then(data => {
+  documentApi.getApprovalLine().then(data => {
     approvalLines.value = data;
   });
 });
