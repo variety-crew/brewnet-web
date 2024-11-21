@@ -16,9 +16,6 @@ const { fullWidth } = defineProps({
 
 <style scoped>
 .app-table-styled {
-  border-spacing: 0;
-  border-collapse: collapse;
-
   &.full {
     width: 100%;
   }
@@ -26,11 +23,20 @@ const { fullWidth } = defineProps({
   :slotted(th) {
     background-color: var(--p-surface-100);
     padding: 5px 10px;
+    border: 1px solid var(--p-surface-200);
   }
 
   :slotted(td) {
     padding: 5px 10px;
     border: 1px solid var(--p-surface-200);
+  }
+
+  :slotted(td.align-center) {
+    text-align: center;
+  }
+
+  :slotted(td.align-right) {
+    text-align: right;
   }
 }
 </style>

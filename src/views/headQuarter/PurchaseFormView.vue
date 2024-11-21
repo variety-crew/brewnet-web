@@ -261,14 +261,6 @@ watch(checkedItemCodes, newCheckedItemCodes => {
     text-align: center;
   }
 
-  td.align-right {
-    text-align: right;
-  }
-
-  td.align-center {
-    text-align: center;
-  }
-
   .approval-area {
     background-color: var(--p-primary-50);
     padding: 20px;

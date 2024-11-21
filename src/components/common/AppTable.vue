@@ -61,8 +61,8 @@
         </div>
       </template>
       <Column
-        v-for="col of columns"
-        :key="col.field"
+        v-for="(col, colIndex) of columns"
+        :key="`field${colIndex}`"
         :field="col.field"
         :header="col.header"
         :sortable="col.sortable"
@@ -97,7 +97,7 @@
               :key="button.getLabel(data)"
               :label="button.getLabel(data)"
               size="small"
-              :severity="button.getSeverity ? button.getSeverity(data) : 'info'"
+              :severity="button.getSeverity ? button.getSeverity(data) : undefined"
               :variant="button.getVariant ? button.getVariant(data) : 'text'"
               :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
               :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"

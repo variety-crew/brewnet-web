@@ -1,6 +1,6 @@
 <template>
   <div class="purchase-list-container">
-    <SearchArea grid :grid-repeat-count="2" grid-repeat-width="1fr" class="purchase-search">
+    <SearchArea grid class="purchase-search">
       <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="작성일자" />
       <AppInputText v-model="purchaseCodeKeyword" label="발주코드" />
       <AppInputText v-model="purchaseMemberKeyword" label="기안자명" />
@@ -21,7 +21,8 @@
 <script setup>
 import dayjs from 'dayjs';
 import { useToast } from 'primevue';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
@@ -29,10 +30,12 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { PURCHASE_STATUS } from '@/utils/constant';
 import { formatKoPurchaseStatus } from '@/utils/format';
+import { getPurchaseStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
 import { mockupPurchases } from '@/utils/mockup';
 
 const toast = useToast();
+const router = useRouter();
 
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
@@ -45,23 +48,6 @@ const paginatedPurchases = ref([]);
 const totalElements = ref(0);
 
 const localStorageUtil = new LocalStorageUtil();
-
-function getPurchaseTagSeverity(status) {
-  switch (status) {
-    case PURCHASE_STATUS.REQUESTED:
-      return 'success';
-
-    case PURCHASE_STATUS.CANCELED:
-    case PURCHASE_STATUS.REJECTED:
-      return 'danger';
-
-    case PURCHASE_STATUS.APPROVED:
-      return 'info';
-
-    default:
-      return 'info';
-  }
-}
 
 function clickSend(data) {
   localStorageUtil.saveSendCompletePurchase(data.code);
@@ -76,6 +62,10 @@ function clickSend(data) {
   // TODO::reload()
 }
 
+function clickGoDetail(data) {
+  router.push({ name: 'hq:purchase:detail', params: { purchaseCode: data.code } });
+}
+
 const columns = [
   {
     field: 'status',
@@ -83,7 +73,7 @@ const columns = [
     render: formatKoPurchaseStatus,
     template: {
       tag: {
-        getSeverity: getPurchaseTagSeverity,
+        getSeverity: getPurchaseStatusSeverity,
       },
     },
   },
@@ -105,19 +95,29 @@ const columns = [
         {
           getLabel: data => {
             if (localStorageUtil.isSendCompletePurchase(data.code)) return '전송완료';
-            return '전송';
+            return '구매품의서 전송';
           },
           clickHandler: clickSend,
           getDisabled: data => {
-            return localStorageUtil.isSendCompletePurchase(data.code);
+            // 이미 전송완료했거나 APPROVED 상태가 아니면 disabled
+            return localStorageUtil.isSendCompletePurchase(data.code) || data.status !== PURCHASE_STATUS.APPROVED;
           },
           getSeverity: data => {
             if (localStorageUtil.isSendCompletePurchase(data.code)) return 'secondary';
             return undefined;
           },
-          getHidden: data => {
-            return data.status !== PURCHASE_STATUS.APPROVED;
-          },
+        },
+      ],
+    },
+  },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
+        {
+          getLabel: data => '상세보기',
+          clickHandler: clickGoDetail,
         },
       ],
     },

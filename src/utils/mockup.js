@@ -403,14 +403,84 @@ export const mockupStorages = [
 ];
 
 // 발주
-function makeMockPurchase(status, code, supplierName, totalPrice, storageName, username, createdAt, approvalAt) {
-  return { status, code, supplierName, totalPrice, storageName, username, createdAt, approvalAt };
+function makeMockPurchase(
+  status,
+  code,
+  supplierName,
+  totalPrice,
+  storageName,
+  username,
+  createdAt,
+  approvalAt,
+  comment,
+) {
+  return { status, code, supplierName, totalPrice, storageName, username, createdAt, approvalAt, comment };
 }
 export const mockupPurchases = [
-  makeMockPurchase('REQUESTED', 100, '원두공장A', 100000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
-  makeMockPurchase('APPROVED', 99, '원두공장A', 200000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
-  makeMockPurchase('APPROVED', 98, '원두공장A', 300000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
-  makeMockPurchase('CANCELED', 97, '원두공장A', 400000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
-  makeMockPurchase('REJECTED', 96, '원두공장A', 500000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
-  makeMockPurchase('REQUESTED', 95, '원두공장A', 600000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
+  makeMockPurchase(
+    'REQUESTED',
+    100,
+    '원두공장A',
+    100000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'APPROVED',
+    99,
+    '원두공장A',
+    200000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'APPROVED',
+    98,
+    '원두공장A',
+    300000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'CANCELED',
+    97,
+    '원두공장A',
+    400000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'REJECTED',
+    96,
+    '원두공장A',
+    500000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'REQUESTED',
+    95,
+    '원두공장A',
+    600000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
 ];
