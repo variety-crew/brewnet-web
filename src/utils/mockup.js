@@ -401,3 +401,16 @@ export const mockupStorages = [
   makeMockStorage(3, '서부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
   makeMockStorage(4, '남부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
 ];
+
+// 발주
+function makeMockPurchase(status, code, supplierName, totalPrice, storageName, username, createdAt, approvalAt) {
+  return { status, code, supplierName, totalPrice, storageName, username, createdAt, approvalAt };
+}
+export const mockupPurchases = [
+  makeMockPurchase('REQUESTED', 100, '원두공장A', 100000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
+  makeMockPurchase('APPROVED', 99, '원두공장A', 200000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
+  makeMockPurchase('APPROVED', 98, '원두공장A', 300000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
+  makeMockPurchase('CANCELED', 97, '원두공장A', 400000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
+  makeMockPurchase('REJECTED', 96, '원두공장A', 500000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
+  makeMockPurchase('REQUESTED', 95, '원두공장A', 600000, '서부창고', '홍길동', '2024-11-11', '2024-11-11'),
+];

@@ -82,7 +82,8 @@
         <template v-if="col.template?.tag" #body="{ data }">
           <Tag
             :value="col.render ? col.render(data[col.field]) : data[col.field]"
-            :severity="col.template.tag.getSeverity(data)"
+            :severity="col.template.tag.getSeverity(data[col.field])"
+            rounded
           />
         </template>
 
@@ -109,7 +110,7 @@
 
         <!-- template은 따로 없지만 render가 있는 경우 -->
         <template v-else-if="col.render" #body="{ data }">
-          {{ col.render(data[col.field]) }}
+          {{ col.render(data) }}
         </template>
       </Column>
     </DataTable>
@@ -157,6 +158,8 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *   alignment: string            // 정렬 ('left', 'center', 'right')
    * }]
    */
+
+  // required false
   rowsPerPage: {
     type: Number,
     required: false,

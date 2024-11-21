@@ -53,8 +53,8 @@ const columns = [
   { field: 'exchangeCode', header: '교환번호', sortable: true },
   { field: 'franchiseName', header: '교환요청지점' },
   { field: 'itemName', header: '교환품목명' },
-  { field: 'reason', header: '교환사유', render: formatKoExchangeReason },
-  { field: 'status', header: '교환상태', render: formatKoExchangeStatus },
+  { field: 'reason', header: '교환사유', render: data => formatKoExchangeReason(data.reason) },
+  { field: 'status', header: '교환상태', render: data => formatKoExchangeStatus(data.status) },
   { field: 'memberCode', header: '교환담당자' },
   { field: 'createdAt', header: '교환요청일자' },
   {

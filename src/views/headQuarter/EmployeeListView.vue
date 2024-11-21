@@ -69,11 +69,11 @@ const columns = [
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
-  { field: 'position', header: '직급', render: formatKoEmployeePosition },
+  { field: 'position', header: '직급', render: data => formatKoEmployeePosition(data.position) },
   {
     field: 'role',
     header: '권한',
-    render: formatKoMemberRole,
+    render: data => formatKoMemberRole(data.role),
   },
   {
     field: '',
