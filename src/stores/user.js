@@ -7,11 +7,20 @@ export const useUserStore = defineStore(
     const loginId = ref('');
     const username = ref('');
     const accessToken = ref('');
+    const refreshToken = ref('');
     const userType = ref(''); // hq: 본사, fc: 가맹점, d: 배송기사
     const email = ref('');
     const phone = ref('');
     const position = ref('');
     const signature = ref('');
+
+    const saveAccessToken = token => {
+      accessToken.value = token;
+    };
+
+    const saveRefreshToken = token => {
+      refreshToken.value = token;
+    };
 
     const loginByHeadQuarter = () => {
       loginId.value = 'iamhq';
@@ -59,6 +68,8 @@ export const useUserStore = defineStore(
       phone,
       position,
       signature,
+      saveAccessToken,
+      saveRefreshToken,
       loginByHeadQuarter,
       loginByFranchise,
       loginByDelivery,

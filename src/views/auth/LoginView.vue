@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <form class="login-container" @submit.prevent="login">
     <!-- 아이디 -->
     <IconField>
       <InputIcon class="pi pi-user" />
@@ -17,10 +17,8 @@
       <Button label="비밀번호 찾기" variant="text" size="small" as="router-link" :to="{ name: 'auth:find-password' }" />
     </div>
 
-    <Button label="본사 로그인" @click="clickLogin('hq')" />
-    <Button label="가맹점 로그인" @click="clickLogin('fc')" />
-    <Button label="배송기사 로그인" @click="clickLogin('d')" />
-  </div>
+    <Button label="로그인" type="submit" />
+  </form>
 </template>
 
 <script setup>
@@ -30,6 +28,7 @@ import { useRouter } from 'vue-router';
 
 import AppCheck from '@/components/common/form/AppCheck.vue';
 import { useUserStore } from '@/stores/user';
+import AuthApiService from '@/utils/api/AuthApiService';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -38,6 +37,8 @@ const toast = useToast();
 const id = ref('');
 const password = ref('');
 const saveAuth = ref(false);
+
+const authApiService = new AuthApiService();
 
 const checkForm = () => {
   try {
@@ -51,9 +52,18 @@ const checkForm = () => {
   return true;
 };
 
-const clickLogin = type => {
+const login = () => {
   const isPass = checkForm();
   if (!isPass) return;
+
+  // authApiService.login(id.value, password.value).then(() => {
+  //   // 로그인 후 access token, refresh token 셋팅 완료
+
+  //   // 로그인 한 사람의 권한 조회
+  //   authApiService.getAuth().then(data => {
+  //     console.log(data);
+  //   });
+  // });
 
   if (type === 'hq') {
     userStore.loginByHeadQuarter();
