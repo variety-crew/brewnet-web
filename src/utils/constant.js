@@ -38,3 +38,11 @@ export const PURCHASE_STATUS = {
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
 };
+
+// 결재라인 종류
+export const APPROVAL_KIND = {
+  PURCHASE: 'PURCHASE',
+  ORDER: 'ORDER',
+  EXCHANGE: 'EXCHANGE',
+  RETURN: 'RETURN',
+};

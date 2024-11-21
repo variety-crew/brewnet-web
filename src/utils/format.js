@@ -1,4 +1,4 @@
-import { EXCHANGE_STATUS, POSITION, PURCHASE_STATUS, ROLE } from './constant';
+import { APPROVAL_KIND, EXCHANGE_STATUS, POSITION, PURCHASE_STATUS, ROLE } from './constant';
 
 export const formatKoEmployeePosition = position => {
   switch (position) {
@@ -104,6 +104,25 @@ export const formatKoPurchaseStatus = status => {
 
     case PURCHASE_STATUS.REJECTED:
       return '발주반려';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoApprovalKind = kind => {
+  switch (kind) {
+    case APPROVAL_KIND.ORDER:
+      return '주문';
+
+    case APPROVAL_KIND.PURCHASE:
+      return '발주';
+
+    case APPROVAL_KIND.EXCHANGE:
+      return '교환';
+
+    case APPROVAL_KIND.RETURN:
+      return '반품';
 
     default:
       return '';
