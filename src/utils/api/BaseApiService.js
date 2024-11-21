@@ -1,5 +1,7 @@
 import { useUserStore } from '@/stores/user';
 
+import DOMEvent from '../domEvent';
+
 export default class BaseApiService {
   #baseUrl = 'http://localhost:8080/api';
   #resource;
@@ -29,27 +31,38 @@ export default class BaseApiService {
         requestHeaders.append('Content-Type', 'application/json');
       }
 
-      // 만들어진 헤더 셋팅
-      fetchOptions['headers'] = requestHeaders;
-
       // 요청 시작
-      const response = await fetch(requestUrl, fetchOptions);
-      if (!response.ok) {
-        throw new Error(`API error: ${response.statusText}`);
-      }
+      const response = await fetch(requestUrl, {
+        ...fetchOptions,
+        headers: requestHeaders,
+      });
+      if (response.ok) {
+        // Promise resolved and HTTP status is successful
 
-      // 응답 헤더에 토큰이 담겨져 왔다면 저장
-      const newAccessToken = response.headers.get('authorization');
-      if (newAccessToken) {
-        this.#userStore.saveAccessToken(newAccessToken);
-      }
-      const newRefreshToken = response.headers.get('refresh-token');
-      if (newRefreshToken) {
-        this.#userStore.saveRefreshToken(newRefreshToken);
-      }
+        // 응답 헤더에 토큰이 담겨져 왔다면 저장
+        const newAccessToken = response.headers.get('authorization');
+        if (newAccessToken) {
+          this.#userStore.saveAccessToken(newAccessToken);
+        }
+        const newRefreshToken = response.headers.get('refresh-token');
+        if (newRefreshToken) {
+          this.#userStore.saveRefreshToken(newRefreshToken);
+        }
+        return response.json();
+      } else {
+        // Promise resolved but HTTP status failed
 
-      return response.json();
-    } catch (e) {
+        // 서버에서 보내주는 에러 메시지 뽑기
+        const errorData = await response.json();
+        const errMsg = errorData.message;
+
+        throw new Error(errMsg);
+      }
+    } catch (error) {
+      // Promise rejected
+
+      DOMEvent.dispatchApiError(error.message);
+
       return null;
     }
   }

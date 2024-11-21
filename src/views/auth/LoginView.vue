@@ -58,27 +58,27 @@ const login = () => {
   const isPass = checkForm();
   if (!isPass) return;
 
-  // authApiService.login(id.value, password.value).then(() => {
-  //   // 로그인 후 access token, refresh token 셋팅 완료
+  authApiService.login(id.value, password.value).then(() => {
+    // 로그인 후 access token, refresh token 셋팅 완료
 
-  //   // 로그인 한 사람의 권한 조회
-  //   authApiService.getAuth().then(data => {
-  //     console.log(data);
-  //   });
-  // });
+    // 로그인 한 사람의 권한 조회
+    authApiService.getAuth().then(data => {
+      console.log(data);
+    });
+  });
 
-  if (type === 'hq') {
-    userStore.loginByHeadQuarter();
-  } else if (type === 'fc') {
-    userStore.loginByFranchise();
-  } else if (type === 'd') {
-    userStore.loginByDelivery();
-  }
+  // if (type === 'hq') {
+  //   userStore.loginByHeadQuarter();
+  // } else if (type === 'fc') {
+  //   userStore.loginByFranchise();
+  // } else if (type === 'd') {
+  //   userStore.loginByDelivery();
+  // }
 
-  // 로그인 정보 저장할건지?
-  localStorageUtil.handleRememberLoginId(saveAuth.value, id.value);
+  // // 로그인 정보 저장할건지?
+  // localStorageUtil.handleRememberLoginId(saveAuth.value, id.value);
 
-  router.replace({ name: `${type}:home` });
+  // router.replace({ name: `${type}:home` });
 };
 
 onMounted(() => {
