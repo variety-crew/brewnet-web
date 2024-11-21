@@ -71,15 +71,15 @@ const columns = [
     template: {
       button: [
         {
-          label: '상세보기',
+          getLabel: () => '상세보기',
           clickHandler: clickDetail,
         },
         {
-          label: '수정',
+          getLabel: () => '수정',
           clickHandler: clickEdit,
         },
         {
-          label: '삭제',
+          getLabel: () => '삭제',
           clickHandler: clickDelete,
         },
       ],

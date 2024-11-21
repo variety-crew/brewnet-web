@@ -43,7 +43,7 @@ const columns = [
     field: '',
     header: '서명',
     template: {
-      button: [{ label: '보기', clickHandler: onClickUploadSignature }],
+      button: [{ getLabel: () => '보기', clickHandler: onClickUploadSignature }],
     },
   },
 ];

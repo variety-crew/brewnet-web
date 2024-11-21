@@ -95,8 +95,8 @@ const columns = [
     header: '',
     template: {
       button: [
-        { label: '정보수정', clickHandler: clickEdit },
-        { label: '삭제', clickHandler: clickRemove },
+        { getLabel: () => '정보수정', clickHandler: clickEdit },
+        { getLabel: () => '삭제', clickHandler: clickRemove },
       ],
     },
   },

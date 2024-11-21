@@ -63,7 +63,7 @@ const columns = [
     template: {
       button: [
         {
-          label: '상세보기',
+          getLabel: () => '상세보기',
           clickHandler: rowData => goToDetail(rowData.exchangeCode),
         },
       ],

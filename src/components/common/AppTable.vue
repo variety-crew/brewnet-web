@@ -26,6 +26,7 @@
       removable-sort
       scrollable
       scroll-height="400px"
+      class="app-table"
     >
       <template #header>
         <div class="table-header">
@@ -77,6 +78,7 @@
             },
           },
         }"
+        class="app-table-column"
       >
         <!-- 태그로 표시할 경우 -->
         <template v-if="col.template?.tag" #body="{ data }">
@@ -92,11 +94,13 @@
           <div>
             <Button
               v-for="button in col.template.button"
-              :key="button.label"
-              :label="button.label"
+              :key="button.getLabel(data)"
+              :label="button.getLabel(data)"
               size="small"
-              :severity="button.severity || 'info'"
-              :variant="button.variant || 'text'"
+              :severity="button.getSeverity ? button.getSeverity(data) : 'info'"
+              :variant="button.getVariant ? button.getVariant(data) : 'text'"
+              :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
+              :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"
               @click="button.clickHandler(data)"
             />
           </div>
@@ -148,14 +152,16 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *     },
    *     button: {[
    *       {
-   *         label: string                   // 버튼 label
-   *         clickHandler: (data: T) => void // 버튼 클릭 시 동작할 handler 메소드
-   *         severity: string                // 프라임뷰 버튼 severity 값
-   *         variant: string                 // 프라임뷰 버튼 variant 값
+   *         getLabel: (data: T) => string     // 버튼 label
+   *         clickHandler: (data: T) => void   // 버튼 클릭 시 동작할 handler 메소드
+   *         getSeverity: (data: T) => string  // 프라임뷰 버튼 severity 값
+   *         getVariant: (data: T) => string   // 프라임뷰 버튼 variant 값
+   *         getDisabled: (data: T) => boolean // 버튼 disabled 여부
+   *         getHidden: (data: T) => boolean   // 버튼 숨기는지?
    *       }
    *     ]}
    *   }
-   *   alignment: string            // 정렬 ('left', 'center', 'right')
+   *   alignment: string              // 정렬 ('left', 'center', 'right')
    * }]
    */
 
@@ -194,15 +200,23 @@ const exportCSV = () => {
 </script>
 
 <style scoped>
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-
-  .right {
+.app-table {
+  .table-header {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  .app-table-column {
+    & .hidden {
+      display: none;
+    }
   }
 }
 </style>

@@ -8,13 +8,19 @@
       <AppInputText v-model="storageKeyword" label="창고명" />
     </SearchArea>
 
-    <AppTable :columns="columns" :paginated-data="paginatedPurchases" :total-elements="purchases.length" />
+    <AppTable
+      :columns="columns"
+      :paginated-data="paginatedPurchases"
+      :total-elements="totalElements"
+      @reload="reload"
+      @change-page="onChangePage"
+    />
   </div>
 </template>
 
 <script setup>
 import dayjs from 'dayjs';
-import { Button } from 'primevue';
+import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -23,7 +29,10 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { PURCHASE_STATUS } from '@/utils/constant';
 import { formatKoPurchaseStatus } from '@/utils/format';
+import LocalStorageUtil from '@/utils/localStorage';
 import { mockupPurchases } from '@/utils/mockup';
+
+const toast = useToast();
 
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
@@ -32,10 +41,10 @@ const purchaseMemberKeyword = ref('');
 const supplierKeyword = ref('');
 const storageKeyword = ref('');
 
-const purchases = ref([]);
-const paginatedPurchases = computed(() => {
-  return purchases.value.slice(0, 15);
-});
+const paginatedPurchases = ref([]);
+const totalElements = ref(0);
+
+const localStorageUtil = new LocalStorageUtil();
 
 function getPurchaseTagSeverity(status) {
   switch (status) {
@@ -55,7 +64,16 @@ function getPurchaseTagSeverity(status) {
 }
 
 function clickSend(data) {
-  console.log(data);
+  localStorageUtil.saveSendCompletePurchase(data.code);
+
+  toast.add({
+    severity: 'success',
+    summary: '처리 성공',
+    detail: '구매품의서가 회계부서로 전송되었습니다.',
+    life: 3000,
+  });
+
+  // TODO::reload()
 }
 
 const columns = [
@@ -82,11 +100,41 @@ const columns = [
   {
     field: '',
     header: '회계팀 전송',
+    template: {
+      button: [
+        {
+          getLabel: data => {
+            if (localStorageUtil.isSendCompletePurchase(data.code)) return '전송완료';
+            return '전송';
+          },
+          clickHandler: clickSend,
+          getDisabled: data => {
+            return localStorageUtil.isSendCompletePurchase(data.code);
+          },
+          getSeverity: data => {
+            if (localStorageUtil.isSendCompletePurchase(data.code)) return 'secondary';
+            return undefined;
+          },
+          getHidden: data => {
+            return data.status !== PURCHASE_STATUS.APPROVED;
+          },
+        },
+      ],
+    },
   },
 ];
 
+const reload = () => {
+  console.log('reload');
+};
+
+const onChangePage = event => {
+  console.log(event.page, '로 변경됨');
+};
+
 onMounted(() => {
-  purchases.value = [...mockupPurchases];
+  paginatedPurchases.value = [...mockupPurchases].slice(0, 15);
+  totalElements.value = 20;
 });
 </script>
 

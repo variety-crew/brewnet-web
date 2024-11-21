@@ -55,11 +55,11 @@ const columns = [
     template: {
       button: [
         {
-          label: '정보수정',
+          getLabel: () => '정보수정',
           clickHandler: onClickEdit,
         },
         {
-          label: '삭제',
+          getLabel: () => '삭제',
           clickHandler: onClickRemove,
         },
       ],

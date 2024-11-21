@@ -81,15 +81,15 @@ const columns = [
     template: {
       button: [
         {
-          label: '정보수정',
+          getLabel: () => '정보수정',
           clickHandler: onClickEdit,
         },
         {
-          label: '권한설정',
+          getLabel: () => '권한설정',
           clickHandler: onClickEditRole,
         },
         {
-          label: '삭제',
+          getLabel: () => '삭제',
           clickHandler: onClickRemove,
         },
       ],
