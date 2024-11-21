@@ -3,7 +3,7 @@ import { useDialog } from 'primevue/usedialog';
 export function useModal() {
   const dialog = useDialog();
 
-  const openModal = ({ component, header, data }) => {
+  const openModal = ({ component, header, data, onClose }) => {
     dialog.open(component, {
       props: {
         header,
@@ -17,6 +17,7 @@ export function useModal() {
         modal: true,
       },
       data,
+      onClose,
     });
   };
 

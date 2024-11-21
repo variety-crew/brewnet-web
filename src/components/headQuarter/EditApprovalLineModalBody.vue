@@ -16,6 +16,8 @@ import { makeSelectOption } from '@/utils/helper';
 import AppModalBody from '../common/AppModalBody.vue';
 import AppSelect from '../common/form/AppSelect.vue';
 
+const emit = defineEmits(['complete']);
+
 const dialogRef = inject('dialogRef');
 
 const position = ref('');
@@ -32,7 +34,7 @@ const save = () => {
 
   documentApi.setApprovalLine({ ...approvalLine, positionName: position.value }).then(() => {
     DOMEvent.dispatchApiSuccess('결재라인이 수정되었습니다.');
-    dialogRef.value.close();
+    dialogRef.value.close({ reload: true });
   });
 };
 

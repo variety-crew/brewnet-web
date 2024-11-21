@@ -10,7 +10,7 @@ export default class DocumentApi extends BaseApiService {
   //
 
   // 결재라인 조회
-  getApprovalLine() {
+  getApprovalLines() {
     return this.get('/approval');
   }
 

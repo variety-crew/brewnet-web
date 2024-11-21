@@ -34,6 +34,12 @@ const approvalLines = ref([]);
 
 const documentApi = new DocumentApi();
 
+const getApprovalLines = () => {
+  documentApi.getApprovalLines().then(data => {
+    approvalLines.value = data;
+  });
+};
+
 const clickEdit = target => {
   openModal({
     component: EditApprovalLineModalBody,
@@ -41,13 +47,18 @@ const clickEdit = target => {
     data: {
       targetApprovalLine: target,
     },
+    onClose: opt => {
+      const callbackParams = opt.data;
+      if (callbackParams.reload) {
+        getApprovalLines();
+      }
+    },
   });
 };
 
 onMounted(() => {
-  documentApi.getApprovalLine().then(data => {
-    approvalLines.value = data;
-  });
+  // 결재라인 가져오기
+  getApprovalLines();
 });
 </script>
 
