@@ -1,11 +1,12 @@
 <template>
   <div>
-    <SearchArea>
+    <SearchArea grid>
       <AppInputText v-model="franchiseNameKeyword" label="지점명" />
       <AppAutoComplete
         v-model="addressKeyword"
         label="시/도"
         :suggestions="addressSuggestions"
+        full-width
         @complete-input="onChangeAddressKeyword"
       />
     </SearchArea>

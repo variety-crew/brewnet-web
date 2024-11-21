@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea>
+    <SearchArea grid>
       <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
     </SearchArea>
 

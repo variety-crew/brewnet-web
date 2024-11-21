@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchArea>
+    <SearchArea grid>
       <AppInputText v-model="titleKeyword" label="제목" />
       <AppInputText v-model="authorKeyword" label="작성자" />
     </SearchArea>
