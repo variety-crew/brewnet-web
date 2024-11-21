@@ -10,10 +10,36 @@
         />
 
         <div class="top-buttons">
-          <Button label="발주서 출력" variant="outlined" size="small" />
-          <Button label="구매품의서 전송(회계)" variant="outlined" size="small" />
-          <Button label="구매품의서 출력" variant="outlined" size="small" />
-          <Button label="삭제" severity="danger" size="small" variant="outlined" />
+          <Button
+            label="발주서 출력"
+            variant="outlined"
+            size="small"
+            :disabled="!isApproved"
+            @click="clickPrintPurchaseDocument"
+          />
+          <Button
+            label="구매품의서 전송(회계)"
+            variant="outlined"
+            size="small"
+            :disabled="isAlreadySend || !isApproved"
+            @click="clickSendPurchase"
+          />
+          <Button
+            label="구매품의서 출력"
+            variant="outlined"
+            size="small"
+            :disabled="!isApproved"
+            @click="clickPrintPurchase"
+          />
+          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
+          <Button
+            label="삭제"
+            severity="danger"
+            size="small"
+            variant="outlined"
+            :disabled="disabledDeleteButton"
+            @click="clickDelete"
+          />
         </div>
       </div>
 
@@ -73,7 +99,7 @@
         </AppTableStyled>
       </div>
 
-      <div class="approval-status-area">
+      <div>
         <h4 class="mb-1">결재이력</h4>
         <AppTableStyled full-width>
           <thead>
@@ -99,24 +125,76 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useToast } from 'primevue';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { PURCHASE_STATUS } from '@/utils/constant';
 import { formatKoPurchaseStatus } from '@/utils/format';
 import { getPurchaseStatusSeverity } from '@/utils/helper';
+import LocalStorageUtil from '@/utils/localStorage';
 import { mockupItems, mockupPurchases } from '@/utils/mockup';
 
 const route = useRoute();
+const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
+const toast = useToast();
 
 const purchaseDetail = ref(null);
 const purchaseItems = ref([]);
+const disabledDeleteButton = computed(() => {
+  return purchaseDetail.value.status !== PURCHASE_STATUS.REQUESTED;
+});
+const isAlreadySend = ref(false);
+const isApproved = computed(() => {
+  return purchaseDetail.value.status === PURCHASE_STATUS.APPROVED;
+});
+
+const localStorageUtil = new LocalStorageUtil();
+
+const clickPrintPurchaseDocument = () => {
+  // TODO:: 발주서 출력
+};
+
+const clickSendPurchase = () => {
+  // TODO:: 구매품의서 회계팀 전송
+};
+
+const clickPrintPurchase = () => {
+  // TODO:: 구매품의서 출력
+};
+
+const clickGoToList = () => {
+  router.replace({ name: 'hq:purchase:list' });
+};
+
+const deletePurchase = () => {
+  // TODO:: 발주 삭제 API
+
+  toast.add({ severity: 'error', summary: '처리 성공', detail: '발주(구매품의서)가 삭제되었습니다.', life: 3000 });
+  router.replace({ name: 'hq:purchase:list' });
+};
+
+const clickDelete = () => {
+  showConfirm({
+    header: '발주 삭제',
+    message: '발주(구매품의서)를 삭제하시겠습니까?',
+    acceptLabel: '발주 삭제',
+    onAccept: deletePurchase,
+    danger: true,
+  });
+};
 
 onMounted(() => {
+  // 발주 상세 데이터 셋팅
   const purchaseCode = route.params.purchaseCode;
   purchaseDetail.value = mockupPurchases.find(e => e.code == purchaseCode);
-
   purchaseItems.value = [...mockupItems];
+
+  // 이미 회계팀에 보냈는지 확인
+  isAlreadySend.value = localStorageUtil.isSendCompletePurchase(Number(purchaseCode));
 });
 </script>
 
@@ -162,9 +240,6 @@ onMounted(() => {
         height: 50px;
       }
     }
-  }
-
-  .approval-status-area {
   }
 }
 </style>
