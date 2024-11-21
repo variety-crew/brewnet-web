@@ -17,35 +17,25 @@
     <AppInputText v-model="phone" label="휴대폰번호" name="phone" />
 
     <!-- 담당 가맹점 -->
-    <AppFormField label="가맹점">
-      <AutoComplete
-        v-model="selectedFranchise"
-        option-label="label"
-        :suggestions="franchiseSuggestions"
-        size="small"
-        complete-on-focus
-        name="franchise"
-        fluid
-        @complete="search"
-      >
-        <template #option="slotProps">
-          <div>{{ slotProps.option.label }}</div>
-        </template>
-        <template #footer>
-          <div class="px-3 py-3">
-            <Button
-              label="가맹점 신규 등록"
-              fluid
-              severity="secondary"
-              text
-              size="small"
-              icon="pi pi-plus"
-              @click="clickAddFranchise"
-            />
-          </div>
-        </template>
-      </AutoComplete>
-    </AppFormField>
+    <AppAutoComplete
+      v-model="selectedFranchise"
+      label="가맹점"
+      :suggestions="franchiseSuggestions"
+      full-width
+      @complete-input="search"
+    >
+      <template #footer>
+        <Button
+          label="가맹점 신규 등록"
+          fluid
+          severity="secondary"
+          text
+          size="small"
+          icon="pi pi-plus"
+          @click="clickAddFranchise"
+        />
+      </template>
+    </AppAutoComplete>
 
     <Button type="submit" variant="outlined" label="저장" />
   </form>
@@ -57,9 +47,10 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppLabelText from '@/components/common/AppLabelText.vue';
-import AppFormField from '@/components/common/form/AppFormField.vue';
+import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import { makeAutocompleteSuggestion } from '@/utils/helper';
 import { mockupFranchiseAccounts, mockupFranchises } from '@/utils/mockup';
 import { emailRegex, loginIdRegex } from '@/utils/regex';
 
@@ -77,7 +68,7 @@ const filteredFranchises = ref([]);
 const editMode = ref(false);
 
 const franchiseSuggestions = computed(() => {
-  return filteredFranchises.value.map(e => ({ label: e.franchiseName, code: e.code }));
+  return filteredFranchises.value.map(e => makeAutocompleteSuggestion(e.code, e.franchiseName));
 });
 
 const checkForm = () => {

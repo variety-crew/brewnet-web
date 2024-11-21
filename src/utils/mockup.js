@@ -318,3 +318,169 @@ export const mockupExchanges = [
   ),
   makeMockExchange('15', '메가커피 성수점', '얼음컵(L), 종이컵(M)', 'DAMAGED', null, '2024-11-15', 'REQUESTED', 'NONE'),
 ];
+
+// 거래처
+function makeMockSupplier(code, name, managerName, address, detailAddress, contact, email) {
+  return { code, name, managerName, address, detailAddress, contact, email };
+}
+
+export const mockupSuppliers = [
+  makeMockSupplier(
+    99,
+    '원두A공장',
+    '홍길동',
+    '서울 관악구 난곡로 367',
+    '상세주소',
+    '010-1111-1111',
+    'gdhong@company.com',
+  ),
+  makeMockSupplier(
+    98,
+    '원두B공장',
+    '용길한',
+    '서울 관악구 난곡로 367',
+    '상세주소',
+    '010-1111-1111',
+    'gdhong@company.com',
+  ),
+  makeMockSupplier(
+    97,
+    '원두C공장',
+    '정준서',
+    '서울 관악구 난곡로 367',
+    '상세주소',
+    '010-1111-1111',
+    'gdhong@company.com',
+  ),
+];
+
+// 상품
+function makeMockItem(code, name, purchasePrice, sellingPrice, imageUrl, safetyStock, uniqueCode, category) {
+  return { code, name, purchasePrice, sellingPrice, imageUrl, safetyStock, uniqueCode, category };
+}
+export const mockupItems = [
+  makeMockItem(
+    1,
+    '산토스',
+    20000,
+    30000,
+    'https://media.istockphoto.com/id/2158812697/ko/%EC%82%AC%EC%A7%84/%EC%B0%BD%EA%B0%80-%EC%98%86-%EB%82%98%EB%AC%B4-%ED%83%81%EC%9E%90-%EC%9C%84%EC%97%90-%EB%86%93%EC%9D%B8-%EB%B8%94%EB%9E%99-%EC%BB%A4%ED%94%BC-%ED%95%9C-%EC%9E%94%EC%9D%98-%ED%95%98%EC%9D%B4-%EC%95%B5%EA%B8%80-%EB%B7%B0.jpg?s=2048x2048&w=is&k=20&c=_qrZuDASfDBr70l-C0I6wLs03vRwZhlBkyx3d4nSUc4=',
+    100,
+    'C10',
+    '원두',
+  ),
+  makeMockItem(
+    2,
+    '산토스 디카페인',
+    20000,
+    30000,
+    'https://media.istockphoto.com/id/2158812697/ko/%EC%82%AC%EC%A7%84/%EC%B0%BD%EA%B0%80-%EC%98%86-%EB%82%98%EB%AC%B4-%ED%83%81%EC%9E%90-%EC%9C%84%EC%97%90-%EB%86%93%EC%9D%B8-%EB%B8%94%EB%9E%99-%EC%BB%A4%ED%94%BC-%ED%95%9C-%EC%9E%94%EC%9D%98-%ED%95%98%EC%9D%B4-%EC%95%B5%EA%B8%80-%EB%B7%B0.jpg?s=2048x2048&w=is&k=20&c=_qrZuDASfDBr70l-C0I6wLs03vRwZhlBkyx3d4nSUc4=',
+    100,
+    'C101',
+    '원두',
+  ),
+  makeMockItem(
+    3,
+    '슈프리모',
+    20000,
+    30000,
+    'https://media.istockphoto.com/id/2158812697/ko/%EC%82%AC%EC%A7%84/%EC%B0%BD%EA%B0%80-%EC%98%86-%EB%82%98%EB%AC%B4-%ED%83%81%EC%9E%90-%EC%9C%84%EC%97%90-%EB%86%93%EC%9D%B8-%EB%B8%94%EB%9E%99-%EC%BB%A4%ED%94%BC-%ED%95%9C-%EC%9E%94%EC%9D%98-%ED%95%98%EC%9D%B4-%EC%95%B5%EA%B8%80-%EB%B7%B0.jpg?s=2048x2048&w=is&k=20&c=_qrZuDASfDBr70l-C0I6wLs03vRwZhlBkyx3d4nSUc4=',
+    100,
+    'C111',
+    '원두',
+  ),
+];
+
+// 창고
+function makeMockStorage(code, name, address, contact) {
+  return { code, name, address, contact };
+}
+export const mockupStorages = [
+  makeMockStorage(1, '센트럴 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+  makeMockStorage(2, '동부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+  makeMockStorage(3, '서부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+  makeMockStorage(4, '남부 창고', '세종특별자치시 한누리대로 2130', '044-234-5678'),
+];
+
+// 발주
+function makeMockPurchase(
+  status,
+  code,
+  supplierName,
+  totalPrice,
+  storageName,
+  username,
+  createdAt,
+  approvalAt,
+  comment,
+) {
+  return { status, code, supplierName, totalPrice, storageName, username, createdAt, approvalAt, comment };
+}
+export const mockupPurchases = [
+  makeMockPurchase(
+    'REQUESTED',
+    100,
+    '원두공장A',
+    100000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'APPROVED',
+    99,
+    '원두공장A',
+    200000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'APPROVED',
+    98,
+    '원두공장A',
+    300000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'CANCELED',
+    97,
+    '원두공장A',
+    400000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'REJECTED',
+    96,
+    '원두공장A',
+    500000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+  makeMockPurchase(
+    'REQUESTED',
+    95,
+    '원두공장A',
+    600000,
+    '서부창고',
+    '홍길동',
+    '2024-11-11',
+    '2024-11-11',
+    '발주에 대한 비고사항입니다~ 참고해주세요',
+  ),
+];

@@ -1,15 +1,17 @@
+import { EXCHANGE_STATUS, POSITION, PURCHASE_STATUS, ROLE } from './constant';
+
 export const formatKoEmployeePosition = position => {
   switch (position) {
-    case 'STAFF':
+    case POSITION.STAFF:
       return '사원';
 
-    case 'ASSISTANT_MANAGER':
+    case POSITION.ASSISTANT_MANAGER:
       return '대리';
 
-    case 'MANAGER':
+    case POSITION.MANAGER:
       return '과장';
 
-    case 'CEO':
+    case POSITION.CEO:
       return '대표이사';
 
     default:
@@ -19,19 +21,19 @@ export const formatKoEmployeePosition = position => {
 
 export const formatKoMemberRole = role => {
   switch (role) {
-    case 'ROLE_MASTER':
+    case ROLE.MASTER:
       return '마스터';
 
-    case 'ROLE_RESPONSIBLE_ADMIN':
+    case ROLE.RESPONSIBLE_ADMIN:
       return '책임관리자';
 
-    case 'ROLE_GENERAL_ADMIN':
+    case ROLE.GENERAL_ADMIN:
       return '일반관리자';
 
-    case 'ROLE_FRANCHISE':
+    case ROLE.FRANCHISE:
       return '가맹점';
 
-    case 'ROLE_DELIVERY':
+    case ROLE.DELIVERY:
       return '배송';
 
     default:
@@ -57,32 +59,51 @@ export const formatKoExchangeReason = reason => {
 
 export const formatKoExchangeStatus = status => {
   switch (status) {
-    case 'REQUESTED':
+    case EXCHANGE_STATUS.REQUESTED:
       return '교환요청';
 
-    case 'CANCELED':
+    case EXCHANGE_STATUS.CANCELED:
       return '교환취소';
 
-    case 'APPROVED':
+    case EXCHANGE_STATUS.APPROVED:
       return '교환승인';
 
-    case 'REJECTED':
+    case EXCHANGE_STATUS.REJECTED:
       return '교환반려';
 
-    case 'PICKING':
+    case EXCHANGE_STATUS.PICKING:
       return '수거중';
 
-    case 'PICKED':
+    case EXCHANGE_STATUS.PICKED:
       return '수거완료';
 
-    case 'SHIPPING':
+    case EXCHANGE_STATUS.SHIPPING:
       return '배송중';
 
-    case 'SHIPPED':
+    case EXCHANGE_STATUS.SHIPPED:
       return '배송완료';
 
-    case 'COMPLETED':
+    case EXCHANGE_STATUS.COMPLETED:
       return '배송완료';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoPurchaseStatus = status => {
+  switch (status) {
+    case PURCHASE_STATUS.REQUESTED:
+      return '결재요청';
+
+    case PURCHASE_STATUS.CANCELED:
+      return '결재요청취소';
+
+    case PURCHASE_STATUS.APPROVED:
+      return '발주승인';
+
+    case PURCHASE_STATUS.REJECTED:
+      return '발주반려';
 
     default:
       return '';

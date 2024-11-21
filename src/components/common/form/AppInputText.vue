@@ -3,12 +3,20 @@
     <IconField v-if="icon">
       <InputIcon v-if="iconPosition === 'start'" :class="icon" />
       <InputText
-        :value="modelValue"
+        :value="numberMode ? (modelValue ? Number(modelValue).toLocaleString() : null) : modelValue"
         size="small"
         :name="name"
         :placeholder="placeholder"
         :fluid="fullWidth"
         :readonly="readOnly"
+        :disabled="disabled"
+        :pt="{
+          root: {
+            style: {
+              'text-align': textAlign || 'initial',
+            },
+          },
+        }"
         @input="onChangeInput"
         @click="onClickInput"
       />
@@ -16,12 +24,20 @@
     </IconField>
     <template v-else>
       <InputText
-        :value="modelValue"
+        :value="numberMode ? (modelValue ? Number(modelValue).toLocaleString() : null) : modelValue"
         size="small"
         :name="name"
         :placeholder="placeholder"
         :fluid="fullWidth"
         :readonly="readOnly"
+        :disabled="disabled"
+        :pt="{
+          root: {
+            style: {
+              'text-align': textAlign || 'initial',
+            },
+          },
+        }"
         @input="onChangeInput"
       />
     </template>
@@ -29,18 +45,34 @@
 </template>
 
 <script setup>
+import { notNumber } from '@/utils/regex';
+
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue, name, placeholder, fullWidth, readOnly, icon, iconPosition } = defineProps({
+const {
+  label,
+  modelValue,
+  name,
+  placeholder,
+  fullWidth,
+  readOnly,
+  icon,
+  iconPosition,
+  disabled,
+  numberMode,
+  textAlign,
+} = defineProps({
   label: {
     type: String,
     required: false,
     default: '',
   },
   modelValue: {
-    type: String,
+    type: [String, null],
     required: true,
   },
+
+  // required false
   name: {
     type: [String, null],
     required: false,
@@ -71,12 +103,31 @@ const { label, modelValue, name, placeholder, fullWidth, readOnly, icon, iconPos
     required: false,
     default: 'start',
   },
+  disabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  numberMode: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  textAlign: {
+    type: [String, null],
+    required: false,
+    default: null,
+  },
 });
 
 const emit = defineEmits(['update:modelValue', 'onClick']);
 
 function onChangeInput(event) {
-  emit('update:modelValue', event.target.value);
+  let newVal = event.target.value;
+  if (numberMode) {
+    newVal = newVal.replace(notNumber, '');
+  }
+  emit('update:modelValue', newVal);
 }
 
 function onClickInput() {

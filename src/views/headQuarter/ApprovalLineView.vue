@@ -1,6 +1,6 @@
 <template>
   <div class="approval-line-container">
-    <table>
+    <AppTableStyled full-width>
       <tr v-for="approvalLine in approvalLines" :key="approvalLine.code">
         <th>{{ approvalLine.title }}</th>
         <td>
@@ -12,7 +12,7 @@
           <Button label="수정" size="small" @click="clickEdit(approvalLine)" />
         </td>
       </tr>
-    </table>
+    </AppTableStyled>
 
     <DynamicDialog />
   </div>
@@ -21,6 +21,7 @@
 <script setup>
 import { defineAsyncComponent, onMounted, ref } from 'vue';
 
+import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useModal } from '@/hooks/useModal';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { mockupApprovalLines } from '@/utils/mockup';
@@ -54,20 +55,7 @@ onMounted(() => {
 <style scoped>
 .approval-line-container {
   table {
-    width: 100%;
     margin-top: 20px;
-    border-spacing: 0;
-    border-collapse: collapse;
-
-    th {
-      background-color: var(--p-surface-100);
-    }
-
-    th,
-    td {
-      padding: 5px 10px;
-      border: 1px solid var(--p-surface-200);
-    }
 
     tr > td:nth-child(3) {
       text-align: center;

@@ -7,6 +7,7 @@
         show-icon
         icon-display="input"
         show-button-bar
+        size="small"
         @update:model-value="onChangeStart"
       />
       <i class="pi pi-arrow-right"></i>
@@ -16,6 +17,7 @@
         show-icon
         icon-display="input"
         show-button-bar
+        size="small"
         @update:model-value="onChangeEnd"
       />
     </div>
@@ -33,8 +35,8 @@ const { label } = defineProps({
   },
 });
 
-const start = defineModel('start', { type: Date });
-const end = defineModel('end', { type: Date });
+const start = defineModel('start', { type: Date, required: true });
+const end = defineModel('end', { type: Date, required: true });
 
 const onChangeStart = newValue => {
   start.value = newValue;

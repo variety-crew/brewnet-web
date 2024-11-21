@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea>
+    <SearchArea grid>
       <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
     </SearchArea>
 
@@ -69,11 +69,11 @@ const columns = [
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
-  { field: 'position', header: '직급', render: formatKoEmployeePosition },
+  { field: 'position', header: '직급', render: data => formatKoEmployeePosition(data.position) },
   {
     field: 'role',
     header: '권한',
-    render: formatKoMemberRole,
+    render: data => formatKoMemberRole(data.role),
   },
   {
     field: '',
@@ -81,15 +81,15 @@ const columns = [
     template: {
       button: [
         {
-          label: '정보수정',
+          getLabel: () => '정보수정',
           clickHandler: onClickEdit,
         },
         {
-          label: '권한설정',
+          getLabel: () => '권한설정',
           clickHandler: onClickEditRole,
         },
         {
-          label: '삭제',
+          getLabel: () => '삭제',
           clickHandler: onClickRemove,
         },
       ],

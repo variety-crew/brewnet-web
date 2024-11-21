@@ -1,17 +1,14 @@
 <template>
   <div>
-    <SearchArea>
+    <SearchArea grid>
       <AppInputText v-model="franchiseNameKeyword" label="지점명" />
-      <AppFormField label="시/도">
-        <AutoComplete
-          v-model="addressKeyword"
-          :suggestions="addressSuggestions"
-          size="small"
-          complete-on-focus
-          fluid
-          @complete="onChangeAddressKeyword"
-        />
-      </AppFormField>
+      <AppAutoComplete
+        v-model="addressKeyword"
+        label="시/도"
+        :suggestions="addressSuggestions"
+        full-width
+        @complete-input="onChangeAddressKeyword"
+      />
     </SearchArea>
 
     <AppTable
@@ -30,10 +27,11 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
-import AppFormField from '@/components/common/form/AppFormField.vue';
+import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { makeAutocompleteSuggestion } from '@/utils/helper';
 import { mockupFranchises } from '@/utils/mockup';
 
 const { showConfirm } = useAppConfirmModal();
@@ -54,16 +52,16 @@ const allAddress = [
   '광주',
   '울산',
   '세종특별자치시',
-  '경기도',
-  '충청북도',
-  '충청남도',
-  '전라북도',
-  '전라남도',
-  '경상북도',
-  '경상남도',
-  '제주',
-  '강원도',
-];
+  '경기',
+  '충북',
+  '충남',
+  '전남',
+  '경북',
+  '경남',
+  '강원특별자치도',
+  '전북특별자치도',
+  '제주특별자치도',
+].map(e => makeAutocompleteSuggestion(e, e));
 const addressSuggestions = ref([]);
 
 const clickEdit = data => {
@@ -97,8 +95,8 @@ const columns = [
     header: '',
     template: {
       button: [
-        { label: '정보수정', clickHandler: clickEdit },
-        { label: '삭제', clickHandler: clickRemove },
+        { getLabel: () => '정보수정', clickHandler: clickEdit },
+        { getLabel: () => '삭제', clickHandler: clickRemove },
       ],
     },
   },
@@ -114,7 +112,11 @@ const reload = () => {
 };
 
 const onChangeAddressKeyword = event => {
-  if (!event.query) addressSuggestions.value = allAddress;
+  if (!event.query) {
+    addressSuggestions.value = allAddress;
+    return;
+  }
+
   addressSuggestions.value = allAddress.filter(e => e.includes(event.query));
 };
 

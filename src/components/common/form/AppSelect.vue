@@ -22,7 +22,7 @@ import AppFormField from './AppFormField.vue';
 const { modelValue, options, initialValue, label, name } = defineProps({
   // 부모로부터 현재 선택된 값을 받아옴
   modelValue: {
-    type: String,
+    type: [String, Number],
     required: true,
   },
 
