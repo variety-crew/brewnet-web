@@ -48,7 +48,8 @@ export default class BaseApiService {
         if (newRefreshToken) {
           this.#userStore.saveTempRefreshToken(newRefreshToken);
         }
-        return response.json();
+        const responseData = await response.json();
+        return responseData.result;
       } else {
         // Promise resolved but HTTP status failed
 

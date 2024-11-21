@@ -1,12 +1,10 @@
 <template>
   <div class="approval-line-container">
     <AppTableStyled full-width>
-      <tr v-for="approvalLine in approvalLines" :key="approvalLine.code">
-        <th>{{ approvalLine.title }}</th>
+      <tr v-for="approvalLine in approvalLines" :key="approvalLine.kind">
+        <th>{{ formatKoApprovalKind(approvalLine.kind) }} 결재라인</th>
         <td>
-          <p v-for="(position, i) in approvalLine.positions" :key="position">
-            {{ i + 1 }}차 결재자: {{ formatKoEmployeePosition(position) }}
-          </p>
+          <p>결재자(직급): {{ approvalLine.positionName }}</p>
         </td>
         <td>
           <Button label="수정" size="small" @click="clickEdit(approvalLine)" />
@@ -23,8 +21,8 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useModal } from '@/hooks/useModal';
-import { formatKoEmployeePosition } from '@/utils/format';
-import { mockupApprovalLines } from '@/utils/mockup';
+import DocumentApi from '@/utils/api/DocumentApi';
+import { formatKoApprovalKind } from '@/utils/format';
 
 const EditApprovalLineModalBody = defineAsyncComponent(
   () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
@@ -34,21 +32,33 @@ const { openModal } = useModal();
 
 const approvalLines = ref([]);
 
-let editingCode = null;
+const documentApi = new DocumentApi();
+
+const getApprovalLines = () => {
+  documentApi.getApprovalLines().then(data => {
+    approvalLines.value = data;
+  });
+};
 
 const clickEdit = target => {
-  editingCode = target.code;
   openModal({
     component: EditApprovalLineModalBody,
-    header: `${target.title} 수정`,
+    header: `${formatKoApprovalKind(target.kind)} 결재라인 수정`,
     data: {
       targetApprovalLine: target,
+    },
+    onClose: opt => {
+      const callbackParams = opt.data;
+      if (callbackParams.reload) {
+        getApprovalLines();
+      }
     },
   });
 };
 
 onMounted(() => {
-  approvalLines.value = [...mockupApprovalLines];
+  // 결재라인 가져오기
+  getApprovalLines();
 });
 </script>
 
