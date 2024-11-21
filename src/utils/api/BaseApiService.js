@@ -20,7 +20,7 @@ export default class BaseApiService {
       // 토큰이 있다면 헤더에 담아 요청
       const token = this.#userStore.accessToken;
       if (token) {
-        requestHeaders.append('Authorization', `Bearer ${token}`);
+        requestHeaders.append('Authorization', `${token}`);
       }
 
       // form data가 아니면 Content-Type 추가
