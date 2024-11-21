@@ -29,6 +29,7 @@ import { useRouter } from 'vue-router';
 import AppCheck from '@/components/common/form/AppCheck.vue';
 import { useUserStore } from '@/stores/user';
 import AuthApiService from '@/utils/api/AuthApiService';
+import LocalStorageUtil from '@/utils/localStorage';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -39,6 +40,7 @@ const password = ref('');
 const saveAuth = ref(false);
 
 const authApiService = new AuthApiService();
+const localStorageUtil = new LocalStorageUtil();
 
 const checkForm = () => {
   try {
@@ -74,18 +76,14 @@ const login = () => {
   }
 
   // 로그인 정보 저장할건지?
-  if (saveAuth.value) {
-    localStorage.setItem('loginId', id.value);
-  } else {
-    localStorage.removeItem('loginId');
-  }
+  localStorageUtil.handleRememberLoginId(saveAuth.value, id.value);
 
   router.replace({ name: `${type}:home` });
 };
 
 onMounted(() => {
   // 저장된 로그인 아이디가 있다면 default 셋팅
-  const foundLoginId = localStorage.getItem('loginId');
+  const foundLoginId = localStorageUtil.getLoginId();
   if (foundLoginId) {
     id.value = foundLoginId;
   }
