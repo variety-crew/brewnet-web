@@ -22,6 +22,7 @@
 </template>
 
 <script setup>
+import { jwtDecode } from 'jwt-decode';
 import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -29,6 +30,7 @@ import { useRouter } from 'vue-router';
 import AppCheck from '@/components/common/form/AppCheck.vue';
 import { useUserStore } from '@/stores/user';
 import AuthApiService from '@/utils/api/AuthApiService';
+import { ROLE } from '@/utils/constant';
 import LocalStorageUtil from '@/utils/localStorage';
 
 const userStore = useUserStore();
@@ -59,26 +61,34 @@ const login = () => {
   if (!isPass) return;
 
   authApiService.login(id.value, password.value).then(() => {
-    // 로그인 후 access token, refresh token 셋팅 완료
+    // 로그인 후 temp access token, temp refresh token 셋팅 완료
 
-    // 로그인 한 사람의 권한 조회
-    authApiService.getAuth().then(data => {
-      console.log(data);
-    });
+    // token decode 진행
+    const { authorities } = jwtDecode(userStore.tempAccessToken);
+
+    let userType;
+    if (authorities.includes(ROLE.FRANCHISE)) {
+      userType = 'fc';
+    } else if (authorities.includes(ROLE.DELIVERY)) {
+      userType = 'd';
+    } else if (
+      authorities.includes(ROLE.GENERAL_ADMIN) ||
+      authorities.includes(ROLE.RESPONSIBLE_ADMIN) ||
+      authorities.includes(ROLE.MASTER)
+    ) {
+      userType = 'hq';
+    }
+
+    // 유저 타입 검증됐다면 로그인 성공
+    if (userType) {
+      userStore.setUserType(userType);
+      userStore.saveTokenTempToReal(); // temp -> 진짜 토큰으로 셋팅
+
+      localStorageUtil.handleRememberLoginId(saveAuth.value, id.value); // 로그인 정보 저장할건지?
+
+      router.replace({ name: `${userType}:home` });
+    }
   });
-
-  // if (type === 'hq') {
-  //   userStore.loginByHeadQuarter();
-  // } else if (type === 'fc') {
-  //   userStore.loginByFranchise();
-  // } else if (type === 'd') {
-  //   userStore.loginByDelivery();
-  // }
-
-  // // 로그인 정보 저장할건지?
-  // localStorageUtil.handleRememberLoginId(saveAuth.value, id.value);
-
-  // router.replace({ name: `${type}:home` });
 };
 
 onMounted(() => {

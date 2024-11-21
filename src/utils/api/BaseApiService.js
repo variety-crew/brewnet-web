@@ -42,11 +42,11 @@ export default class BaseApiService {
         // 응답 헤더에 토큰이 담겨져 왔다면 저장
         const newAccessToken = response.headers.get('authorization');
         if (newAccessToken) {
-          this.#userStore.saveAccessToken(newAccessToken);
+          this.#userStore.saveTempAccessToken(newAccessToken);
         }
         const newRefreshToken = response.headers.get('refresh-token');
         if (newRefreshToken) {
-          this.#userStore.saveRefreshToken(newRefreshToken);
+          this.#userStore.saveTempRefreshToken(newRefreshToken);
         }
         return response.json();
       } else {
@@ -62,8 +62,7 @@ export default class BaseApiService {
       // Promise rejected
 
       DOMEvent.dispatchApiError(error.message);
-
-      return null;
+      throw error; // throw 함으로써 사용부의 catch에 걸림
     }
   }
 

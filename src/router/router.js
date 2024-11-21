@@ -22,16 +22,25 @@ const routes = [
         path: 'login',
         name: 'auth:login',
         component: () => import('@/views/auth/LoginView.vue'),
+        meta: {
+          guestOnly: true,
+        },
       },
       {
         path: 'find-password',
         name: 'auth:find-password',
         component: () => import('@/views/auth/FindPassword.vue'),
+        meta: {
+          guestOnly: true,
+        },
       },
       {
         path: 'reset-password',
         name: 'auth:reset-password',
         component: () => import('@/views/auth/ResetPassword.vue'),
+        meta: {
+          guestOnly: true,
+        },
       },
     ],
   },
