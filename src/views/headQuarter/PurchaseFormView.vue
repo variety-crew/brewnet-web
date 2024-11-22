@@ -15,7 +15,7 @@
         v-model="selectedStorage"
         label="입고창고 선택"
         :suggestions="storageSuggestions"
-        placeholder="창고명이나 창고코드로 검색"
+        placeholder="창고명 검색"
         full-width
         @complete-input="onCompleteInputStorage"
       />
@@ -102,9 +102,11 @@ import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
+import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
+import HQStorageApi from '@/utils/api/HQStorageApi';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupApprovalLines, mockupEmployees, mockupItems, mockupStorages, mockupSuppliers } from '@/utils/mockup';
+import { mockupApprovalLines, mockupEmployees, mockupItems, mockupSuppliers } from '@/utils/mockup';
 
 const userStore = useUserStore();
 const toast = useToast();
@@ -120,7 +122,7 @@ const supplierSuggestions = computed(() => {
 const selectedStorage = ref(null);
 const filteredStorages = ref([]);
 const storageSuggestions = computed(() => {
-  return filteredStorages.value.map(e => makeAutocompleteSuggestion(e.code, `#${e.code} ${e.name}`));
+  return filteredStorages.value.map(e => makeAutocompleteSuggestion(e.storageCode, e.storageName));
 });
 
 const allCheck = ref(false);
@@ -136,6 +138,9 @@ const approvalLine = ref(mockupApprovalLines.find(e => e.code === 'purchase'));
 const approvalUserSuggestions = ref([]);
 const selectedApprovalUser = ref(null);
 
+const hqPurchaseApi = new HQPurchaseApi();
+const hqStorageApi = new HQStorageApi();
+
 const onCompleteInputSupplier = event => {
   // if (!event.query) return;
   // filteredSuppliers.value = mockupSuppliers.filter(
@@ -146,7 +151,10 @@ const onCompleteInputSupplier = event => {
 };
 
 const onCompleteInputStorage = event => {
-  filteredStorages.value = [...mockupStorages];
+  // 창고명으로 검색
+  hqStorageApi.getStorages({ storageName: event.query }).then(data => {
+    filteredStorages.value = data.data;
+  });
 };
 
 const onCompleteInputApprovalUser = event => {

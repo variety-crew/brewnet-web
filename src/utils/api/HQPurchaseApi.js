@@ -56,4 +56,19 @@ export default class HQPurchaseApi extends BaseApiService {
   getPurchaseApprovalLines(purchaseCode) {
     return this.get(`/${purchaseCode}/approval-line`);
   }
+
+  //
+  // POST
+  //
+
+  // 발주(구매품의서) 등록
+  createPurchase({ comment, correspondentCode, storageCode, approverCode, items }) {
+    return this.post('/create', {
+      comment,
+      correspondentCode,
+      storageCode,
+      approverCode,
+      items,
+    });
+  }
 }
