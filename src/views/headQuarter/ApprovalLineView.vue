@@ -49,6 +49,8 @@ const clickEdit = target => {
     },
     onClose: opt => {
       const callbackParams = opt.data;
+      if (!callbackParams) return;
+
       if (callbackParams.reload) {
         getApprovalLines();
       }
