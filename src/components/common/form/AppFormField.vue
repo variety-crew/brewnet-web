@@ -1,12 +1,14 @@
 <template>
   <div ref="element" class="app-input-container" :class="{ width100, flexGrow1 }">
-    <label v-if="label">{{ label }}</label>
+    <AppLabel v-if="label" :label="label" />
     <slot></slot>
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
+
+import AppLabel from '../AppLabel.vue';
 
 const { label, fullWidth } = defineProps({
   label: {
@@ -50,11 +52,6 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 5px;
-
-  label {
-    font-size: 14px;
-    color: var(--p-surface-600);
-  }
 
   &.flexGrow1 {
     flex-grow: 1;

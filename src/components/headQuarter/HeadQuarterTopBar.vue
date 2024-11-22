@@ -21,18 +21,18 @@
           />
         </div>
 
-        <div class="user">
-          <p>{{ userStore.username }}</p>
+        <div>
           <Button
             type="button"
             icon="pi pi-chevron-down"
             aria-haspopup="true"
             aria-controls="overlay_menu"
             aria-label="User Menu"
-            variant="text"
-            raised
+            :label="`${userStore.username} 님`"
             severity="secondary"
             size="small"
+            icon-pos="right"
+            rounded
             @click="toggleUserMenu"
           />
 
@@ -54,10 +54,12 @@ import { useRouter } from 'vue-router';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import AppMenu from '@/router/AppMenu';
 import { useUserStore } from '@/stores/user';
+import AuthApi from '@/utils/api/AuthApi';
 
 import AppNavbar from '../common/AppNavbar.vue';
 
 const appMenu = new AppMenu();
+const authApi = new AuthApi();
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -81,8 +83,10 @@ const toggleUserMenu = event => {
 };
 
 const handleLogout = () => {
-  userStore.logout();
-  router.replace({ name: 'auth:login' });
+  authApi.logout().then(() => {
+    userStore.clearUserData();
+    router.replace({ name: 'auth:login' });
+  });
 };
 
 function clickLogout() {
@@ -116,12 +120,6 @@ function clickMyPage() {
     a.topbar-link-active {
       color: var(--p-primary-600);
       border-bottom: 2px solid var(--p-primary-600);
-    }
-
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
   }
 }
