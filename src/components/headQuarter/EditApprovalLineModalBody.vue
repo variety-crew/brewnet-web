@@ -7,7 +7,7 @@
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue';
 
-import DocumentApi from '@/utils/api/DocumentApi';
+import MasterDocumentApi from '@/utils/api/MasterDocumentApi';
 import { APPROVAL_POSITIONS } from '@/utils/constant';
 import DOMEvent from '@/utils/domEvent';
 import { formatKoEmployeePosition } from '@/utils/format';
@@ -27,12 +27,12 @@ const positionOptions = computed(() => {
 });
 
 let approvalLine = null;
-const documentApi = new DocumentApi();
+const masterDocumentApi = new MasterDocumentApi();
 
 const save = () => {
   if (!approvalLine) return;
 
-  documentApi.setApprovalLine({ ...approvalLine, positionName: position.value }).then(() => {
+  masterDocumentApi.setApprovalLine({ ...approvalLine, positionName: position.value }).then(() => {
     DOMEvent.dispatchApiSuccess('결재라인이 수정되었습니다.');
     dialogRef.value.close({ reload: true });
   });
