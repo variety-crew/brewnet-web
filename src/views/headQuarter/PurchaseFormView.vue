@@ -64,7 +64,8 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="5">총 합계 {{ total.toLocaleString() }}</td>
+              <td>총 합계</td>
+              <td colspan="4" class="align-center">{{ total.toLocaleString() }}</td>
               <td class="align-right">{{ totalSupplyValue.toLocaleString() }}</td>
               <td class="align-right">{{ totalTaxValue.toLocaleString() }}</td>
             </tr>
@@ -202,16 +203,25 @@ const checkForm = () => {
 };
 
 const onPurchaseSave = () => {
-  //TODO:: 발주 등록 API 호출
-  const newPurchaseCode = 201;
+  hqPurchaseApi
+    .createPurchase({
+      comment: comment.value,
+      correspondentCode: selectedSupplier.value.code,
+      storageCode: selectedStorage.value.code,
+      approverCode: selectedApprovalUser.value.code,
+      items: selectedItems.value.map(e => ({ itemCode: e.itemCode, quantity: e.quantity })),
+    })
+    .then(newPurchaseCode => {
+      toast.add({
+        severity: 'success',
+        summary: '처리 성공',
+        detail: '발주에 대한 결재요청이 등록되었습니다.',
+        life: 3000,
+      });
 
-  toast.add({
-    severity: 'success',
-    summary: '처리 성공',
-    detail: '발주에 대한 결재요청이 등록되었습니다.',
-    life: 3000,
-  });
-  router.replace({ name: 'hq:purchase:detail', params: { purchaseCode: newPurchaseCode } });
+      // 상세 페이지로 이동
+      router.replace({ name: 'hq:purchase:detail', params: { purchaseCode: newPurchaseCode } });
+    });
 };
 
 const clickSave = () => {
