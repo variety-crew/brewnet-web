@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea grid>
+    <SearchArea grid @search="onSearch">
       <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
     </SearchArea>
 
@@ -113,13 +113,12 @@ const reload = () => {
   getEmployees();
 };
 
+const onSearch = () => {
+  getEmployees();
+};
+
 onMounted(() => {
   getEmployees();
-});
-
-// 임직원명으로 검색
-watch(nameKeyword, newVal => {
-  console.log(newVal);
 });
 
 // 페이지 변경되면 API 호출
