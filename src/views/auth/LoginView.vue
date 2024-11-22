@@ -29,7 +29,7 @@ import { useRouter } from 'vue-router';
 
 import AppCheck from '@/components/common/form/AppCheck.vue';
 import { useUserStore } from '@/stores/user';
-import AuthApiService from '@/utils/api/AuthApiService';
+import AuthApi from '@/utils/api/AuthApi';
 import { ROLE } from '@/utils/constant';
 import LocalStorageUtil from '@/utils/localStorage';
 
@@ -41,7 +41,7 @@ const id = ref('');
 const password = ref('');
 const saveAuth = ref(false);
 
-const authApiService = new AuthApiService();
+const authApi = new AuthApi();
 const localStorageUtil = new LocalStorageUtil();
 
 const checkForm = () => {
@@ -60,7 +60,7 @@ const login = () => {
   const isPass = checkForm();
   if (!isPass) return;
 
-  authApiService.login(id.value, password.value).then(() => {
+  authApi.login(id.value, password.value).then(() => {
     // 로그인 후 temp access token, temp refresh token 셋팅 완료
 
     // token decode 진행

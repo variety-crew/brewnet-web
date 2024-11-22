@@ -1,6 +1,6 @@
 import BaseApiService from './BaseApiService';
 
-export default class AuthApiService extends BaseApiService {
+export default class AuthApi extends BaseApiService {
   constructor() {
     super('/v1/auth');
   }
