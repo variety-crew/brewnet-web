@@ -11,7 +11,7 @@
       <AppSelect
         v-model="criteria.criteria"
         :options="criteriaOptions"
-        :initial-value="initialCriteria"
+        :initial-value="criteria.criteria"
         label="검색어"
         label-position="left"
         full-width
@@ -46,7 +46,7 @@ import { makeSelectOption } from '@/utils/helper';
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
   endDate: new Date(),
-  criteria: '',
+  criteria: SEARCH_CRITERIA.ITEM_UNIQUE_CODE,
   keyword: '',
 });
 const criteria = ref(getInitialCriteria());
@@ -55,7 +55,6 @@ const totalElements = ref(0);
 const pageSize = ref(15);
 const page = ref(1);
 
-const initialCriteria = ref('');
 const criteriaOptions = computed(() => {
   return CRITERIA_IN_STOCK.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
@@ -131,10 +130,6 @@ const onReload = () => {
 };
 
 onMounted(() => {
-  // default 검색기준 셋팅
-  initialCriteria.value = SEARCH_CRITERIA.ITEM_UNIQUE_CODE;
-  criteria.value.criteria = SEARCH_CRITERIA.ITEM_UNIQUE_CODE;
-
   getInStockItems();
 });
 </script>
