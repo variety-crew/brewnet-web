@@ -9,13 +9,18 @@
 import { useRouter } from 'vue-router';
 
 import { useUserStore } from '@/stores/user';
+import AuthApi from '@/utils/api/AuthApi';
 
 const userStore = useUserStore();
 const router = useRouter();
 
+const authApi = new AuthApi();
+
 const clickLogout = () => {
-  userStore.logout();
-  router.replace({ name: 'auth:login' });
+  authApi.logout().then(() => {
+    userStore.logout();
+    router.replace({ name: 'auth:login' });
+  });
 };
 </script>
 

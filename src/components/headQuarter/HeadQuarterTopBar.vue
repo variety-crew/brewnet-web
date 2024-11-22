@@ -54,10 +54,12 @@ import { useRouter } from 'vue-router';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import AppMenu from '@/router/AppMenu';
 import { useUserStore } from '@/stores/user';
+import AuthApi from '@/utils/api/AuthApi';
 
 import AppNavbar from '../common/AppNavbar.vue';
 
 const appMenu = new AppMenu();
+const authApi = new AuthApi();
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -81,8 +83,10 @@ const toggleUserMenu = event => {
 };
 
 const handleLogout = () => {
-  userStore.logout();
-  router.replace({ name: 'auth:login' });
+  authApi.logout().then(() => {
+    userStore.logout();
+    router.replace({ name: 'auth:login' });
+  });
 };
 
 function clickLogout() {

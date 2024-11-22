@@ -15,4 +15,8 @@ export default class AuthApi extends BaseApiService {
       password,
     });
   }
+
+  logout() {
+    return this.post('/logout');
+  }
 }
