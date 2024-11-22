@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea grid>
-      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
+    <SearchArea grid @search="onSearch" @form-reset="reset">
+      <AppInputText id="input_name_keyword" v-model="criteria.username" label="임직원명" />
     </SearchArea>
 
     <AppTable
       :paginated-data="paginatedEmployees"
       :columns="columns"
-      :total-elements="employees.length"
+      :total-elements="totalElements"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
+import { ref, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -26,8 +26,8 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
-import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
-import { mockupEmployees } from '@/utils/mockup';
+import MemberApi from '@/utils/api/MemberApi';
+import { formatKoMemberRole } from '@/utils/format';
 
 const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuarter/EditMemberRoleModalBody.vue'));
 
@@ -35,11 +35,13 @@ const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
 
-const nameKeyword = ref('');
-const employees = ref([]);
-const paginatedEmployees = computed(() => {
-  return employees.value.slice(0, 15);
-});
+const getInitialCriteriaData = () => ({ username: '' });
+const criteria = ref(getInitialCriteriaData());
+const paginatedEmployees = ref([]);
+const totalElements = ref(0);
+const page = ref(0);
+
+const memberApi = new MemberApi();
 
 function onClickEdit(data) {
   router.push({ name: 'hq:settings:employee:edit', params: { memberCode: data.code } });
@@ -64,12 +66,12 @@ function onClickRemove(data) {
 }
 
 const columns = [
-  { field: 'code', header: '임직원코드' },
+  { field: 'memberCode', header: '임직원코드' },
   { field: 'name', header: '임직원명', sortable: true },
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
-  { field: 'position', header: '직급', render: data => formatKoEmployeePosition(data.position) },
+  { field: 'positionName', header: '직급' },
   {
     field: 'role',
     header: '권한',
@@ -97,22 +99,37 @@ const columns = [
   },
 ];
 
+const getEmployees = () => {
+  memberApi.getMembers({ page: page.value, memberName: criteria.value.username }).then(data => {
+    totalElements.value = data.totalElements;
+    paginatedEmployees.value = data.content;
+  });
+};
+
 const onChangePage = event => {
-  const { page } = event;
-  console.log(page, '페이지로 변경되었다!');
+  page.value = event.page;
 };
 
 const reload = () => {
-  console.log('reload 테이블');
+  getEmployees();
+};
+
+const onSearch = () => {
+  getEmployees();
+};
+
+const reset = () => {
+  criteria.value = getInitialCriteriaData();
+  getEmployees();
 };
 
 onMounted(() => {
-  employees.value = [...mockupEmployees];
+  getEmployees();
 });
 
-// 임직원명으로 검색
-watch(nameKeyword, newVal => {
-  console.log(newVal);
+// 페이지 변경되면 API 호출
+watch(page, () => {
+  getEmployees();
 });
 </script>
 
