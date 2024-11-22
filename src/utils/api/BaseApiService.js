@@ -49,7 +49,13 @@ export default class BaseApiService {
           this.#userStore.saveTempRefreshToken(newRefreshToken);
         }
         const responseData = await response.json();
-        console.log(`${requestUrl} >>> 응답 >>>`, responseData); // response data logging
+
+        // logging
+        const parsedUrl = new URL(requestUrl);
+        console.log(
+          `REQUEST: ${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}\nQUERY  : ${parsedUrl.search}\n\nRESPONSE`,
+          responseData,
+        );
 
         return responseData.result;
       } else {

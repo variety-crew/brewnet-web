@@ -1,4 +1,12 @@
-import { APPROVAL_KIND, APPROVAL_STATUS, EXCHANGE_STATUS, POSITION, PURCHASE_STATUS, ROLE } from './constant';
+import {
+  APPROVAL_KIND,
+  APPROVAL_STATUS,
+  EXCHANGE_STATUS,
+  POSITION,
+  PURCHASE_STATUS,
+  ROLE,
+  SEARCH_CRITERIA,
+} from './constant';
 
 export const formatKoEmployeePosition = position => {
   switch (position) {
@@ -139,6 +147,25 @@ export const formatKoApprovalStatus = status => {
 
     case APPROVAL_STATUS.REJECTED:
       return '반려';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoSearchCriteria = criteria => {
+  switch (criteria) {
+    case SEARCH_CRITERIA.ITEM_UNIQUE_CODE:
+      return '품목코드';
+
+    case SEARCH_CRITERIA.ITEM_NAME:
+      return '품목명';
+
+    case SEARCH_CRITERIA.CORRESPONDENT_NAME:
+      return '거래처명';
+
+    case SEARCH_CRITERIA.STORAGE_NAME:
+      return '창고명';
 
     default:
       return '';
