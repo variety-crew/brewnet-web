@@ -4,6 +4,7 @@
       :paginated-data="paginatedFranchiseMembers"
       :columns="columns"
       :total-elements="totalElements"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -24,6 +25,7 @@ const { showConfirm } = useAppConfirmModal();
 const page = ref(0);
 const paginatedFranchiseMembers = ref([]);
 const totalElements = ref(0);
+const pageSize = ref(15);
 
 const hqFranchiseApi = new HQFranchiseApi();
 
@@ -47,7 +49,7 @@ function onClickRemove(data) {
 
 const columns = [
   { field: 'memberCode', header: '계정코드' },
-  { field: 'id', header: '아이디' },
+  { field: 'loginId', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
   { field: 'franchiseName', header: '지점명' },
@@ -70,7 +72,7 @@ const columns = [
 ];
 
 const getFranchiseMembers = () => {
-  hqFranchiseApi.getFranchiseMembers({ page: page.value }).then(data => {
+  hqFranchiseApi.getFranchiseMembers({ page: page.value, pageSize: pageSize.value }).then(data => {
     totalElements.value = data.totalElements;
     paginatedFranchiseMembers.value = data.content;
   });

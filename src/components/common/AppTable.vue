@@ -140,6 +140,10 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
     type: Array,
     required: true,
   },
+  rowsPerPage: {
+    type: Number,
+    required: true,
+  },
   /**
    * columns: [{
    *   field: string               // 테이블 데이터의 필드명
@@ -166,11 +170,6 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    */
 
   // required false
-  rowsPerPage: {
-    type: Number,
-    required: false,
-    default: 15,
-  },
   addButton: {
     type: Object,
     required: false,

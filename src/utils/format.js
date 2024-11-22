@@ -1,14 +1,6 @@
-import {
-  APPROVAL_KIND,
-  DRAFTER_APPROVED,
-  APPROVAL,
-  EXCHANGE_REASON,
-  EXCHANGE_STATUS,
-  ORDER_STATUS,
-  POSITION,
-  PURCHASE_STATUS,
-  ROLE,
-} from './constant';
+import { APPROVAL_KIND, EXCHANGE_STATUS, POSITION, PURCHASE_STATUS, ROLE } from './constant';
+import { APPROVAL_KIND, EXCHANGE_STATUS, POSITION, PURCHASE_STATUS, ROLE, APPROVAL_STATUS } from './constant';
+
 
 export const formatKoEmployeePosition = position => {
   switch (position) {
@@ -51,55 +43,20 @@ export const formatKoMemberRole = role => {
   }
 };
 
-export const formatKoDrafterApproved = drafterApproved => {
-  switch (drafterApproved) {
-    case DRAFTER_APPROVED.APPROVE:
-      return '승인';
-
-    case DRAFTER_APPROVED.REJECT:
-      return '반려';
-
-    case DRAFTER_APPROVED.NONE:
-      return '미정';
-
-    default:
-      return '';
-  }
-};
-
-export const formatKoApproval = approval => {
-  switch (approval) {
-    case APPROVAL.APPROVED:
-      return '결재승인';
-
-    case APPROVAL.CANCELED:
-      return '결재취소';
-
-    case APPROVAL.UNCONFIRMED:
-      return '미확인'; // 결재 확인되지 않음
-
-    case APPROVAL.REJECTED:
-      return '결재반려';
-
-    default:
-      return '';
-  }
-};
-
 export const formatKoExchangeReason = reason => {
-  switch (reason) {
-    case EXCHANGE_REASON.DAMAGED:
-      return '파손';
+    switch (reason) {
+        case EXCHANGE_REASON.DAMAGED:
+            return '파손';
 
-    case EXCHANGE_REASON.DEFECTIVE:
-      return '품질불량';
+        case EXCHANGE_REASON.DEFECTIVE:
+            return '품질불량';
 
-    case EXCHANGE_REASON.OTHER:
-      return '기타';
+        case EXCHANGE_REASON.OTHER:
+            return '기타';
 
-    default:
-      return '';
-  }
+        default:
+            return '';
+    }
 };
 
 export const formatKoExchangeStatus = status => {
@@ -107,8 +64,8 @@ export const formatKoExchangeStatus = status => {
     case EXCHANGE_STATUS.REQUESTED:
       return '교환요청';
 
-    case EXCHANGE_STATUS.PENDING:
-      return '진행중';
+     case EXCHANGE_STATUS.PENDING:
+          return '진행중';
 
     case EXCHANGE_STATUS.CANCELED:
       return '교환취소';
@@ -132,34 +89,6 @@ export const formatKoExchangeStatus = status => {
       return '배송완료';
 
     case EXCHANGE_STATUS.COMPLETED:
-      return '배송완료';
-
-    default:
-      return '';
-  }
-};
-
-export const formatKoOrderStatus = status => {
-  switch (status) {
-    case ORDER_STATUS.REQUESTED:
-      return '주문요청';
-
-    case ORDER_STATUS.PENDING:
-      return '진행중';
-
-    case ORDER_STATUS.CANCELED:
-      return '주문취소';
-
-    case ORDER_STATUS.APPROVED:
-      return '주문승인';
-
-    case ORDER_STATUS.REJECTED:
-      return '주문반려';
-
-    case ORDER_STATUS.SHIPPING:
-      return '배송중';
-
-    case ORDER_STATUS.SHIPPED:
       return '배송완료';
 
     default:
@@ -203,4 +132,83 @@ export const formatKoApprovalKind = kind => {
     default:
       return '';
   }
+};
+
+export const formatKoApprovalStatus = status => {
+    switch (status) {
+        case APPROVAL_STATUS.UNCONFIRMED:
+            return '진행중';
+
+        case APPROVAL_STATUS.APPROVED:
+            return '승인';
+
+        case APPROVAL_STATUS.REJECTED:
+            return '반려';
+
+        default:
+            return '';
+    }
+};
+
+export const formatKoDrafterApproved = drafterApproved => {
+    switch (drafterApproved) {
+        case DRAFTER_APPROVED.APPROVE:
+            return '승인';
+
+        case DRAFTER_APPROVED.REJECT:
+            return '반려';
+
+        case DRAFTER_APPROVED.NONE:
+            return '미정';
+
+        default:
+            return '';
+    }
+};
+
+export const formatKoApproval = approval => {
+    switch (approval) {
+        case APPROVAL.APPROVED:
+            return '결재승인';
+
+        case APPROVAL.CANCELED:
+            return '결재취소';
+
+        case APPROVAL.UNCONFIRMED:
+            return '미확인'; // 결재 확인되지 않음
+
+        case APPROVAL.REJECTED:
+            return '결재반려';
+
+        default:
+            return '';
+    }
+};
+
+export const formatKoOrderStatus = status => {
+    switch (status) {
+        case ORDER_STATUS.REQUESTED:
+            return '주문요청';
+
+        case ORDER_STATUS.PENDING:
+            return '진행중';
+
+        case ORDER_STATUS.CANCELED:
+            return '주문취소';
+
+        case ORDER_STATUS.APPROVED:
+            return '주문승인';
+
+        case ORDER_STATUS.REJECTED:
+            return '주문반려';
+
+        case ORDER_STATUS.SHIPPING:
+            return '배송중';
+
+        case ORDER_STATUS.SHIPPED:
+            return '배송완료';
+
+        default:
+            return '';
+    }
 };
