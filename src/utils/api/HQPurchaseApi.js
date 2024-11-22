@@ -23,7 +23,7 @@ export default class HQPurchaseApi extends BaseApiService {
     storageName = '',
   }) {
     const searchParams = new URLSearchParams();
-    searchParams.append('page', page);
+    searchParams.append('pageNumber', page);
     searchParams.append('pageSize', pageSize);
     searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
     searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
