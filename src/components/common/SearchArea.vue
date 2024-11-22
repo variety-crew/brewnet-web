@@ -1,5 +1,5 @@
 <template>
-  <form class="search-area-form" @submit.prevent="onSubmit">
+  <form class="search-area-form" @submit.prevent="onSubmit" @reset.prevent="onReset">
     <div
       class="search-area"
       :class="{ grid }"
@@ -10,7 +10,10 @@
       <slot></slot>
     </div>
 
-    <Button type="submit" label="조회" icon="pi pi-search" size="small" fluid />
+    <div class="form-buttons">
+      <Button type="reset" label="조건 초기화" icon="pi pi-filter-slash" size="small" variant="outlined" />
+      <Button type="submit" label="조회" icon="pi pi-search" size="small" fluid />
+    </div>
   </form>
 </template>
 
@@ -32,10 +35,14 @@ const { grid, gridRepeatCount, gridRepeatWidth } = defineProps({
     default: '1fr',
   },
 });
-const emit = defineEmits(['search']);
+const emit = defineEmits(['search', 'form-reset']);
 
 const onSubmit = () => {
   emit('search');
+};
+
+const onReset = () => {
+  emit('form-reset');
 };
 </script>
 
@@ -53,6 +60,15 @@ const onSubmit = () => {
     &.grid {
       display: grid;
       gap: 16px;
+    }
+  }
+
+  .form-buttons {
+    display: flex;
+    gap: 16px;
+
+    button[type='reset'] {
+      flex-shrink: 0;
     }
   }
 }

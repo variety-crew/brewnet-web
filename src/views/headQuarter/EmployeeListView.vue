@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea grid @search="onSearch">
-      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
+    <SearchArea grid @search="onSearch" @form-reset="reset">
+      <AppInputText id="input_name_keyword" v-model="criteria.username" label="임직원명" />
     </SearchArea>
 
     <AppTable
@@ -35,7 +35,8 @@ const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
 
-const nameKeyword = ref('');
+const getInitialCriteriaData = () => ({ username: '' });
+const criteria = ref(getInitialCriteriaData());
 const paginatedEmployees = ref([]);
 const totalElements = ref(0);
 const page = ref(0);
@@ -99,7 +100,7 @@ const columns = [
 ];
 
 const getEmployees = () => {
-  memberApi.getMembers({ page: page.value, memberName: nameKeyword.value }).then(data => {
+  memberApi.getMembers({ page: page.value, memberName: criteria.value.username }).then(data => {
     totalElements.value = data.totalElements;
     paginatedEmployees.value = data.content;
   });
@@ -114,6 +115,11 @@ const reload = () => {
 };
 
 const onSearch = () => {
+  getEmployees();
+};
+
+const reset = () => {
+  criteria.value = getInitialCriteriaData();
   getEmployees();
 };
 
