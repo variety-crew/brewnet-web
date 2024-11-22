@@ -1,9 +1,9 @@
 <template>
   <div>
     <AppTable
-      :paginated-data="paginatedAccounts"
+      :paginated-data="paginatedFranchiseMembers"
       :columns="columns"
-      :total-elements="accounts.length"
+      :total-elements="totalElements"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -11,19 +11,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { mockupFranchiseAccounts } from '@/utils/mockup';
+import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
 
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
-const accounts = ref([]);
-const paginatedAccounts = computed(() => {
-  return accounts.value.slice(0, 15);
-});
+
+const page = ref(0);
+const paginatedFranchiseMembers = ref([]);
+const totalElements = ref(0);
+
+const hqFranchiseApi = new HQFranchiseApi();
 
 function onClickEdit(data) {
   router.push({ name: 'hq:partner:franchise-account:edit', params: { memberCode: data.code } });
@@ -44,7 +46,7 @@ function onClickRemove(data) {
 }
 
 const columns = [
-  { field: 'code', header: '계정코드' },
+  { field: 'memberCode', header: '계정코드' },
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
@@ -67,17 +69,28 @@ const columns = [
   },
 ];
 
+const getFranchiseMembers = () => {
+  hqFranchiseApi.getFranchiseMembers({ page: page.value }).then(data => {
+    totalElements.value = data.totalElements;
+    paginatedFranchiseMembers.value = data.content;
+  });
+};
+
 const onChangePage = event => {
-  const { page } = event;
-  console.log(page, '페이지로 변경되었다!');
+  page.value = event.page;
 };
 
 const reload = () => {
-  console.log('reload');
+  getFranchiseMembers();
 };
 
 onMounted(() => {
-  accounts.value = [...mockupFranchiseAccounts];
+  getFranchiseMembers();
+});
+
+// 페이지 변경되면 API 호출
+watch(page, () => {
+  getFranchiseMembers();
 });
 </script>
 
