@@ -64,7 +64,8 @@
           </tbody>
           <tfoot>
             <tr>
-              <td colspan="5">총 합계 {{ total.toLocaleString() }}</td>
+              <td>총 합계</td>
+              <td colspan="4" class="align-center">{{ total.toLocaleString() }}</td>
               <td class="align-right">{{ totalSupplyValue.toLocaleString() }}</td>
               <td class="align-right">{{ totalTaxValue.toLocaleString() }}</td>
             </tr>
