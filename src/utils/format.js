@@ -6,6 +6,7 @@ import {
   ROLE,
   APPROVAL_STATUS,
   ORDER_STATUS,
+  DRAFTER_APPROVED,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
