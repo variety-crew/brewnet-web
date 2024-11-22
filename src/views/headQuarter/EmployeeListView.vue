@@ -9,6 +9,7 @@
       :paginated-data="paginatedEmployees"
       :columns="columns"
       :total-elements="totalElements"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -27,7 +28,7 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import MemberApi from '@/utils/api/MemberApi';
-import { formatKoMemberRole } from '@/utils/format';
+import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 
 const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuarter/EditMemberRoleModalBody.vue'));
 
@@ -35,11 +36,12 @@ const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
 
-const getInitialCriteriaData = () => ({ username: '' });
-const criteria = ref(getInitialCriteriaData());
+const getInitialCriteria = () => ({ username: '' });
+const criteria = ref(getInitialCriteria());
 const paginatedEmployees = ref([]);
 const totalElements = ref(0);
 const page = ref(0);
+const pageSize = ref(15);
 
 const memberApi = new MemberApi();
 
@@ -71,7 +73,7 @@ const columns = [
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
-  { field: 'positionName', header: '직급' },
+  { field: 'positionName', header: '직급', render: data => formatKoEmployeePosition(data.positionName) },
   {
     field: 'role',
     header: '권한',
@@ -100,10 +102,12 @@ const columns = [
 ];
 
 const getEmployees = () => {
-  memberApi.getMembers({ page: page.value, memberName: criteria.value.username }).then(data => {
-    totalElements.value = data.totalElements;
-    paginatedEmployees.value = data.content;
-  });
+  memberApi
+    .getMembers({ page: page.value, pageSize: pageSize.value, memberName: criteria.value.username })
+    .then(data => {
+      totalElements.value = data.totalElements;
+      paginatedEmployees.value = data.content;
+    });
 };
 
 const onChangePage = event => {
@@ -119,7 +123,7 @@ const onSearch = () => {
 };
 
 const reset = () => {
-  criteria.value = getInitialCriteriaData();
+  criteria.value = getInitialCriteria();
   getEmployees();
 };
 

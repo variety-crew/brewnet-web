@@ -1,4 +1,4 @@
-import { PURCHASE_STATUS } from './constant';
+import { APPROVAL_STATUS, PURCHASE_STATUS } from './constant';
 
 // 프라임뷰에 사용될 데이터
 export const makeSelectOption = (label = '', value = '') => {
@@ -22,5 +22,21 @@ export const getPurchaseStatusSeverity = purchaseStatus => {
 
     default:
       return 'info';
+  }
+};
+
+export const getApprovalStatusSeverity = status => {
+  switch (status) {
+    case APPROVAL_STATUS.UNCONFIRMED:
+      return 'success';
+
+    case APPROVAL_STATUS.REJECTED:
+      return 'danger';
+
+    case APPROVAL_STATUS.APPROVED:
+      return 'info';
+
+    default:
+      return 'secondary';
   }
 };

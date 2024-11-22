@@ -2,7 +2,7 @@
   <div>
     <!-- 검색 area -->
     <SearchArea grid class="exchange-search">
-      <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="사용일자" />
+      <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="사용일자" class="criteria use-date" />
       <!-- <AppSelect v-model="position" label="직급" :options="positionOptions" :initial-value="initialPosition" /> -->
       <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
     </SearchArea>
@@ -11,6 +11,7 @@
       :paginated-data="paginatedExchanges"
       :columns="columns"
       :total-elements="exchanges.length"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -42,6 +43,7 @@ const exchanges = ref([]);
 const paginatedExchanges = computed(() => {
   return exchanges.value.slice(0, 15);
 });
+const pageSize = ref(15);
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
 
@@ -87,7 +89,7 @@ onMounted(() => {
 
 <style scoped>
 .exchange-search {
-  & > *:nth-child(1) {
+  .criteria.use-date {
     grid-column: 1 / 7;
   }
 }
