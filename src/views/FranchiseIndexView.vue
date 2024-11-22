@@ -1,20 +1,15 @@
 <template>
-  <div class="fc-container">
+  <MainContainer>
     <FranchiseTopBar />
     <RouterView />
-  </div>
+  </MainContainer>
 </template>
 
 <script setup>
 import { RouterView } from 'vue-router';
 
+import MainContainer from '@/components/common/MainContainer.vue';
 import FranchiseTopBar from '@/components/franchise/FranchiseTopBar.vue';
 </script>
 
-<style scoped>
-.fc-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-</style>
+<style scoped></style>

@@ -29,7 +29,6 @@ const sideMenus = computed(() => {
 
 <style scoped>
 .side-menu {
-  height: 100%;
   background-color: var(--p-content-background);
   min-width: 150px;
   flex-shrink: 0;
