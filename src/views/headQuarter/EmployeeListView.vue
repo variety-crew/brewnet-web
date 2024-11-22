@@ -38,9 +38,9 @@ const { openModal } = useModal();
 const nameKeyword = ref('');
 const paginatedEmployees = ref([]);
 const totalElements = ref(0);
+const page = ref(0);
 
 const memberApi = new MemberApi();
-const page = 0;
 
 function onClickEdit(data) {
   router.push({ name: 'hq:settings:employee:edit', params: { memberCode: data.code } });
@@ -99,19 +99,18 @@ const columns = [
 ];
 
 const getEmployees = () => {
-  memberApi.getMembers({ page, memberName: nameKeyword.value }).then(data => {
+  memberApi.getMembers({ page: page.value, memberName: nameKeyword.value }).then(data => {
     totalElements.value = data.totalElements;
     paginatedEmployees.value = data.content;
   });
 };
 
 const onChangePage = event => {
-  const { page } = event;
-  console.log(page, '페이지로 변경되었다!');
+  page.value = event.page;
 };
 
 const reload = () => {
-  console.log('reload 테이블');
+  getEmployees();
 };
 
 onMounted(() => {
@@ -121,6 +120,11 @@ onMounted(() => {
 // 임직원명으로 검색
 watch(nameKeyword, newVal => {
   console.log(newVal);
+});
+
+// 페이지 변경되면 API 호출
+watch(page, () => {
+  getEmployees();
 });
 </script>
 
