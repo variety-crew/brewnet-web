@@ -46,4 +46,14 @@ export default class HQPurchaseApi extends BaseApiService {
 
     return this.get(`?${searchParams.toString()}`);
   }
+
+  // 발주 상세 조회
+  getPurchase(purchaseCode) {
+    return this.get(`/${purchaseCode}`);
+  }
+
+  // 특정 발주의 결재라인 조회
+  getPurchaseApprovalLines(purchaseCode) {
+    return this.get(`/${purchaseCode}/approval-line`);
+  }
 }
