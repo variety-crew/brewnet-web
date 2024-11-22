@@ -20,7 +20,7 @@ export default class LocalStorageUtil {
 
   // 회계부서로 발주내역 전송 완료했을 때
   saveSendCompletePurchase(purchaseCode) {
-    let saveValue = [purchaseCode];
+    let saveValue = [Number(purchaseCode)];
     const foundItems = this.#getSendCompletePurchase();
 
     if (foundItems.length > 0) {

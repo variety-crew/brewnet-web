@@ -165,7 +165,17 @@ const clickPrintPurchaseDocument = () => {
 };
 
 const clickSendPurchase = () => {
-  // TODO:: 구매품의서 회계팀 전송
+  localStorageUtil.saveSendCompletePurchase(purchaseCode);
+
+  toast.add({
+    severity: 'success',
+    summary: '처리 성공',
+    detail: '구매품의서가 회계부서로 전송되었습니다.',
+    life: 3000,
+  });
+
+  // 보냈다고 가정
+  isAlreadySend.value = true;
 };
 
 const clickPrintPurchase = () => {
