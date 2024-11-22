@@ -28,7 +28,7 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import MemberApi from '@/utils/api/MemberApi';
-import { formatKoMemberRole } from '@/utils/format';
+import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 
 const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuarter/EditMemberRoleModalBody.vue'));
 
@@ -73,7 +73,7 @@ const columns = [
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
-  { field: 'positionName', header: '직급' },
+  { field: 'positionName', header: '직급', render: data => formatKoEmployeePosition(data.positionName) },
   {
     field: 'role',
     header: '권한',

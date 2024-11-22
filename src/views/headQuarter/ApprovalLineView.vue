@@ -4,7 +4,7 @@
       <tr v-for="approvalLine in approvalLines" :key="approvalLine.kind">
         <th>{{ formatKoApprovalKind(approvalLine.kind) }} 결재라인</th>
         <td>
-          <p>결재자(직급): {{ approvalLine.positionName }}</p>
+          <p>결재자(직급): {{ formatKoEmployeePosition(approvalLine.positionName) }}</p>
         </td>
         <td>
           <Button label="수정" size="small" @click="clickEdit(approvalLine)" />
@@ -21,8 +21,8 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useModal } from '@/hooks/useModal';
-import DocumentApi from '@/utils/api/DocumentApi';
-import { formatKoApprovalKind } from '@/utils/format';
+import HQDocumentApi from '@/utils/api/HQDocumentApi';
+import { formatKoApprovalKind, formatKoEmployeePosition } from '@/utils/format';
 
 const EditApprovalLineModalBody = defineAsyncComponent(
   () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
@@ -32,10 +32,10 @@ const { openModal } = useModal();
 
 const approvalLines = ref([]);
 
-const documentApi = new DocumentApi();
+const hqDocumentApi = new HQDocumentApi();
 
 const getApprovalLines = () => {
-  documentApi.getApprovalLines().then(data => {
+  hqDocumentApi.getApprovalLines().then(data => {
     approvalLines.value = data;
   });
 };

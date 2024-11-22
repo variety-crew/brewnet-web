@@ -23,7 +23,7 @@ const dialogRef = inject('dialogRef');
 const position = ref('');
 const initialPosition = ref('');
 const positionOptions = computed(() => {
-  return APPROVAL_POSITIONS.map(e => makeSelectOption(formatKoEmployeePosition(e), formatKoEmployeePosition(e)));
+  return APPROVAL_POSITIONS.map(e => makeSelectOption(formatKoEmployeePosition(e), e));
 });
 
 let approvalLine = null;
