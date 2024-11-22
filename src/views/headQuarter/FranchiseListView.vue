@@ -6,7 +6,6 @@
         v-model="addressKeyword"
         label="시/도"
         :suggestions="addressSuggestions"
-        :rows
         full-width
         @complete-input="onChangeAddressKeyword"
       />
