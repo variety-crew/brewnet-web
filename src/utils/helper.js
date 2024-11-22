@@ -1,4 +1,4 @@
-import { PURCHASE_STATUS, ORDER_STATUS, DRAFTER_APPROVED } from './constant';
+import { PURCHASE_STATUS, ORDER_STATUS, DRAFTER_APPROVED, APPROVAL_STATUS } from './constant';
 
 // 프라임뷰에 사용될 데이터
 export const makeSelectOption = (label = '', value = '') => {
