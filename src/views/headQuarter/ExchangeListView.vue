@@ -11,6 +11,7 @@
       :paginated-data="paginatedExchanges"
       :columns="columns"
       :total-elements="exchanges.length"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -42,6 +43,7 @@ const exchanges = ref([]);
 const paginatedExchanges = computed(() => {
   return exchanges.value.slice(0, 15);
 });
+const pageSize = ref(15);
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
 

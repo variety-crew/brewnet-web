@@ -6,6 +6,7 @@
         v-model="addressKeyword"
         label="시/도"
         :suggestions="addressSuggestions"
+        :rows
         full-width
         @complete-input="onChangeAddressKeyword"
       />
@@ -15,6 +16,7 @@
       :paginated-data="paginatedFranchises"
       :columns="columns"
       :total-elements="franchises.length"
+      :rows-per-page="pageSize"
       show-excel-export
       @change-page="onChangePage"
       @reload="reload"
@@ -41,6 +43,7 @@ const franchises = ref([]);
 const paginatedFranchises = computed(() => {
   return franchises.value.slice(0, 15);
 });
+const pageSize = ref(15);
 const franchiseNameKeyword = ref('');
 const addressKeyword = ref(null);
 const allAddress = [

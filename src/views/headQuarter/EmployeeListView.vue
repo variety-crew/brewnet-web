@@ -9,6 +9,7 @@
       :paginated-data="paginatedEmployees"
       :columns="columns"
       :total-elements="totalElements"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -40,6 +41,7 @@ const criteria = ref(getInitialCriteria());
 const paginatedEmployees = ref([]);
 const totalElements = ref(0);
 const page = ref(0);
+const pageSize = ref(15);
 
 const memberApi = new MemberApi();
 
@@ -100,10 +102,12 @@ const columns = [
 ];
 
 const getEmployees = () => {
-  memberApi.getMembers({ page: page.value, memberName: criteria.value.username }).then(data => {
-    totalElements.value = data.totalElements;
-    paginatedEmployees.value = data.content;
-  });
+  memberApi
+    .getMembers({ page: page.value, pageSize: pageSize.value, memberName: criteria.value.username })
+    .then(data => {
+      totalElements.value = data.totalElements;
+      paginatedEmployees.value = data.content;
+    });
 };
 
 const onChangePage = event => {

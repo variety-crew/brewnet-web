@@ -9,6 +9,7 @@
       :columns="columns"
       :paginated-data="paginatedNotices"
       :total-elements="notices.length"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -34,6 +35,7 @@ const notices = ref([]);
 const paginatedNotices = computed(() => {
   return notices.value.slice(0, 15);
 });
+const pageSize = ref(15);
 const titleKeyword = ref('');
 const authorKeyword = ref('');
 

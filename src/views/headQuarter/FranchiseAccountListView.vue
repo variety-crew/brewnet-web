@@ -4,6 +4,7 @@
       :paginated-data="paginatedFranchiseMembers"
       :columns="columns"
       :total-elements="totalElements"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -24,6 +25,7 @@ const { showConfirm } = useAppConfirmModal();
 const page = ref(0);
 const paginatedFranchiseMembers = ref([]);
 const totalElements = ref(0);
+const pageSize = ref(15);
 
 const hqFranchiseApi = new HQFranchiseApi();
 
@@ -70,7 +72,7 @@ const columns = [
 ];
 
 const getFranchiseMembers = () => {
-  hqFranchiseApi.getFranchiseMembers({ page: page.value }).then(data => {
+  hqFranchiseApi.getFranchiseMembers({ page: page.value, pageSize: pageSize.value }).then(data => {
     totalElements.value = data.totalElements;
     paginatedFranchiseMembers.value = data.content;
   });
