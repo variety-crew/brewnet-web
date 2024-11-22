@@ -116,4 +116,13 @@ export default class HQPurchaseApi extends BaseApiService {
       items,
     });
   }
+
+  //
+  // PUT
+  //
+
+  // 입고 처리
+  stockIn({ itemCode, purchaseCode }) {
+    return this.put('/in-stock', { itemCode, purchaseCode });
+  }
 }

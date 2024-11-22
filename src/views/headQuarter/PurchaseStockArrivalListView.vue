@@ -41,10 +41,13 @@ import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue'
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import { CRITERIA_IN_STOCK, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption, makeTabs } from '@/utils/helper';
+
+const { showConfirm } = useAppConfirmModal();
 
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
@@ -78,7 +81,19 @@ const tabItems = computed(() => {
 
 const hqPurchaseApi = new HQPurchaseApi();
 
-function handleStockIn(data) {}
+const onStockUncheckToCheck = data => {
+  hqPurchaseApi.stockIn({ itemCode: data.itemCode, purchaseCode: data.purchaseCode }).then(() => {
+    onReload();
+  });
+};
+const handleStockIn = data => {
+  showConfirm({
+    header: '입고 진행',
+    message: '입고 완료 처리하시겠습니까?',
+    acceptLabel: '입고 진행',
+    onAccept: () => onStockUncheckToCheck(data),
+  });
+};
 
 const columns = [
   {
