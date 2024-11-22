@@ -7,7 +7,7 @@
         v-model="selectedSupplier"
         label="거래처 선택"
         :suggestions="supplierSuggestions"
-        placeholder="거래처명이나 거래처코드로 검색"
+        placeholder="거래처명으로 검색"
         full-width
         @complete-input="onCompleteInputSupplier"
       />
@@ -102,11 +102,11 @@ import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
+import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import HQStorageApi from '@/utils/api/HQStorageApi';
-import { formatKoEmployeePosition } from '@/utils/format';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupApprovalLines, mockupEmployees, mockupItems, mockupSuppliers } from '@/utils/mockup';
+import { mockupApprovalLines, mockupItems } from '@/utils/mockup';
 
 const userStore = useUserStore();
 const toast = useToast();
@@ -116,13 +116,20 @@ const { showConfirm } = useAppConfirmModal();
 const selectedSupplier = ref(null);
 const filteredSuppliers = ref([]);
 const supplierSuggestions = computed(() => {
-  return filteredSuppliers.value.map(e => makeAutocompleteSuggestion(e.code, `#${e.code} ${e.name}`));
+  return filteredSuppliers.value.map(e => makeAutocompleteSuggestion(e.correspondentCode, e.correspondentName));
 });
 
 const selectedStorage = ref(null);
 const filteredStorages = ref([]);
 const storageSuggestions = computed(() => {
   return filteredStorages.value.map(e => makeAutocompleteSuggestion(e.storageCode, e.storageName));
+});
+
+const approvalLine = ref(mockupApprovalLines.find(e => e.code === 'purchase'));
+const selectedApprovalUser = ref(null);
+const approverCandidates = ref([]);
+const approvalUserSuggestions = computed(() => {
+  return approverCandidates.value.map(e => makeAutocompleteSuggestion(e.approverCode, e.approverName));
 });
 
 const allCheck = ref(false);
@@ -134,23 +141,15 @@ const totalTaxValue = ref(0);
 const total = computed(() => totalSupplyValue.value + totalTaxValue.value);
 const comment = ref('');
 
-const approvalLine = ref(mockupApprovalLines.find(e => e.code === 'purchase'));
-const selectedApprovalUser = ref(null);
-const approverCandidates = ref([]);
-const approvalUserSuggestions = computed(() => {
-  return approverCandidates.value.map(e => makeAutocompleteSuggestion(e.approverCode, e.approverName));
-});
-
 const hqPurchaseApi = new HQPurchaseApi();
 const hqStorageApi = new HQStorageApi();
+const hqCorrespondentApi = new HQCorrespondentApi();
 
 const onCompleteInputSupplier = event => {
-  // if (!event.query) return;
-  // filteredSuppliers.value = mockupSuppliers.filter(
-  //   e => e.code.toString().includes(event.query) || e.name.includes(event.query),
-  // );
-
-  filteredSuppliers.value = [...mockupSuppliers];
+  // 거래처명으로 검색
+  hqCorrespondentApi.getCorrespondent({ correspondentName: event.query }).then(data => {
+    filteredSuppliers.value = data.data;
+  });
 };
 
 const onCompleteInputStorage = event => {
