@@ -25,7 +25,7 @@ import DocumentApi from '@/utils/api/DocumentApi';
 import { formatKoApprovalKind } from '@/utils/format';
 
 const EditApprovalLineModalBody = defineAsyncComponent(
-  () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
+    () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
 );
 
 const { openModal } = useModal();
