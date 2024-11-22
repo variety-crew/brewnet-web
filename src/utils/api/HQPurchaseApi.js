@@ -72,6 +72,7 @@ export default class HQPurchaseApi extends BaseApiService {
     itemName,
     correspondentName,
     storageName,
+    onlyUnchecked = false,
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('pageNumber', page);
@@ -95,6 +96,9 @@ export default class HQPurchaseApi extends BaseApiService {
       searchParams.append('storageName', storageName);
     }
 
+    if (onlyUnchecked) {
+      return this.get(`/uncheck-in-stock?${searchParams.toString()}`);
+    }
     return this.get(`/total-in-stock?${searchParams.toString()}`);
   }
 

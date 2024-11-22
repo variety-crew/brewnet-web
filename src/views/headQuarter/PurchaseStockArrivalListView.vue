@@ -19,6 +19,8 @@
       <AppInputText v-model="criteria.keyword" placeholder="검색어 입력" class="criteria keyword" />
     </SearchArea>
 
+    <AppTabs v-model="activeTab" :tab-items="tabItems" />
+
     <AppTable
       :columns="columns"
       :rows-per-page="pageSize"
@@ -31,9 +33,10 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppTabs from '@/components/common/AppTabs.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
@@ -41,7 +44,7 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import { CRITERIA_IN_STOCK, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
-import { makeSelectOption } from '@/utils/helper';
+import { makeSelectOption, makeTabs } from '@/utils/helper';
 
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
@@ -55,8 +58,22 @@ const totalElements = ref(0);
 const pageSize = ref(15);
 const page = ref(1);
 
+const TAB_ITEM = {
+  ALL: 'ALL',
+  UNCHECK: 'UNCHECK',
+};
+function formatKoTabItem(tabValue) {
+  if (tabValue === TAB_ITEM.ALL) return '전체 입고내역';
+  if (tabValue === TAB_ITEM.UNCHECK) return '미확인 입고내역';
+  return 'Tab';
+}
+const activeTab = ref(TAB_ITEM.ALL);
+
 const criteriaOptions = computed(() => {
   return CRITERIA_IN_STOCK.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
+});
+const tabItems = computed(() => {
+  return [TAB_ITEM.ALL, TAB_ITEM.UNCHECK].map(e => makeTabs(formatKoTabItem(e), e));
 });
 
 const hqPurchaseApi = new HQPurchaseApi();
@@ -86,7 +103,7 @@ const columns = [
     template: {
       button: [
         {
-          getLabel: data => '입고',
+          getLabel: data => '입고확인',
           clickHandler: handleStockIn,
         },
       ],
@@ -109,6 +126,7 @@ const getInStockItems = () => {
       itemName: currentCriteria === SEARCH_CRITERIA.ITEM_NAME ? queryKeyword : undefined,
       correspondentName: currentCriteria === SEARCH_CRITERIA.CORRESPONDENT_NAME ? queryKeyword : undefined,
       storageName: currentCriteria === SEARCH_CRITERIA.STORAGE_NAME ? queryKeyword : undefined,
+      onlyUnchecked: activeTab.value === TAB_ITEM.UNCHECK,
     })
     .then(data => {
       paginatedItems.value = data.data;
@@ -130,6 +148,11 @@ const onReload = () => {
 };
 
 onMounted(() => {
+  getInStockItems();
+});
+
+// 탭이 변경되면 API 호출
+watch(activeTab, newActiveTab => {
   getInStockItems();
 });
 </script>
