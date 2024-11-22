@@ -8,7 +8,7 @@
     <AppTable
       :paginated-data="paginatedEmployees"
       :columns="columns"
-      :total-elements="employees.length"
+      :total-elements="totalElements"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
+import { ref, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -26,8 +26,8 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
-import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
-import { mockupEmployees } from '@/utils/mockup';
+import MemberApi from '@/utils/api/MemberApi';
+import { formatKoMemberRole } from '@/utils/format';
 
 const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuarter/EditMemberRoleModalBody.vue'));
 
@@ -36,10 +36,11 @@ const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
 
 const nameKeyword = ref('');
-const employees = ref([]);
-const paginatedEmployees = computed(() => {
-  return employees.value.slice(0, 15);
-});
+const paginatedEmployees = ref([]);
+const totalElements = ref(0);
+
+const memberApi = new MemberApi();
+const page = 0;
 
 function onClickEdit(data) {
   router.push({ name: 'hq:settings:employee:edit', params: { memberCode: data.code } });
@@ -64,12 +65,12 @@ function onClickRemove(data) {
 }
 
 const columns = [
-  { field: 'code', header: '임직원코드' },
+  { field: 'memberCode', header: '임직원코드' },
   { field: 'name', header: '임직원명', sortable: true },
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
-  { field: 'position', header: '직급', render: data => formatKoEmployeePosition(data.position) },
+  { field: 'positionName', header: '직급' },
   {
     field: 'role',
     header: '권한',
@@ -97,6 +98,13 @@ const columns = [
   },
 ];
 
+const getEmployees = () => {
+  memberApi.getMembers({ page, memberName: nameKeyword.value }).then(data => {
+    totalElements.value = data.totalElements;
+    paginatedEmployees.value = data.content;
+  });
+};
+
 const onChangePage = event => {
   const { page } = event;
   console.log(page, '페이지로 변경되었다!');
@@ -107,7 +115,7 @@ const reload = () => {
 };
 
 onMounted(() => {
-  employees.value = [...mockupEmployees];
+  getEmployees();
 });
 
 // 임직원명으로 검색
