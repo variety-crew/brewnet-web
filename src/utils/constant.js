@@ -47,3 +47,10 @@ export const APPROVAL_KIND = {
   EXCHANGE: 'EXCHANGE',
   RETURN: 'RETURN',
 };
+
+// 결재상태
+export const APPROVAL_STATUS = {
+  UNCONFIRMED: 'UNCONFIRMED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+};

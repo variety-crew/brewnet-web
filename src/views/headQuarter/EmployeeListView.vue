@@ -35,8 +35,8 @@ const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
 
-const getInitialCriteriaData = () => ({ username: '' });
-const criteria = ref(getInitialCriteriaData());
+const getInitialCriteria = () => ({ username: '' });
+const criteria = ref(getInitialCriteria());
 const paginatedEmployees = ref([]);
 const totalElements = ref(0);
 const page = ref(0);
@@ -119,7 +119,7 @@ const onSearch = () => {
 };
 
 const reset = () => {
-  criteria.value = getInitialCriteriaData();
+  criteria.value = getInitialCriteria();
   getEmployees();
 };
 
