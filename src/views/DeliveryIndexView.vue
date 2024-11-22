@@ -18,7 +18,7 @@ const authApi = new AuthApi();
 
 const clickLogout = () => {
   authApi.logout().then(() => {
-    userStore.logout();
+    userStore.clearUserData();
     router.replace({ name: 'auth:login' });
   });
 };
