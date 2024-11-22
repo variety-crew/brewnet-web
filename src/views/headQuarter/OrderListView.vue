@@ -11,6 +11,7 @@
       :paginated-data="paginatedOrders"
       :columns="columns"
       :total-elements="orders.length"
+      :rows-per-page="pageSize"
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -43,6 +44,7 @@ const orders = ref([]);
 const paginatedOrders = computed(() => {
   return orders.value.slice(0, 15);
 });
+const pageSize = ref(15);
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
 
@@ -109,7 +111,7 @@ onMounted(() => {
 
 <style scoped>
 .order-search {
-  & > *:nth-child(1) {
+  .criteria.use-date {
     grid-column: 1 / 7;
   }
 }

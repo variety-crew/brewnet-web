@@ -8,12 +8,12 @@
     </SearchArea>
 
     <AppTable
-        :paginated-data="paginatedExchanges"
-        :columns="columns"
-        :total-elements="exchanges.length"
-        :rows-per-page="pageSize"
-        @change-page="onChangePage"
-        @reload="reload"
+      :paginated-data="paginatedExchanges"
+      :columns="columns"
+      :total-elements="exchanges.length"
+      :rows-per-page="pageSize"
+      @change-page="onChangePage"
+      @reload="reload"
     />
 
     <DynamicDialog />
