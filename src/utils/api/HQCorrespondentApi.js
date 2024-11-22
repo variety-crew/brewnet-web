@@ -25,4 +25,22 @@ export default class HQCorrespondentApi extends BaseApiService {
 
     return this.get(`?${searchParams.toString()}`);
   }
+
+  // 특정 거래처가 취급하는 품목 조회
+  getCorrespondentItems({ page = 1, pageSize = 15, correspondentCode, itemUniqueCode, itemName }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('pageNumber', page);
+    searchParams.append('pageSize', pageSize);
+    searchParams.append('correspondentCode', correspondentCode);
+
+    if (itemUniqueCode) {
+      searchParams.append('itemUniqueCode', itemUniqueCode);
+    }
+
+    if (itemName) {
+      searchParams.append('itemName', itemName);
+    }
+
+    return this.get(`/items?${searchParams.toString()}`);
+  }
 }
