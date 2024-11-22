@@ -91,10 +91,12 @@ const login = async () => {
     userStore.setUserType(userType);
     userStore.saveTokenTempToReal(); // temp -> 진짜 토큰으로 셋팅
 
-    const myInfo = await memberApi.getMyInfo();
+    if (userType === 'hq') {
+      const myInfo = await memberApi.getMyInfo();
+      userStore.setUserData(myInfo); // 내 정보 셋팅
+    }
 
     // 메인 페이지로 이동할 준비
-    userStore.setUserData(myInfo); // 내 정보 셋팅
     localStorageUtil.handleRememberLoginId(saveAuth.value, id.value); // 로그인 정보 저장할건지?
     router.replace({ name: `${userType}:home` });
   } catch (e) {
