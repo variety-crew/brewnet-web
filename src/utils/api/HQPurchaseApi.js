@@ -62,6 +62,42 @@ export default class HQPurchaseApi extends BaseApiService {
     return this.get('/approvers?approvalLine=PURCHASE');
   }
 
+  // 전체 입고품목 목록 조회(발주 품목)
+  getInStockItems({
+    page = 1,
+    pageSize = 15,
+    startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
+    endDate = dayjs().format('YYYY-MM-DD'),
+    itemUniqueCode,
+    itemName,
+    correspondentName,
+    storageName,
+  }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('pageNumber', page);
+    searchParams.append('pageSize', pageSize);
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
+
+    if (itemUniqueCode) {
+      searchParams.append('itemUniqueCode', itemUniqueCode);
+    }
+
+    if (itemName) {
+      searchParams.append('itemName', itemName);
+    }
+
+    if (correspondentName) {
+      searchParams.append('correspondentName', correspondentName);
+    }
+
+    if (storageName) {
+      searchParams.append('storageName', storageName);
+    }
+
+    return this.get(`/total-in-stock?${searchParams.toString()}`);
+  }
+
   //
   // POST
   //
