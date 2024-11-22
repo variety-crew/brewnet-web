@@ -3,7 +3,7 @@
     <template v-if="!name">
       <!-- 싱글 체크박스 -->
       <Checkbox :checked="modelValue" :input-id="id" :name="name" binary size="small" @change="onChangeCheck" />
-      <label v-if="label" :for="id">{{ label }}</label>
+      <AppLabel v-if="label" :label-for="id" :label="label" />
     </template>
     <template v-else>
       <!-- 체크박스 여러개 -->
@@ -12,6 +12,8 @@
 </template>
 
 <script setup>
+import AppLabel from '../AppLabel.vue';
+
 const { label, name, modelValue, id } = defineProps({
   // v-model로 넘겨주면 알아서 셋팅되는 값
   modelValue: {
@@ -54,9 +56,5 @@ const onChangeCheck = event => {
   display: flex;
   align-items: center;
   gap: 5px;
-
-  label {
-    font-size: 14px;
-  }
 }
 </style>
