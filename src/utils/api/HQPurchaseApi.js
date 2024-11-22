@@ -57,6 +57,11 @@ export default class HQPurchaseApi extends BaseApiService {
     return this.get(`/${purchaseCode}/approval-line`);
   }
 
+  // 발주 결재라인의 결재자 후보들 조회
+  getPurchaseApproverCandidates() {
+    return this.get('/approvers?approvalLine=PURCHASE');
+  }
+
   //
   // POST
   //

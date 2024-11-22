@@ -135,8 +135,11 @@ const total = computed(() => totalSupplyValue.value + totalTaxValue.value);
 const comment = ref('');
 
 const approvalLine = ref(mockupApprovalLines.find(e => e.code === 'purchase'));
-const approvalUserSuggestions = ref([]);
 const selectedApprovalUser = ref(null);
+const approverCandidates = ref([]);
+const approvalUserSuggestions = computed(() => {
+  return approverCandidates.value.map(e => makeAutocompleteSuggestion(e.approverCode, e.approverName));
+});
 
 const hqPurchaseApi = new HQPurchaseApi();
 const hqStorageApi = new HQStorageApi();
@@ -158,9 +161,10 @@ const onCompleteInputStorage = event => {
 };
 
 const onCompleteInputApprovalUser = event => {
-  approvalUserSuggestions.value = mockupEmployees
-    .filter(e => approvalLine.value.positions.includes(e.position))
-    .map(e => makeAutocompleteSuggestion(e.code, `${e.name}(${formatKoEmployeePosition(e.position)})`));
+  // 발주 결재라인의 결재자 후보들 검색
+  hqPurchaseApi.getPurchaseApproverCandidates().then(data => {
+    approverCandidates.value = data;
+  });
 };
 
 const calculateSum = (price, quantity) => {
