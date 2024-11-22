@@ -1,7 +1,260 @@
 <template>
-    <div>
-      <h1>Order Details</h1>
-      <!-- Your content goes here -->
-    </div>
-  </template>
-  
+  <div class="order-detail-container">
+    <template v-if="orderDetail">
+      <div class="top-area">
+        <Tag
+          rounded
+          :value="formatKoOrderStatus(orderDetail.approvalStatus)"
+          :severity="getOrderStatusSeverity(orderDetail.approvalStatus)"
+          class="mb-1"
+        />
+        <div class="top-buttons">
+          <Button
+            label="결재 라인 조회"
+            variant="outlined"
+            size="small"
+            :disabled="isRequested"
+            @click="clickSendApprovalLine"
+          />
+          <Button
+            label="결재하기"
+            variant="outlined"
+            size="small"
+            :disabled="!isRequested"
+            @click="clickRequestApproval"
+          />
+          <Button label="주문요청서 출력" variant="outlined" size="small" @click="clickPrintOrder" />
+          <Button
+            label="거래명세서 출력"
+            variant="outlined"
+            size="small"
+            :disabled="!isCompleted"
+            @click="clickPrintInvoice"
+          />
+          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
+          <Button
+            label="결재요청취소"
+            severity="danger"
+            size="small"
+            variant="outlined"
+            :disabled="disabledCancelButton"
+            @click="clickCancel"
+          />
+        </div>
+      </div>
+
+      <div class="body-area">
+        <h1>주문상세</h1>
+
+        <table class="approval-line-table">
+          <tr>
+            <th>기안자</th>
+            <th>결재자</th>
+          </tr>
+          <tr>
+            <td>{{ orderDetail.managerName }}</td>
+            <td></td>
+          </tr>
+        </table>
+
+        <AppTableStyled full-width>
+          <tbody>
+            <tr>
+              <th>주문일자</th>
+              <td>{{ orderDetail.createdAt }}</td>
+              <th>주문지점</th>
+              <td>{{ orderDetail.franchiseName }}</td>
+              <th>주문금액</th>
+              <td>{{ orderDetail.sumPrice }}</td>
+              <th>주문담당자</th>
+              <td>{{ orderDetail.managerName }}</td>
+            </tr>
+            <tr>
+              <th>비고사항</th>
+              <td colspan="7">비고사항이 입력되는 곳</td>
+            </tr>
+            <tr>
+              <th>품목코드</th>
+              <th colspan="3">품목명</th>
+              <th>수량</th>
+              <th>단가</th>
+              <th>공급가액</th>
+              <th>부가세</th>
+            </tr>
+            <tr v-for="item in orderItems" :key="item.code">
+              <td class="align-center">{{ item.uniqueCode }}</td>
+              <td colspan="3">{{ item.name }}</td>
+              <td></td>
+              <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
+              <td class="align-right"></td>
+              <td class="align-right"></td>
+            </tr>
+            <tr>
+              <th>총 주문금액</th>
+              <td colspan="5"></td>
+              <td class="align-right"></td>
+              <td class="align-right"></td>
+            </tr>
+            <!-- <tr style="height: 100px">
+              <th>첨언</th>
+              <td colspan="7" class="align-center">{{ orderDetail.comment }}</td>
+              <td colspan="7" class="align-center">첨언이 입력되는 곳</td>
+            </tr> -->
+          </tbody>
+        </AppTableStyled>
+      </div>
+
+      <div>
+        <h4 class="mb-1">결재이력</h4>
+        <AppTableStyled full-width>
+          <thead>
+            <tr>
+              <th>결재자</th>
+              <th>결재상태</th>
+              <th>비고사항</th>
+              <th>결재일시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="align-center">{결재자이름}</td>
+              <td class="align-center">{결재자의 승인/반려}</td>
+              <td class="align-center">{결재자의 비고사항}</td>
+              <td class="align-center">{결재자의 승인/반려 일자}</td>
+            </tr>
+          </tbody>
+        </AppTableStyled>
+      </div>
+    </template>
+  </div>
+</template>
+
+<script setup>
+import { useToast } from 'primevue';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
+import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { useUserStore } from '@/stores/user';
+import { ORDER_STATUS } from '@/utils/constant';
+import { formatKoOrderStatus } from '@/utils/format';
+import { getOrderStatusSeverity } from '@/utils/helper';
+import LocalStorageUtil from '@/utils/localStorage';
+import { mockupItems, mockupOrders } from '@/utils/mockup';
+
+const userStore = useUserStore();
+const route = useRoute();
+const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
+const toast = useToast();
+
+const orderDetail = ref(null);
+const orderItems = ref([]);
+const disabledCancelButton = computed(() => {
+  return orderDetail.value.managerName !== useUserStore.username;
+});
+// const isAlreadySend = ref(false);
+const isRequested = computed(() => {
+  return orderDetail.value.approvalStatus === ORDER_STATUS.REQUESTED;
+});
+
+const isCompleted = computed(() => {
+  return orderDetail.value.approvalStatus === ORDER_STATUS.SHIPPED;
+});
+
+const localStorageUtil = new LocalStorageUtil();
+
+const clickSendApprovalLine = () => {
+  // TODO:: 결재 라인 조회
+};
+
+const clickRequestApproval = () => {
+  // TODO:: 결재요청
+};
+
+const clickPrintOrder = () => {
+  // TODO:: 주문요청서 출력
+};
+
+const clickPrintInvoice = () => {
+  // TODO:: 거래명세서 출력
+};
+
+const clickGoToList = () => {
+  router.replace({ name: 'hq:order:list' });
+};
+
+const cancelOrder = () => {
+  // TODO:: 결재 요청 취소 API
+
+  toast.add({ severity: 'error', summary: '처리 성공', detail: '결재 요청이 취소되었습니다.', life: 3000 });
+  router.replace({ name: 'hq:order:list' });
+};
+
+const clickCancel = () => {
+  showConfirm({
+    header: '결재 요청 취소',
+    message: '결재 요청을 취소하시겠습니까?',
+    acceptLabel: '결재 요청 취소',
+    onAccept: cancelOrder,
+    danger: true,
+  });
+};
+
+onMounted(() => {
+  // 주문 상세 데이터 셋팅
+  const orderCode = route.params.orderCode;
+  orderDetail.value = mockupOrders.find(e => e.orderCode == orderCode);
+  orderItems.value = [...mockupItems];
+
+  // 이미 회계팀에 보냈는지 확인
+  // isAlreadySend.value = localStorageUtil.isSendCompleteOrder(Number(orderCode));
+});
+</script>
+
+<style scoped>
+.order-detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .top-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .top-buttons {
+      display: flex;
+      gap: 5px;
+    }
+  }
+
+  .body-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    .approval-line-table {
+      align-self: flex-end;
+
+      th {
+        border: 1px solid black;
+        padding: 3px 0;
+        font-size: 13px;
+        width: 70px;
+      }
+      td {
+        border: 1px solid black;
+        font-size: 13px;
+        text-align: center;
+      }
+
+      & > tr:nth-child(2) {
+        height: 50px;
+      }
+    }
+  }
+}
+</style>
