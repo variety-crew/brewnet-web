@@ -5,6 +5,7 @@ import {
   ORDER_STATUS,
   POSITION,
   PURCHASE_STATUS,
+  RETURN_STATUS,
   ROLE,
   SEARCH_CRITERIA,
 } from './constant';
@@ -195,6 +196,37 @@ export const formatKoOrderStatus = status => {
 
     case ORDER_STATUS.SHIPPED:
       return '배송완료';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoReturnStatus = status => {
+  switch (status) {
+    case RETURN_STATUS.REQUESTED:
+      return '반품요청';
+
+    case RETURN_STATUS.PENDING:
+      return '반품처리중';
+
+    case RETURN_STATUS.CANCELED:
+      return '반품취소';
+
+    case RETURN_STATUS.APPROVED:
+      return '반품승인';
+
+    case RETURN_STATUS.REJECTED:
+      return '반품반려';
+
+    case RETURN_STATUS.PICKING:
+      return '수거중';
+
+    case RETURN_STATUS.PICKED:
+      return '수거완료';
+
+    case RETURN_STATUS.COMPLETED:
+      return '반품완료';
 
     default:
       return '';

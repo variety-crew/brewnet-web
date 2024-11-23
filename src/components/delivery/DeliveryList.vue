@@ -1,6 +1,11 @@
 <template>
   <ul class="delivery-list-container">
-    <DeliveryListItem v-for="deliveryItem in deliveryItems" :key="deliveryItem.code" :delivery-item="deliveryItem" />
+    <DeliveryListItem
+      v-for="deliveryItem in deliveryItems"
+      :key="deliveryItem.code"
+      :delivery-item="deliveryItem"
+      @reload-data="emit('reload-data')"
+    />
   </ul>
 </template>
 
@@ -22,6 +27,7 @@ const { deliveryItems } = defineProps({
    * }]
    */
 });
+const emit = defineEmits(['reload-data']);
 </script>
 
 <style scoped>

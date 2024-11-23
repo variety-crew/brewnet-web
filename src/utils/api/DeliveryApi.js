@@ -19,4 +19,13 @@ export default class DeliverApi extends BaseApiService {
 
     return this.get(`?${searchParams.toString()}`);
   }
+
+  //
+  // PUT
+  //
+
+  // 배송 상태 변경
+  changeDeliveryStatus({ code, deliveryKind, deliveryStatus }) {
+    return this.put('/status', { code, deliveryKind, deliveryStatus });
+  }
 }

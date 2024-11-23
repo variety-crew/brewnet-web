@@ -1,7 +1,10 @@
 <template>
   <div class="container">
-    <h2 class="title">배송 목록</h2>
-    <DeliveryList :delivery-items="orderDeliveryList" />
+    <div class="top">
+      <h2 class="title">배송 목록</h2>
+      <Button icon="pi pi-refresh" variant="outlined" />
+    </div>
+    <DeliveryList :delivery-items="orderDeliveryList" @reload-data="reloadData" />
   </div>
 </template>
 
@@ -15,13 +18,18 @@ import { DELIVERY_KIND, ORDER_STATUS } from '@/utils/constant';
 const orderDeliveryList = ref([]);
 
 const deliveryApi = new DeliverApi();
-const page = 0;
+let page = 0;
 const pageSize = 15;
 
 const getDeliveryList = () => {
   deliveryApi.getDeliveryList({ page, pageSize, deliveryKind: DELIVERY_KIND.ORDER }).then(data => {
     orderDeliveryList.value = data.content;
   });
+};
+
+const reloadData = () => {
+  page = 0;
+  getDeliveryList();
 };
 
 onMounted(() => {
@@ -51,9 +59,14 @@ onMounted(() => {
   flex-direction: column;
   padding: 0 16px;
 
-  .title {
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 16px 0;
-    align-self: center;
+  }
+
+  .title {
   }
 }
 </style>
