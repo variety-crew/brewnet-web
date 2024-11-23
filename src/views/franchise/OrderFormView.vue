@@ -138,12 +138,12 @@ watch(
   newItems => {
     // 공급가액 총액 계산
     totalSupplyValue.value = newItems
-      .map(e => calculateSum(e.purchasePrice, e.quantity))
+      .map(e => calculateSum(e.sellingPrice, e.quantity))
       .reduce((prev, current) => prev + current, 0);
 
     // 부가세 총액 계산
     totalTaxValue.value = newItems
-      .map(e => calculateTax(calculateSum(e.purchasePrice, e.quantity)))
+      .map(e => calculateTax(calculateSum(e.sellingPrice, e.quantity)))
       .reduce((prev, current) => prev + current, 0);
   },
   { deep: true }, // items 내용이 변하면 watch 되도록 설정
