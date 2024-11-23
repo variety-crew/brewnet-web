@@ -71,6 +71,8 @@ export const CRITERIA_IN_STOCK = [
   SEARCH_CRITERIA.CORRESPONDENT_NAME,
   SEARCH_CRITERIA.STORAGE_NAME,
 ];
+// 품목 목록 페이지 criteria
+export const CRITERIA_ITEM_LIST = [SEARCH_CRITERIA.ITEM_NAME];
 
 // 배송 종류
 export const DELIVERY_KIND = {
