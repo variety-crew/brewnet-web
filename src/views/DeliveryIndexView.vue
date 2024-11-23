@@ -2,12 +2,13 @@
   <div class="delivery-main-container">
     <header>
       <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
+      <h3>{{ $route.meta?.pageTitle || '' }}</h3>
       <Button label="로그아웃" variant="text" size="small" @click="clickLogout" />
     </header>
     <main>
       <RouterView />
     </main>
-    <footer v-if="$route.name !== 'd:detail'">
+    <footer>
       <nav>
         <RouterLink
           v-for="navItem in navItems"
@@ -38,6 +39,7 @@ const navItems = ref([
   { routerName: 'd:home', title: '주문' },
   { routerName: 'd:exchange', title: '교환' },
   { routerName: 'd:return', title: '반품' },
+  { routerName: 'd:detail', title: '배송 현황' },
 ]);
 
 const clickLogout = () => {
@@ -78,8 +80,11 @@ const clickLogout = () => {
     border-top: 2px solid var(--p-surface-100);
 
     nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+
+      & > * {
+        flex: 1 1;
+      }
     }
     .tab-link {
       text-align: center;

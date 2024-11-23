@@ -2,7 +2,7 @@
   <div class="container">
     <div class="top">
       <h2 class="title">배송 목록</h2>
-      <Button icon="pi pi-refresh" variant="outlined" />
+      <!-- <Button icon="pi pi-refresh" variant="outlined" /> -->
     </div>
     <DeliveryList :delivery-items="orderDeliveryList" @reload-data="reloadData" />
   </div>

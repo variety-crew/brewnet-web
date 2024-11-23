@@ -446,21 +446,33 @@ const routes = [
         path: 'home',
         name: 'd:home',
         component: () => import('@/views/delivery/HomeView.vue'),
+        meta: {
+          pageTitle: '주문',
+        },
       },
       {
         path: 'exchange',
         name: 'd:exchange',
         component: () => import('@/views/delivery/ExchangeView.vue'),
+        meta: {
+          pageTitle: '교환',
+        },
       },
       {
         path: 'return',
         name: 'd:return',
         component: () => import('@/views/delivery/ReturnView.vue'),
+        meta: {
+          pageTitle: '반품',
+        },
       },
       {
-        path: ':code/detail',
+        path: 'now-delivery',
         name: 'd:detail',
         component: () => import('@/views/delivery/DetailView.vue'),
+        meta: {
+          pageTitle: '배송 상세보기',
+        },
       },
     ],
   },
