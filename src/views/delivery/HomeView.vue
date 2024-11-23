@@ -118,7 +118,7 @@ const columns = [
     template: {
       button: [
         {
-          getLabel: () => '가맹점 전화걸기',
+          getLabel: () => '가맹점',
           getSeverity: () => 'secondary',
           getVariant: () => undefined,
           getIcon: () => 'pi pi-phone',
