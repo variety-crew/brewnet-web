@@ -68,7 +68,7 @@ const clickCall = () => {
 };
 
 const clickItem = () => {
-  router.push({ name: 'd:detail', params: { orderCode: deliveryItem.code } });
+  router.push({ name: 'd:detail', params: { code: deliveryItem.code } });
 };
 </script>
 

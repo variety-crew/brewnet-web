@@ -458,7 +458,7 @@ const routes = [
         component: () => import('@/views/delivery/ReturnView.vue'),
       },
       {
-        path: ':orderCode/detail',
+        path: ':code/detail',
         name: 'd:detail',
         component: () => import('@/views/delivery/DetailView.vue'),
       },
