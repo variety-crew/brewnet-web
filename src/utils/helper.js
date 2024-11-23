@@ -1,4 +1,11 @@
-import { APPROVAL_STATUS, PURCHASE_STATUS } from './constant';
+import {
+  APPROVAL_STATUS,
+  DELIVERY_KIND,
+  EXCHANGE_STATUS,
+  ORDER_STATUS,
+  PURCHASE_STATUS,
+  RETURN_STATUS,
+} from './constant';
 
 // 프라임뷰에 사용될 데이터
 export const makeSelectOption = (label = '', value = '') => {

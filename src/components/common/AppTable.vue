@@ -60,6 +60,7 @@
           </div>
         </div>
       </template>
+      <template #empty>데이터가 없습니다.</template>
       <Column
         v-for="(col, colIndex) of columns"
         :key="`field${colIndex}`"
@@ -91,7 +92,7 @@
 
         <!-- 버튼 리스트를 표시할 경우 -->
         <template v-else-if="col.template?.button" #body="{ data }">
-          <div>
+          <div class="buttons">
             <Button
               v-for="button in col.template.button"
               :key="button.getLabel(data)"
@@ -101,6 +102,7 @@
               :variant="button.getVariant ? button.getVariant(data) : 'text'"
               :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
               :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"
+              :icon="button.getIcon ? button.getIcon(data) : undefined"
               @click="button.clickHandler(data)"
             />
           </div>
@@ -162,6 +164,7 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *         getVariant: (data: T) => string   // 프라임뷰 버튼 variant 값
    *         getDisabled: (data: T) => boolean // 버튼 disabled 여부
    *         getHidden: (data: T) => boolean   // 버튼 숨기는지?
+   *         getIcon: (data: T) => string      // 프라임뷰 아이콘
    *       }
    *     ]}
    *   }
@@ -216,6 +219,12 @@ const exportCSV = () => {
     & .hidden {
       display: none;
     }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
   }
 }
 </style>

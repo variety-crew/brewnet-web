@@ -2,6 +2,7 @@
   <div class="delivery-main-container">
     <header>
       <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
+      <h3>{{ $route.meta?.pageTitle || '' }}</h3>
       <Button label="로그아웃" variant="text" size="small" @click="clickLogout" />
     </header>
     <main>
@@ -37,7 +38,7 @@ const authApi = new AuthApi();
 const navItems = ref([
   { routerName: 'd:home', title: '주문' },
   { routerName: 'd:exchange-return', title: '교환/반품' },
-  { routerName: 'd:complete', title: '배송완료' },
+  { routerName: 'd:detail', title: '배송 현황' },
 ]);
 
 const clickLogout = () => {
@@ -78,8 +79,11 @@ const clickLogout = () => {
     border-top: 2px solid var(--p-surface-100);
 
     nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+
+      & > * {
+        flex: 1 1;
+      }
     }
     .tab-link {
       text-align: center;

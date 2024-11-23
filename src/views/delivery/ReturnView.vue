@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <h2 class="title">주문 배송 목록</h2>
+    <h2 class="title">반품 배송 목록</h2>
     <AppTable
       :columns="columns"
       :rows-per-page="pageSize"
-      :paginated-data="paginatedOrderDeliveries"
+      :paginated-data="paginatedReturnDeliveries"
       :total-elements="totalElements"
       @reload="reloadData"
       @change-page="onChangePage"
@@ -19,13 +19,12 @@ import { onMounted, ref } from 'vue';
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
-import { DELIVERY_KIND, ORDER_STATUS } from '@/utils/constant';
-import { formatKoOrderStatus } from '@/utils/format';
+import { DELIVERY_KIND, RETURN_STATUS } from '@/utils/constant';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 
-const paginatedOrderDeliveries = ref([]);
+const paginatedReturnDeliveries = ref([]);
 const page = ref(0);
 const pageSize = ref(15);
 const totalElements = ref(0);
@@ -33,11 +32,11 @@ const totalElements = ref(0);
 const deliveryApi = new DeliverApi();
 
 const getDeliveryButtonLabel = status => {
-  if (status === ORDER_STATUS.APPROVED) {
-    return '배송 시작';
+  if (status === RETURN_STATUS.APPROVED) {
+    return '회수 시작';
   }
-  if (status === ORDER_STATUS.SHIPPING) {
-    return '배송 완료';
+  if (status === RETURN_STATUS.PICKING) {
+    return '회수 완료';
   }
   return '';
 };
@@ -68,11 +67,16 @@ const clickChangeStatus = data => {
   let message = '';
   let toStatus = null;
 
-  if (currentStatus === ORDER_STATUS.APPROVED) {
-    header = '배송 시작';
-    acceptLabel = '배송 시작';
-    message = '배송을 시작하시겠습니까?';
-    toStatus = ORDER_STATUS.SHIPPING;
+  if (currentStatus === RETURN_STATUS.APPROVED) {
+    header = '회수 시작';
+    acceptLabel = '회수 시작';
+    message = '회수를 시작하시겠습니까?';
+    toStatus = RETURN_STATUS.PICKING;
+  } else if (currentStatus === RETURN_STATUS.PICKING) {
+    header = '회수 완료';
+    acceptLabel = '회수 완료';
+    message = '회수를 완료하시겠습니까?';
+    toStatus = RETURN_STATUS.PICKED;
   }
 
   if (!toStatus) {
@@ -95,10 +99,6 @@ const clickChangeStatus = data => {
   });
 };
 
-const isShowActionButton = deliveryStatus => {
-  return deliveryStatus === ORDER_STATUS.APPROVED;
-};
-
 const columns = [
   {
     field: 'code',
@@ -107,7 +107,7 @@ const columns = [
   { field: 'deliveryFranchiseName', header: '배송지' },
   {
     field: '',
-    header: '가맹점 연락처',
+    header: '',
     template: {
       button: [
         {
@@ -117,29 +117,10 @@ const columns = [
           getIcon: () => 'pi pi-phone',
           clickHandler: clickCall,
         },
-      ],
-    },
-  },
-  {
-    field: '',
-    header: '',
-    template: {
-      button: [
         {
-          getLabel: data => {
-            if (isShowActionButton(data.deliveryStatus)) {
-              return getDeliveryButtonLabel(data.deliveryStatus);
-            }
-            return formatKoOrderStatus(data.deliveryStatus);
-          },
-          getVariant: data => {
-            if (isShowActionButton(data.deliveryStatus)) {
-              return undefined;
-            }
-            return 'text';
-          },
+          getLabel: data => getDeliveryButtonLabel(data.deliveryStatus),
+          getVariant: data => undefined,
           clickHandler: clickChangeStatus,
-          getDisabled: data => !isShowActionButton(data.deliveryStatus),
         },
       ],
     },
@@ -148,9 +129,9 @@ const columns = [
 
 const getDeliveryList = () => {
   deliveryApi
-    .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DELIVERY_KIND.ORDER })
+    .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DELIVERY_KIND.RETURN })
     .then(data => {
-      paginatedOrderDeliveries.value = data.content;
+      paginatedReturnDeliveries.value = data.content;
       totalElements.value = data.totalElements;
     });
 };
@@ -165,23 +146,23 @@ const onChangePage = event => {
 };
 
 onMounted(() => {
-  getDeliveryList();
-  // paginatedOrderDeliveries.value = [
-  //   {
-  //     code: 100,
-  //     deliveryKind: DELIVERY_KIND.ORDER,
-  //     deliveryFranchiseName: '낙성대점',
-  //     deliveryStatus: ORDER_STATUS.APPROVED,
-  //     contact: '01011111111',
-  //   },
-  //   {
-  //     code: 99,
-  //     deliveryKind: DELIVERY_KIND.ORDER,
-  //     deliveryFranchiseName: '숭실대점',
-  //     deliveryStatus: ORDER_STATUS.SHIPPING,
-  //     contact: '01011111111',
-  //   },
-  // ];
+  // getDeliveryList();
+  paginatedReturnDeliveries.value = [
+    {
+      code: 100,
+      deliveryKind: DELIVERY_KIND.RETURN,
+      deliveryFranchiseName: '낙성대점',
+      deliveryStatus: RETURN_STATUS.APPROVED,
+      contact: '01011111111',
+    },
+    {
+      code: 99,
+      deliveryKind: DELIVERY_KIND.RETURN,
+      deliveryFranchiseName: '숭실대점',
+      deliveryStatus: RETURN_STATUS.PICKING,
+      contact: '01011111111',
+    },
+  ];
 });
 </script>
 

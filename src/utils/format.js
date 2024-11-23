@@ -1,9 +1,12 @@
 import {
   APPROVAL_KIND,
   APPROVAL_STATUS,
+  DELIVERY_KIND,
   EXCHANGE_STATUS,
+  ORDER_STATUS,
   POSITION,
   PURCHASE_STATUS,
+  RETURN_STATUS,
   ROLE,
   SEARCH_CRITERIA,
 } from './constant';
@@ -80,19 +83,19 @@ export const formatKoExchangeStatus = status => {
       return '교환반려';
 
     case EXCHANGE_STATUS.PICKING:
-      return '수거중';
+      return '회수중';
 
     case EXCHANGE_STATUS.PICKED:
-      return '수거완료';
+      return '회수완료';
 
     case EXCHANGE_STATUS.SHIPPING:
-      return '배송중';
+      return '재배송중';
 
     case EXCHANGE_STATUS.SHIPPED:
-      return '배송완료';
+      return '재배송완료';
 
     case EXCHANGE_STATUS.COMPLETED:
-      return '배송완료';
+      return '교환완료';
 
     default:
       return '';
@@ -166,6 +169,97 @@ export const formatKoSearchCriteria = criteria => {
 
     case SEARCH_CRITERIA.STORAGE_NAME:
       return '창고명';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoOrderStatus = status => {
+  switch (status) {
+    case ORDER_STATUS.REQUESTED:
+      return '주문요청';
+
+    case ORDER_STATUS.PENDING:
+      return '주문처리중';
+
+    case ORDER_STATUS.CANCELED:
+      return '주문취소';
+
+    case ORDER_STATUS.APPROVED:
+      return '주문승인';
+
+    case ORDER_STATUS.REJECTED:
+      return '주문반려';
+
+    case ORDER_STATUS.SHIPPING:
+      return '배송중';
+
+    case ORDER_STATUS.SHIPPED:
+      return '배송완료';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoReturnStatus = status => {
+  switch (status) {
+    case RETURN_STATUS.REQUESTED:
+      return '반품요청';
+
+    case RETURN_STATUS.PENDING:
+      return '반품처리중';
+
+    case RETURN_STATUS.CANCELED:
+      return '반품취소';
+
+    case RETURN_STATUS.APPROVED:
+      return '반품승인';
+
+    case RETURN_STATUS.REJECTED:
+      return '반품반려';
+
+    case RETURN_STATUS.PICKING:
+      return '회수중';
+
+    case RETURN_STATUS.PICKED:
+      return '회수완료';
+
+    case RETURN_STATUS.COMPLETED:
+      return '반품완료';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoDeliveryStatus = orderStatus => {
+  switch (orderStatus) {
+    case ORDER_STATUS.APPROVED:
+      return '배송전';
+
+    case ORDER_STATUS.SHIPPING:
+      return '배송중';
+
+    case ORDER_STATUS.SHIPPED:
+      return '배송완료';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoDeliveryKind = kind => {
+  switch (kind) {
+    case DELIVERY_KIND.ORDER:
+      return '주문';
+
+    case DELIVERY_KIND.EXCHANGE:
+      return '교환';
+
+    case DELIVERY_KIND.RETURN:
+      return '반품';
 
     default:
       return '';
