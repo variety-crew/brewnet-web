@@ -384,6 +384,14 @@ const routes = [
             },
           },
           {
+            path: ':orderCode/detail',
+            name: 'fc:home:order:detail',
+            component: () => import('@/views/franchise/OrderDetailView.vue'),
+            meta: {
+              breadcrumb: '주문 상세',
+            },
+          },
+          {
             path: 'order/form',
             name: 'fc:home:order:form',
             component: () => import('@/views/franchise/OrderFormView.vue'),
