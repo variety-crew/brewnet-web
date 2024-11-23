@@ -83,19 +83,19 @@ export const formatKoExchangeStatus = status => {
       return '교환반려';
 
     case EXCHANGE_STATUS.PICKING:
-      return '수거중';
+      return '회수중';
 
     case EXCHANGE_STATUS.PICKED:
-      return '수거완료';
+      return '회수완료';
 
     case EXCHANGE_STATUS.SHIPPING:
-      return '배송중';
+      return '재배송중';
 
     case EXCHANGE_STATUS.SHIPPED:
-      return '배송완료';
+      return '재배송완료';
 
     case EXCHANGE_STATUS.COMPLETED:
-      return '배송완료';
+      return '교환완료';
 
     default:
       return '';
@@ -221,10 +221,10 @@ export const formatKoReturnStatus = status => {
       return '반품반려';
 
     case RETURN_STATUS.PICKING:
-      return '수거중';
+      return '회수중';
 
     case RETURN_STATUS.PICKED:
-      return '수거완료';
+      return '회수완료';
 
     case RETURN_STATUS.COMPLETED:
       return '반품완료';

@@ -20,6 +20,7 @@ import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
 import { DELIVERY_KIND, ORDER_STATUS } from '@/utils/constant';
+import { formatKoOrderStatus } from '@/utils/format';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -72,11 +73,6 @@ const clickChangeStatus = data => {
     acceptLabel = '배송 시작';
     message = '배송을 시작하시겠습니까?';
     toStatus = ORDER_STATUS.SHIPPING;
-  } else if (currentStatus === ORDER_STATUS.SHIPPING) {
-    header = '배송 완료';
-    acceptLabel = '배송 완료';
-    message = '배송을 완료하시겠습니까?';
-    toStatus = ORDER_STATUS.SHIPPED;
   }
 
   if (!toStatus) {
@@ -97,6 +93,10 @@ const clickChangeStatus = data => {
       changeDeliveryStatus(data.code, toStatus);
     },
   });
+};
+
+const isShowActionButton = deliveryStatus => {
+  return deliveryStatus === ORDER_STATUS.APPROVED;
 };
 
 const columns = [
@@ -126,9 +126,20 @@ const columns = [
     template: {
       button: [
         {
-          getLabel: data => getDeliveryButtonLabel(data.deliveryStatus),
-          getVariant: data => undefined,
+          getLabel: data => {
+            if (isShowActionButton(data.deliveryStatus)) {
+              return getDeliveryButtonLabel(data.deliveryStatus);
+            }
+            return formatKoOrderStatus(data.deliveryStatus);
+          },
+          getVariant: data => {
+            if (isShowActionButton(data.deliveryStatus)) {
+              return undefined;
+            }
+            return 'text';
+          },
           clickHandler: clickChangeStatus,
+          getDisabled: data => !isShowActionButton(data.deliveryStatus),
         },
       ],
     },

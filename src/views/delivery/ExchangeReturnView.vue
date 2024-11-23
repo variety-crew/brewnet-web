@@ -20,6 +20,7 @@ import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
 import { DELIVERY_KIND, EXCHANGE_STATUS, RETURN_STATUS } from '@/utils/constant';
+import { formatKoDeliveryKind, formatKoExchangeStatus, formatKoReturnStatus } from '@/utils/format';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -51,11 +52,11 @@ const clickCall = data => {
   location.href = `tel:${data.contact}`;
 };
 
-const changeDeliveryStatus = (orderCode, toStatus) => {
+const changeDeliveryStatus = (code, deliveryKind, toStatus) => {
   deliveryApi
     .changeDeliveryStatus({
-      code: orderCode,
-      deliveryKind: DELIVERY_KIND.EXCHANGE,
+      code,
+      deliveryKind,
       deliveryStatus: toStatus,
     })
     .then(() => {
@@ -73,33 +74,29 @@ const clickChangeStatus = data => {
   let message = '';
   let toStatus = null;
 
-  if (currentStatus === EXCHANGE_STATUS.APPROVED) {
-    header = '회수 시작';
-    acceptLabel = '회수 시작';
-    message = '회수를 시작하시겠습니까?';
-    toStatus = EXCHANGE_STATUS.PICKING;
-  } else if (currentStatus === EXCHANGE_STATUS.PICKING) {
-    header = '회수 완료';
-    acceptLabel = '회수 완료';
-    message = '회수를 완료하시겠습니까?';
-    toStatus = EXCHANGE_STATUS.PICKED;
-  } else if (currentStatus === EXCHANGE_STATUS.PICKED) {
-    header = '재배송 시작';
-    acceptLabel = '재배송 시작';
-    message = '재배송을 시작하시겠습니까?';
-    toStatus = EXCHANGE_STATUS.SHIPPING;
-  } else if (currentStatus === EXCHANGE_STATUS.SHIPPING) {
-    header = '재배송 완료';
-    acceptLabel = '재배송 완료';
-    message = '재배송을 완료하시겠습니까?';
-    toStatus = EXCHANGE_STATUS.SHIPPED;
+  if (data.deliveryKind === DELIVERY_KIND.EXCHANGE) {
+    // 교환일 때
+    if (currentStatus === EXCHANGE_STATUS.APPROVED) {
+      header = '회수 시작';
+      acceptLabel = '회수 시작';
+      message = '회수를 시작하시겠습니까?';
+      toStatus = EXCHANGE_STATUS.PICKING;
+    }
+  } else if (data.deliveryKind === DELIVERY_KIND.RETURN) {
+    // 반품일 때
+    if (currentStatus === RETURN_STATUS.APPROVED) {
+      header = '회수 시작';
+      acceptLabel = '회수 시작';
+      message = '회수를 시작하시겠습니까?';
+      toStatus = RETURN_STATUS.PICKING;
+    }
   }
 
   if (!toStatus) {
     toast.add({
       severity: 'error',
       summary: '처리 실패',
-      detail: '변경할 상태값이 설정되지 않았습니다. -- 교환',
+      detail: '변경할 상태값이 설정되지 않았습니다. -- 교환/반품',
       life: 3000,
     });
     return;
@@ -110,9 +107,18 @@ const clickChangeStatus = data => {
     message: `[주문코드: ${data.code} / 배송지: ${data.deliveryFranchiseName}] ${message}`,
     acceptLabel,
     onAccept: () => {
-      changeDeliveryStatus(data.code, toStatus);
+      changeDeliveryStatus(data.code, data.deliveryKind, toStatus);
     },
   });
+};
+
+const isShowActionButton = (deliveryKind, deliveryStatus) => {
+  // 교환/반품 -> APPROVED 상태일 때에만
+  if (deliveryKind === DELIVERY_KIND.EXCHANGE) {
+    return deliveryStatus === EXCHANGE_STATUS.APPROVED;
+  }
+
+  return deliveryStatus === RETURN_STATUS.APPROVED;
 };
 
 const columns = [
@@ -120,6 +126,7 @@ const columns = [
     field: 'code',
     header: '주문코드',
   },
+  { field: 'deliveryKind', header: '구분', render: data => formatKoDeliveryKind(data.deliveryKind) },
   { field: 'deliveryFranchiseName', header: '배송지' },
   {
     field: '',
@@ -142,9 +149,26 @@ const columns = [
     template: {
       button: [
         {
-          getLabel: data => getDeliveryButtonLabel(data.deliveryStatus),
-          getVariant: data => undefined,
+          getLabel: data => {
+            if (isShowActionButton(data.deliveryKind, data.deliveryStatus)) {
+              return getDeliveryButtonLabel(data.deliveryStatus);
+            }
+
+            // 나머지 상태는 현재 상태 그대로 보여주기
+            if (data.deliveryKind === DELIVERY_KIND.EXCHANGE) {
+              return formatKoExchangeStatus(data.deliveryStatus);
+            }
+
+            return formatKoReturnStatus(data.deliveryStatus);
+          },
+          getVariant: data => {
+            if (isShowActionButton(data.deliveryKind, data.deliveryStatus)) {
+              return undefined;
+            }
+            return 'text';
+          },
           clickHandler: clickChangeStatus,
+          getDisabled: data => !isShowActionButton(data.deliveryKind, data.deliveryStatus),
         },
       ],
     },
