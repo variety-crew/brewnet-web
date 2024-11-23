@@ -14,7 +14,7 @@ export default class FCOrderApi extends BaseApiService {
   // 가맹점의 주문 등록
   createOrder({ items }) {
     return this.post('', {
-      items,
+      orderList: items,
     });
   }
 
