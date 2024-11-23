@@ -148,6 +148,7 @@ const getDeliveryList = () => {
     .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DELIVERY_KIND.EXCHANGE })
     .then(data => {
       paginatedExchangeDeliveries.value = data.content;
+      totalElements.value = data.totalElements;
     });
 };
 

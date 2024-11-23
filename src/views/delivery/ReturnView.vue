@@ -132,6 +132,7 @@ const getDeliveryList = () => {
     .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DELIVERY_KIND.RETURN })
     .then(data => {
       paginatedReturnDeliveries.value = data.content;
+      totalElements.value = data.totalElements;
     });
 };
 
