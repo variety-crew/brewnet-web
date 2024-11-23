@@ -2,6 +2,7 @@ import {
   APPROVAL_KIND,
   APPROVAL_STATUS,
   EXCHANGE_STATUS,
+  ORDER_STATUS,
   POSITION,
   PURCHASE_STATUS,
   ROLE,
@@ -166,6 +167,50 @@ export const formatKoSearchCriteria = criteria => {
 
     case SEARCH_CRITERIA.STORAGE_NAME:
       return '창고명';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoOrderStatus = status => {
+  switch (status) {
+    case ORDER_STATUS.REQUESTED:
+      return '주문요청';
+
+    case ORDER_STATUS.PENDING:
+      return '주문처리중';
+
+    case ORDER_STATUS.CANCELED:
+      return '주문취소';
+
+    case ORDER_STATUS.APPROVED:
+      return '주문승인';
+
+    case ORDER_STATUS.REJECTED:
+      return '주문반려';
+
+    case ORDER_STATUS.SHIPPING:
+      return '배송중';
+
+    case ORDER_STATUS.SHIPPED:
+      return '배송완료';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoDeliveryStatus = orderStatus => {
+  switch (orderStatus) {
+    case ORDER_STATUS.APPROVED:
+      return '배송전';
+
+    case ORDER_STATUS.SHIPPING:
+      return '배송중';
+
+    case ORDER_STATUS.SHIPPED:
+      return '배송완료';
 
     default:
       return '';
