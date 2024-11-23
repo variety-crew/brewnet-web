@@ -60,6 +60,7 @@
           </div>
         </div>
       </template>
+      <template #empty>데이터가 없습니다.</template>
       <Column
         v-for="(col, colIndex) of columns"
         :key="`field${colIndex}`"

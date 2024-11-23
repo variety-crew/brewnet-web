@@ -194,51 +194,51 @@ const onChangePage = event => {
 };
 
 onMounted(() => {
-  // getDeliveryList();
-  paginatedExchangeDeliveries.value = [
-    {
-      code: 100,
-      deliveryKind: DELIVERY_KIND.EXCHANGE,
-      deliveryFranchiseName: '낙성대점',
-      deliveryStatus: EXCHANGE_STATUS.APPROVED,
-      contact: '01011111111',
-    },
-    {
-      code: 99,
-      deliveryKind: DELIVERY_KIND.EXCHANGE,
-      deliveryFranchiseName: '숭실대점',
-      deliveryStatus: EXCHANGE_STATUS.PICKING,
-      contact: '01011111111',
-    },
-    {
-      code: 98,
-      deliveryKind: DELIVERY_KIND.EXCHANGE,
-      deliveryFranchiseName: '미아점',
-      deliveryStatus: EXCHANGE_STATUS.PICKED,
-      contact: '01011111111',
-    },
-    {
-      code: 97,
-      deliveryKind: DELIVERY_KIND.EXCHANGE,
-      deliveryFranchiseName: '미아사거리점',
-      deliveryStatus: EXCHANGE_STATUS.SHIPPING,
-      contact: '01011111111',
-    },
-    {
-      code: 96,
-      deliveryKind: DELIVERY_KIND.RETURN,
-      deliveryFranchiseName: '낙성대점',
-      deliveryStatus: RETURN_STATUS.APPROVED,
-      contact: '01011111111',
-    },
-    {
-      code: 95,
-      deliveryKind: DELIVERY_KIND.RETURN,
-      deliveryFranchiseName: '숭실대점',
-      deliveryStatus: RETURN_STATUS.PICKING,
-      contact: '01011111111',
-    },
-  ];
+  getDeliveryList();
+  // paginatedExchangeDeliveries.value = [
+  //   {
+  //     code: 100,
+  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryFranchiseName: '낙성대점',
+  //     deliveryStatus: EXCHANGE_STATUS.APPROVED,
+  //     contact: '01011111111',
+  //   },
+  //   {
+  //     code: 99,
+  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryFranchiseName: '숭실대점',
+  //     deliveryStatus: EXCHANGE_STATUS.PICKING,
+  //     contact: '01011111111',
+  //   },
+  //   {
+  //     code: 98,
+  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryFranchiseName: '미아점',
+  //     deliveryStatus: EXCHANGE_STATUS.PICKED,
+  //     contact: '01011111111',
+  //   },
+  //   {
+  //     code: 97,
+  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryFranchiseName: '미아사거리점',
+  //     deliveryStatus: EXCHANGE_STATUS.SHIPPING,
+  //     contact: '01011111111',
+  //   },
+  //   {
+  //     code: 96,
+  //     deliveryKind: DELIVERY_KIND.RETURN,
+  //     deliveryFranchiseName: '낙성대점',
+  //     deliveryStatus: RETURN_STATUS.APPROVED,
+  //     contact: '01011111111',
+  //   },
+  //   {
+  //     code: 95,
+  //     deliveryKind: DELIVERY_KIND.RETURN,
+  //     deliveryFranchiseName: '숭실대점',
+  //     deliveryStatus: RETURN_STATUS.PICKING,
+  //     contact: '01011111111',
+  //   },
+  // ];
 });
 </script>
 

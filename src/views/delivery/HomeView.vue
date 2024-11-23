@@ -165,23 +165,23 @@ const onChangePage = event => {
 };
 
 onMounted(() => {
-  // getDeliveryList();
-  paginatedOrderDeliveries.value = [
-    {
-      code: 100,
-      deliveryKind: DELIVERY_KIND.ORDER,
-      deliveryFranchiseName: '낙성대점',
-      deliveryStatus: ORDER_STATUS.APPROVED,
-      contact: '01011111111',
-    },
-    {
-      code: 99,
-      deliveryKind: DELIVERY_KIND.ORDER,
-      deliveryFranchiseName: '숭실대점',
-      deliveryStatus: ORDER_STATUS.SHIPPING,
-      contact: '01011111111',
-    },
-  ];
+  getDeliveryList();
+  // paginatedOrderDeliveries.value = [
+  //   {
+  //     code: 100,
+  //     deliveryKind: DELIVERY_KIND.ORDER,
+  //     deliveryFranchiseName: '낙성대점',
+  //     deliveryStatus: ORDER_STATUS.APPROVED,
+  //     contact: '01011111111',
+  //   },
+  //   {
+  //     code: 99,
+  //     deliveryKind: DELIVERY_KIND.ORDER,
+  //     deliveryFranchiseName: '숭실대점',
+  //     deliveryStatus: ORDER_STATUS.SHIPPING,
+  //     contact: '01011111111',
+  //   },
+  // ];
 });
 </script>
 
