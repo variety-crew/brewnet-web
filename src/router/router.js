@@ -118,7 +118,7 @@ const routes = [
             },
           },
           {
-            path: 'order/:orderCode/detail',
+            path: ':orderCode/detail',
             name: 'hq:order:detail',
             component: () => import('@/views/headQuarter/OrderDetailView.vue'),
             meta: {

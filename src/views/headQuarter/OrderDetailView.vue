@@ -2,12 +2,13 @@
   <div class="order-detail-container">
     <template v-if="orderDetail">
       <div class="top-area">
-        <Tag
+        <!-- <Tags
           rounded
           :value="formatKoOrderStatus(orderDetail.approvalStatus)"
           :severity="getOrderStatusSeverity(orderDetail.approvalStatus)"
           class="mb-1"
-        />
+        /> -->
+        <Tags class="mb-1" />
         <div class="top-buttons">
           <Button
             label="결재 라인 조회"
@@ -71,7 +72,7 @@
             </tr>
             <tr>
               <th>비고사항</th>
-              <td colspan="7">비고사항이 입력되는 곳</td>
+              <td colspan="7">{{ orderDetail.comment }}</td>
             </tr>
             <tr>
               <th>품목코드</th>
@@ -81,19 +82,18 @@
               <th>공급가액</th>
               <th>부가세</th>
             </tr>
-            <tr v-for="item in orderItems" :key="item.code">
-              <td class="align-center">{{ item.uniqueCode }}</td>
+            <tr v-for="item in orderDetail.orderItemList" :key="item.itemCode">
+              <td class="align-center">{{ item.itemCode }}</td>
               <td colspan="3">{{ item.name }}</td>
-              <td></td>
-              <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
-              <td class="align-right"></td>
-              <td class="align-right"></td>
+              <td class="align-right">{{ item.quantity.toLocaleString() }}</td>
+              <td class="align-right">{{ (item.partSum / item.quantity).toLocaleString() }}</td>
+              <td class="align-right">{{ item.partSum.toLocaleString() }}</td>
+              <td class="align-right">{{ (item.partSum * 0.1).toLocaleString() }}</td>
             </tr>
             <tr>
               <th>총 주문금액</th>
-              <td colspan="5"></td>
-              <td class="align-right"></td>
-              <td class="align-right"></td>
+              <td colspan="6"></td>
+              <td class="align-right">{{ totalPrice }}</td>
             </tr>
             <!-- <tr style="height: 100px">
               <th>첨언</th>
@@ -137,6 +137,7 @@ import { useRoute, useRouter } from 'vue-router';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
+import HQOrderApi from '@/utils/api/HQOrderApi';
 import { ORDER_STATUS } from '@/utils/constant';
 import { formatKoOrderStatus } from '@/utils/format';
 import { getOrderStatusSeverity } from '@/utils/helper';
@@ -164,6 +165,18 @@ const isCompleted = computed(() => {
 });
 
 const localStorageUtil = new LocalStorageUtil();
+const hqOrderApi = new HQOrderApi();
+const { orderCode } = route.params;
+const totalPrice = computed(() => {
+  // orderDetail.value가 존재하고, orderItemList가 있는 경우에만 계산
+  if (orderDetail.value && orderDetail.value.orderItemList) {
+    const totalPartSum = orderDetail.value.orderItemList.reduce((sum, item) => {
+      return sum + item.partSum;
+    }, 0);
+    return (totalPartSum * 1.1).toLocaleString();
+  }
+  return '0';
+});
 
 const clickSendApprovalLine = () => {
   // TODO:: 결재 라인 조회
@@ -204,12 +217,10 @@ const clickCancel = () => {
 
 onMounted(() => {
   // 주문 상세 데이터 셋팅
-  const orderCode = route.params.orderCode;
-  orderDetail.value = mockupOrders.find(e => e.orderCode == orderCode);
-  orderItems.value = [...mockupItems];
-
-  // 이미 회계팀에 보냈는지 확인
-  // isAlreadySend.value = localStorageUtil.isSendCompleteOrder(Number(orderCode));
+  console.log('call start');
+  hqOrderApi.getOrderDetail(orderCode).then(data => {
+    orderDetail.value = data;
+  });
 });
 </script>
 

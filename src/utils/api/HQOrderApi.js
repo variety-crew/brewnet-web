@@ -4,7 +4,7 @@ import BaseApiService from './BaseApiService';
 
 export default class HQOrderApi extends BaseApiService {
   constructor() {
-    super('/v1/hq/orders/list');
+    super('/v1/hq/orders');
   }
 
   //
@@ -44,16 +44,11 @@ export default class HQOrderApi extends BaseApiService {
       searchParams.append('franchiseName', franchiseName);
     }
 
-    return this.get(`?${searchParams.toString()}`);
+    return this.get(`/list/?${searchParams.toString()}`);
   }
 
-  // 주문 상세 조회 설정 (진행중 / s완료X)
-  getOrderDetail({ positionName, kind, seq }) {
-    const requestBody = {
-      positionName,
-      kind,
-      seq,
-    };
-    return this.post('/approver', requestBody);
+  // 주문 상세 조회 설정 (진행중 / 완료X)
+  getOrderDetail(orderCode) {
+    return this.get(`/detail/${orderCode}`);
   }
 }
