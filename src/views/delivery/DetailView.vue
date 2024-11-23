@@ -104,7 +104,7 @@ const getStepDesc = stepValue => {
   }
 
   if (stepValue === ORDER_STATUS.SHIPPED) {
-    return '베송 완료!';
+    return '배송 완료!';
   }
 
   if (stepValue === EXCHANGE_STATUS.PICKING) {
