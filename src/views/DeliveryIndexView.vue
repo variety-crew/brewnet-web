@@ -37,8 +37,7 @@ const authApi = new AuthApi();
 
 const navItems = ref([
   { routerName: 'd:home', title: '주문' },
-  { routerName: 'd:exchange', title: '교환' },
-  { routerName: 'd:return', title: '반품' },
+  { routerName: 'd:exchange-return', title: '교환/반품' },
   { routerName: 'd:detail', title: '배송 현황' },
 ]);
 

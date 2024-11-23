@@ -107,7 +107,7 @@ const columns = [
   { field: 'deliveryFranchiseName', header: '배송지' },
   {
     field: '',
-    header: '',
+    header: '가맹점 연락처',
     template: {
       button: [
         {
@@ -117,6 +117,14 @@ const columns = [
           getIcon: () => 'pi pi-phone',
           clickHandler: clickCall,
         },
+      ],
+    },
+  },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
         {
           getLabel: data => getDeliveryButtonLabel(data.deliveryStatus),
           getVariant: data => undefined,

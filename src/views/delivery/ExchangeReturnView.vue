@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2 class="title">교환 배송 목록</h2>
+    <h2 class="title">교환/반품 배송 목록</h2>
     <AppTable
       :columns="columns"
       :rows-per-page="pageSize"
@@ -19,7 +19,7 @@ import { onMounted, ref } from 'vue';
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
-import { DELIVERY_KIND, EXCHANGE_STATUS } from '@/utils/constant';
+import { DELIVERY_KIND, EXCHANGE_STATUS, RETURN_STATUS } from '@/utils/constant';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -123,7 +123,7 @@ const columns = [
   { field: 'deliveryFranchiseName', header: '배송지' },
   {
     field: '',
-    header: '',
+    header: '가맹점 연락처',
     template: {
       button: [
         {
@@ -133,6 +133,14 @@ const columns = [
           getIcon: () => 'pi pi-phone',
           clickHandler: clickCall,
         },
+      ],
+    },
+  },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
         {
           getLabel: data => getDeliveryButtonLabel(data.deliveryStatus),
           getVariant: data => undefined,
@@ -190,6 +198,20 @@ onMounted(() => {
       deliveryKind: DELIVERY_KIND.EXCHANGE,
       deliveryFranchiseName: '미아사거리점',
       deliveryStatus: EXCHANGE_STATUS.SHIPPING,
+      contact: '01011111111',
+    },
+    {
+      code: 96,
+      deliveryKind: DELIVERY_KIND.RETURN,
+      deliveryFranchiseName: '낙성대점',
+      deliveryStatus: RETURN_STATUS.APPROVED,
+      contact: '01011111111',
+    },
+    {
+      code: 95,
+      deliveryKind: DELIVERY_KIND.RETURN,
+      deliveryFranchiseName: '숭실대점',
+      deliveryStatus: RETURN_STATUS.PICKING,
       contact: '01011111111',
     },
   ];

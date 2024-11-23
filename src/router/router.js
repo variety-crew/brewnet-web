@@ -451,19 +451,11 @@ const routes = [
         },
       },
       {
-        path: 'exchange',
-        name: 'd:exchange',
-        component: () => import('@/views/delivery/ExchangeView.vue'),
+        path: 'exchange-return',
+        name: 'd:exchange-return',
+        component: () => import('@/views/delivery/ExchangeReturnView.vue'),
         meta: {
-          pageTitle: '교환',
-        },
-      },
-      {
-        path: 'return',
-        name: 'd:return',
-        component: () => import('@/views/delivery/ReturnView.vue'),
-        meta: {
-          pageTitle: '반품',
+          pageTitle: '교환/반품',
         },
       },
       {
