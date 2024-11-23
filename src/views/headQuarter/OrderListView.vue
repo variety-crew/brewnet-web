@@ -1,9 +1,5 @@
 <template>
   <div>
-    <text>
-      {{ criteria.startDate }}
-      {{ criteria.managerName }}
-    </text>
     <!-- 검색 area -->
     <SearchArea grid class="order-search">
       <AppDateRangePicker
@@ -79,8 +75,8 @@ function clickGoDetail(data) {
 
 const columns = [
   { field: 'orderCode', header: '주문번호', sortable: true },
-  { field: 'franchiseName', header: '주문지점' },
-  { field: 'itemName', header: '주문품목명' },
+  { field: 'orderFranchise.franchiseName', header: '주문지점' },
+  { field: 'orderFranchise.itemName', header: '주문품목명' },
   { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
   //   {
   //     field: 'approvalStatus',
@@ -95,7 +91,7 @@ const columns = [
 
   // 수정필요
   // {
-  //   field: 'xxxxxxxxxxxxxxxxxxxxxx',
+  //   field: 'approvalStatus',
   //   header: '주문상태',
   //   render: formatKoOrderStatus,
   //   template: {

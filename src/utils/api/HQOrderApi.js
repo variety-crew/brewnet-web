@@ -23,7 +23,7 @@ export default class HQOrderApi extends BaseApiService {
     franchiseName = '',
   }) {
     const searchParams = new URLSearchParams();
-    searchParams.append('pageNumber', page);
+    searchParams.append('page', page);
     searchParams.append('size', size);
     searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
     searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
@@ -44,11 +44,17 @@ export default class HQOrderApi extends BaseApiService {
       searchParams.append('franchiseName', franchiseName);
     }
 
-    return this.get(`/list/?${searchParams.toString()}`);
+    return this.get(`/list?${searchParams.toString()}`);
+    // return this.get(`/list`);
   }
 
-  // 주문 상세 조회 설정 (진행중 / 완료X)
+  // 주문 상세 조회 설정
   getOrderDetail(orderCode) {
     return this.get(`/detail/${orderCode}`);
+  }
+
+  // 주문 결재이력 조회
+  getOrderApprovalLines(orderCode) {
+    return this.get(`/detail/${orderCode}/history/approval`);
   }
 }

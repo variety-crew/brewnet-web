@@ -10,15 +10,15 @@
         /> -->
         <Tags class="mb-1" />
         <div class="top-buttons">
-          <Button
+          <!-- <Button
             label="결재 라인 조회"
             variant="outlined"
             size="small"
             :disabled="isRequested"
             @click="clickSendApprovalLine"
-          />
+          /> -->
           <Button
-            label="결재하기"
+            label="결재요청하기"
             variant="outlined"
             size="small"
             :disabled="!isRequested"
@@ -66,7 +66,7 @@
               <th>주문지점</th>
               <td>{{ orderDetail.franchiseName }}</td>
               <th>주문금액</th>
-              <td>{{ orderDetail.sumPrice }}</td>
+              <td>{{ orderDetail.sumPrice.toLocaleString() }}</td>
               <th>주문담당자</th>
               <td>{{ orderDetail.managerName }}</td>
             </tr>
@@ -92,8 +92,8 @@
             </tr>
             <tr>
               <th>총 주문금액</th>
-              <td colspan="6"></td>
-              <td class="align-right">{{ totalPrice }}</td>
+              <td class="align-right" colspan="7">{{ totalPrice.toLocaleString() }}</td>
+              <!-- <td class="align-right"></td> -->
             </tr>
             <!-- <tr style="height: 100px">
               <th>첨언</th>
@@ -109,6 +109,7 @@
         <AppTableStyled full-width>
           <thead>
             <tr>
+              <th>직급</th>
               <th>결재자</th>
               <th>결재상태</th>
               <th>비고사항</th>
@@ -116,11 +117,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="align-center">{결재자이름}</td>
-              <td class="align-center">{결재자의 승인/반려}</td>
-              <td class="align-center">{결재자의 비고사항}</td>
-              <td class="align-center">{결재자의 승인/반려 일자}</td>
+            <tr v-for="approvalLine in orderApprovalLines" :key="approvalLine.approverCode">
+              <td class="align-center">{{ formatKoEmployeePosition(approvalLine.position) }}</td>
+              <td class="align-center">{{ approvalLine.approverName }}</td>
+              <td class="align-center">{{ formatKoApprovalStatus(approvalLine.approved) }}</td>
+              <td class="align-center">{{ approvalLine.comment }}</td>
+              <td class="align-center">{{ approvalLine.createdAt }}</td>
             </tr>
           </tbody>
         </AppTableStyled>
@@ -139,7 +141,7 @@ import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
 import { ORDER_STATUS } from '@/utils/constant';
-import { formatKoOrderStatus } from '@/utils/format';
+import { formatKoApprovalStatus, formatKoEmployeePosition } from '@/utils/format';
 import { getOrderStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
 import { mockupItems, mockupOrders } from '@/utils/mockup';
@@ -151,7 +153,7 @@ const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 
 const orderDetail = ref(null);
-const orderItems = ref([]);
+const orderApprovalLines = ref([]);
 const disabledCancelButton = computed(() => {
   return orderDetail.value.managerName !== useUserStore.username;
 });
@@ -220,6 +222,10 @@ onMounted(() => {
   console.log('call start');
   hqOrderApi.getOrderDetail(orderCode).then(data => {
     orderDetail.value = data;
+  });
+
+  hqOrderApi.getOrderApprovalLines(orderCode).then(data => {
+    orderApprovalLines.value = data;
   });
 });
 </script>
