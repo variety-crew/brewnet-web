@@ -41,13 +41,6 @@ const getDeliveryButtonLabel = status => {
   return '';
 };
 
-const getDeliveryButtonVariant = status => {
-  if (status === ORDER_STATUS.APPROVED) {
-    return 'outlined';
-  }
-  return undefined;
-};
-
 const clickCall = data => {
   location.href = `tel:${data.contact}`;
 };
@@ -126,7 +119,7 @@ const columns = [
         },
         {
           getLabel: data => getDeliveryButtonLabel(data.deliveryStatus),
-          getVariant: data => getDeliveryButtonVariant(data.deliveryStatus),
+          getVariant: data => undefined,
           clickHandler: clickChangeStatus,
         },
       ],
