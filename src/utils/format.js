@@ -1,6 +1,7 @@
 import {
   APPROVAL_KIND,
   APPROVAL_STATUS,
+  DELIVERY_KIND,
   EXCHANGE_STATUS,
   ORDER_STATUS,
   POSITION,
@@ -243,6 +244,22 @@ export const formatKoDeliveryStatus = orderStatus => {
 
     case ORDER_STATUS.SHIPPED:
       return '배송완료';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoDeliveryKind = kind => {
+  switch (kind) {
+    case DELIVERY_KIND.ORDER:
+      return '주문';
+
+    case DELIVERY_KIND.EXCHANGE:
+      return '교환';
+
+    case DELIVERY_KIND.RETURN:
+      return '반품';
 
     default:
       return '';

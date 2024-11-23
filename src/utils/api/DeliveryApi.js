@@ -20,6 +20,11 @@ export default class DeliverApi extends BaseApiService {
     return this.get(`?${searchParams.toString()}`);
   }
 
+  // 현재 진행중인 배송 조회
+  getCurrentDelivery() {
+    return this.get('/detail');
+  }
+
   //
   // PUT
   //

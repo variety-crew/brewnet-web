@@ -471,7 +471,7 @@ const routes = [
         name: 'd:detail',
         component: () => import('@/views/delivery/DetailView.vue'),
         meta: {
-          pageTitle: '배송 상세보기',
+          pageTitle: '배송 현황',
         },
       },
     ],
