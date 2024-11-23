@@ -84,8 +84,8 @@
         <!-- 태그로 표시할 경우 -->
         <template v-if="col.template?.tag" #body="{ data }">
           <Tag
-            :value="col.render ? col.render(data[col.field]) : data[col.field]"
-            :severity="col.template.tag.getSeverity(data[col.field])"
+            :value="col.render ? col.render(data) : data[col.field]"
+            :severity="col.template.tag.getSeverity(data)"
             rounded
           />
         </template>
@@ -106,6 +106,11 @@
               @click="button.clickHandler(data)"
             />
           </div>
+        </template>
+
+        <!-- 이미지로 표시할 경우 -->
+        <template v-else-if="col.template?.image" #body="{ data }">
+          <Image v-if="col.template.image.getSrc" :src="col.template.image.getSrc(data)" preview class="image" />
         </template>
 
         <!-- 
@@ -166,7 +171,10 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *         getHidden: (data: T) => boolean   // 버튼 숨기는지?
    *         getIcon: (data: T) => string      // 프라임뷰 아이콘
    *       }
-   *     ]}
+   *     ]},
+   *     image: {
+   *       getSrc: (data: T) => string         // 이미지 src
+   *     }
    *   }
    *   alignment: string              // 정렬 ('left', 'center', 'right')
    * }]
@@ -225,6 +233,12 @@ const exportCSV = () => {
     display: flex;
     gap: 10px;
     justify-content: center;
+  }
+
+  .image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
   }
 }
 </style>
