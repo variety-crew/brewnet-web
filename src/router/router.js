@@ -463,6 +463,16 @@ const routes = [
         name: 'd:home',
         component: () => import('@/views/delivery/HomeView.vue'),
       },
+      {
+        path: 'exchange-return',
+        name: 'd:exchange-return',
+        component: () => import('@/views/delivery/ExchangeReturnView.vue'),
+      },
+      {
+        path: 'complete',
+        name: 'd:complete',
+        component: () => import('@/views/delivery/CompleteView.vue'),
+      },
     ],
   },
 

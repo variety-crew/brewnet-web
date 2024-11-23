@@ -7,7 +7,7 @@
         v-model="selectedSupplier"
         label="거래처 선택"
         :suggestions="supplierSuggestions"
-        placeholder="거래처명이나 거래처코드로 검색"
+        placeholder="거래처명으로 검색"
         full-width
         @complete-input="onCompleteInputSupplier"
       />
@@ -15,7 +15,7 @@
         v-model="selectedStorage"
         label="입고창고 선택"
         :suggestions="storageSuggestions"
-        placeholder="창고명이나 창고코드로 검색"
+        placeholder="창고명 검색"
         full-width
         @complete-input="onCompleteInputStorage"
       />
@@ -23,55 +23,59 @@
       <AppInputText :model-value="userStore.username" disabled label="담당자" />
     </div>
 
-    <AppTableStyled full-width>
-      <thead>
-        <tr>
-          <th>
-            <CheckBox v-model="allCheck" binary />
-          </th>
-          <th v-for="header in tableHeader" :key="header">{{ header }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <template v-if="selectedSupplier">
-          <tr v-for="item in items" :key="item.code">
-            <td class="align-center">
-              <Checkbox v-model="checkedItemCodes" name="itemByPurchase" :value="item.code" />
-            </td>
-            <td class="align-center">{{ item.uniqueCode }}</td>
-            <td>{{ item.name }}</td>
-            <td>
-              <AppInputText
-                v-model="item.quantity"
-                :disabled="!checkedItemCodes.includes(item.code)"
-                :placeholder="
-                  checkedItemCodes.includes(item.code) ? undefined : '발주를 원하시면 체크 선택을 해주세요.'
-                "
-                number-mode
-                :text-align="checkedItemCodes.includes(item.code) ? 'right' : 'center'"
-              />
-            </td>
-            <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
-            <td class="align-right">{{ calculateSum(item.purchasePrice, item.quantity).toLocaleString() }}</td>
-            <td class="align-right">
-              {{ calculateTax(calculateSum(item.purchasePrice, item.quantity)).toLocaleString() }}
-            </td>
-          </tr>
-        </template>
-        <template v-else>
-          <tr>
-            <td colspan="7" class="empty-td">거래처를 선택해주세요.</td>
-          </tr>
-        </template>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="5">총 합계 {{ total.toLocaleString() }}</td>
-          <td class="align-right">{{ totalSupplyValue.toLocaleString() }}</td>
-          <td class="align-right">{{ totalTaxValue.toLocaleString() }}</td>
-        </tr>
-      </tfoot>
-    </AppTableStyled>
+    <template v-if="selectedSupplier">
+      <div class="table-area">
+        <CorrespondentItemTable
+          v-if="selectedSupplier"
+          :correspondent-code="selectedSupplier.code"
+          :selected-items="selectedItems"
+          @choose="chooseItem"
+          @remove="removeItem"
+        />
+        <AppTableStyled>
+          <thead>
+            <tr>
+              <th v-for="header in tableHeader" :key="header">{{ header }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <template v-if="selectedItems.length > 0">
+              <tr v-for="item in selectedItems" :key="item.itemCode">
+                <td class="align-center">
+                  <Button icon="pi pi-trash" variant="text" rounded severity="secondary" @click="removeItem(item)" />
+                </td>
+                <td class="align-center">{{ item.itemUniqueCode }}</td>
+                <td>{{ item.itemName }}</td>
+                <td>
+                  <AppInputText v-model="item.quantity" number-mode text-align="right" />
+                </td>
+                <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
+                <td class="align-right">{{ calculateSum(item.purchasePrice, item.quantity).toLocaleString() }}</td>
+                <td class="align-right">
+                  {{ calculateTax(calculateSum(item.purchasePrice, item.quantity)).toLocaleString() }}
+                </td>
+              </tr>
+            </template>
+            <template v-else>
+              <tr>
+                <td colspan="7" class="empty-td">발주 품목을 선택해주세요.</td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>총 합계</td>
+              <td colspan="4" class="align-center">{{ total.toLocaleString() }}</td>
+              <td class="align-right">{{ totalSupplyValue.toLocaleString() }}</td>
+              <td class="align-right">{{ totalTaxValue.toLocaleString() }}</td>
+            </tr>
+          </tfoot>
+        </AppTableStyled>
+      </div>
+    </template>
+    <template v-else>
+      <EmptyContent text="거래처를 선택해주세요." />
+    </template>
 
     <AppInputText v-model="comment" label="첨언" placeholder="비고사항 등 입력" />
 
@@ -98,13 +102,17 @@ import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import EmptyContent from '@/components/common/EmptyContent.vue';
 import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import CorrespondentItemTable from '@/components/headQuarter/CorrespondentItemTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
-import { formatKoEmployeePosition } from '@/utils/format';
+import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
+import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
+import HQStorageApi from '@/utils/api/HQStorageApi';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupApprovalLines, mockupEmployees, mockupItems, mockupStorages, mockupSuppliers } from '@/utils/mockup';
+import { mockupApprovalLines } from '@/utils/mockup';
 
 const userStore = useUserStore();
 const toast = useToast();
@@ -114,45 +122,52 @@ const { showConfirm } = useAppConfirmModal();
 const selectedSupplier = ref(null);
 const filteredSuppliers = ref([]);
 const supplierSuggestions = computed(() => {
-  return filteredSuppliers.value.map(e => makeAutocompleteSuggestion(e.code, `#${e.code} ${e.name}`));
+  return filteredSuppliers.value.map(e => makeAutocompleteSuggestion(e.correspondentCode, e.correspondentName));
 });
 
 const selectedStorage = ref(null);
 const filteredStorages = ref([]);
 const storageSuggestions = computed(() => {
-  return filteredStorages.value.map(e => makeAutocompleteSuggestion(e.code, `#${e.code} ${e.name}`));
+  return filteredStorages.value.map(e => makeAutocompleteSuggestion(e.storageCode, e.storageName));
 });
 
-const allCheck = ref(false);
-const tableHeader = ref(['품목코드', '품목명', '수량', '단가', '공급가액', '부가세']);
-const items = ref([]);
-const checkedItemCodes = ref([]); // 체크박스 선택된 상품(코드)들
+const approvalLine = ref(mockupApprovalLines.find(e => e.code === 'purchase'));
+const selectedApprovalUser = ref(null);
+const approverCandidates = ref([]);
+const approvalUserSuggestions = computed(() => {
+  return approverCandidates.value.map(e => makeAutocompleteSuggestion(e.approverCode, e.approverName));
+});
+
+const tableHeader = ref(['', '품목코드', '품목명', '수량', '단가', '공급가액', '부가세']);
+const selectedItems = ref([]); // 선택된 상품(코드)들
 const totalSupplyValue = ref(0);
 const totalTaxValue = ref(0);
 const total = computed(() => totalSupplyValue.value + totalTaxValue.value);
 const comment = ref('');
 
-const approvalLine = ref(mockupApprovalLines.find(e => e.code === 'purchase'));
-const approvalUserSuggestions = ref([]);
-const selectedApprovalUser = ref(null);
+const hqPurchaseApi = new HQPurchaseApi();
+const hqStorageApi = new HQStorageApi();
+const hqCorrespondentApi = new HQCorrespondentApi();
 
 const onCompleteInputSupplier = event => {
-  // if (!event.query) return;
-  // filteredSuppliers.value = mockupSuppliers.filter(
-  //   e => e.code.toString().includes(event.query) || e.name.includes(event.query),
-  // );
-
-  filteredSuppliers.value = [...mockupSuppliers];
+  // 거래처명으로 검색
+  hqCorrespondentApi.getCorrespondent({ correspondentName: event.query }).then(data => {
+    filteredSuppliers.value = data.data;
+  });
 };
 
 const onCompleteInputStorage = event => {
-  filteredStorages.value = [...mockupStorages];
+  // 창고명으로 검색
+  hqStorageApi.getStorages({ storageName: event.query }).then(data => {
+    filteredStorages.value = data.data;
+  });
 };
 
 const onCompleteInputApprovalUser = event => {
-  approvalUserSuggestions.value = mockupEmployees
-    .filter(e => approvalLine.value.positions.includes(e.position))
-    .map(e => makeAutocompleteSuggestion(e.code, `${e.name}(${formatKoEmployeePosition(e.position)})`));
+  // 발주 결재라인의 결재자 후보들 검색
+  hqPurchaseApi.getPurchaseApproverCandidates().then(data => {
+    approverCandidates.value = data;
+  });
 };
 
 const calculateSum = (price, quantity) => {
@@ -164,11 +179,19 @@ const calculateTax = sum => {
   return sum * 0.1;
 };
 
+const chooseItem = data => {
+  selectedItems.value = selectedItems.value.concat([{ ...data, quantity: null }]);
+};
+
+const removeItem = data => {
+  selectedItems.value = selectedItems.value.filter(e => e.itemCode !== data.itemCode);
+};
+
 const checkForm = () => {
   try {
     if (!selectedSupplier.value) throw new Error('거래처를 선택해주세요.');
     if (!selectedStorage.value) throw new Error('입고창고를 선택해주세요.');
-    if (checkedItemCodes.value.length === 0) throw new Error('발주 품목을 입력해주세요.');
+    if (selectedItems.value.length === 0) throw new Error('발주 품목을 입력해주세요.');
     if (totalSupplyValue.value === 0) throw new Error('수량을 입력해주세요.');
     if (!selectedApprovalUser.value) throw new Error('결재자를 선택해주세요');
 
@@ -180,16 +203,25 @@ const checkForm = () => {
 };
 
 const onPurchaseSave = () => {
-  //TODO:: 발주 등록 API 호출
-  const newPurchaseCode = 201;
+  hqPurchaseApi
+    .createPurchase({
+      comment: comment.value,
+      correspondentCode: selectedSupplier.value.code,
+      storageCode: selectedStorage.value.code,
+      approverCode: selectedApprovalUser.value.code,
+      items: selectedItems.value.map(e => ({ itemCode: e.itemCode, quantity: e.quantity })),
+    })
+    .then(newPurchaseCode => {
+      toast.add({
+        severity: 'success',
+        summary: '처리 성공',
+        detail: '발주에 대한 결재요청이 등록되었습니다.',
+        life: 3000,
+      });
 
-  toast.add({
-    severity: 'success',
-    summary: '처리 성공',
-    detail: '발주에 대한 결재요청이 등록되었습니다.',
-    life: 3000,
-  });
-  router.replace({ name: 'hq:purchase:detail', params: { purchaseCode: newPurchaseCode } });
+      // 상세 페이지로 이동
+      router.replace({ name: 'hq:purchase:detail', params: { purchaseCode: newPurchaseCode } });
+    });
 };
 
 const clickSave = () => {
@@ -203,15 +235,9 @@ const clickSave = () => {
   });
 };
 
-// 선택된 거래처가 변경된 경우, 아이템 목록 셋팅
-watch(selectedSupplier, newVal => {
-  if (!newVal) return;
-  items.value = mockupItems.map(e => ({ ...e, quantity: null }));
-});
-
-// items가 변하면(items 안의 quantity가 변하면면) 총합 계산
+// items가 변하면(items 안의 quantity가 변하면) 총합 계산
 watch(
-  items,
+  selectedItems,
   newItems => {
     // 공급가액 총액 계산
     totalSupplyValue.value = newItems
@@ -225,24 +251,6 @@ watch(
   },
   { deep: true }, // items 내용이 변하면 watch 되도록 설정
 );
-
-// allCheck가 변하면 item 체크박스 조정
-watch(allCheck, newAllCheck => {
-  if (newAllCheck) {
-    checkedItemCodes.value = items.value.map(e => e.code);
-  } else {
-    checkedItemCodes.value = [];
-  }
-});
-
-// item의 check 상태가 변하면 입력한 수량 조정
-watch(checkedItemCodes, newCheckedItemCodes => {
-  const clearTargetItems = items.value.map(e => ({
-    ...e,
-    quantity: newCheckedItemCodes.includes(e.code) ? e.quantity : null,
-  }));
-  items.value = clearTargetItems;
-});
 </script>
 
 <style scoped>
@@ -257,8 +265,15 @@ watch(checkedItemCodes, newCheckedItemCodes => {
     gap: 16px;
   }
 
-  .empty-td {
-    text-align: center;
+  .table-area {
+    display: grid;
+    grid-template-columns: 1fr 1.7fr;
+    gap: 20px;
+    align-items: flex-start;
+
+    .empty-td {
+      text-align: center;
+    }
   }
 
   .approval-area {

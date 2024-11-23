@@ -29,7 +29,8 @@ import { useRouter } from 'vue-router';
 
 import AppCheck from '@/components/common/form/AppCheck.vue';
 import { useUserStore } from '@/stores/user';
-import AuthApiService from '@/utils/api/AuthApiService';
+import AuthApi from '@/utils/api/AuthApi';
+import MemberApi from '@/utils/api/MemberApi';
 import { ROLE } from '@/utils/constant';
 import LocalStorageUtil from '@/utils/localStorage';
 
@@ -41,8 +42,9 @@ const id = ref('');
 const password = ref('');
 const saveAuth = ref(false);
 
-const authApiService = new AuthApiService();
 const localStorageUtil = new LocalStorageUtil();
+const authApi = new AuthApi();
+const memberApi = new MemberApi();
 
 const checkForm = () => {
   try {
@@ -56,14 +58,16 @@ const checkForm = () => {
   return true;
 };
 
-const login = () => {
+const login = async () => {
   const isPass = checkForm();
   if (!isPass) return;
 
-  authApiService.login(id.value, password.value).then(() => {
-    // 로그인 후 temp access token, temp refresh token 셋팅 완료
+  try {
+    await authApi.login(id.value, password.value);
 
-    // token decode 진행
+    // 로그인 후 temp access token, temp refresh token 셋팅 완료되어있음
+
+    // token decode 진행 -> 유저타입 확인
     const { authorities } = jwtDecode(userStore.tempAccessToken);
 
     let userType;
@@ -79,16 +83,33 @@ const login = () => {
       userType = 'hq';
     }
 
-    // 유저 타입 검증됐다면 로그인 성공
-    if (userType) {
-      userStore.setUserType(userType);
-      userStore.saveTokenTempToReal(); // temp -> 진짜 토큰으로 셋팅
+    // 유저 타입이 셋팅되지 않았다면 실패
+    if (!userType) return;
 
-      localStorageUtil.handleRememberLoginId(saveAuth.value, id.value); // 로그인 정보 저장할건지?
+    // 유저 타입 셋팅 성공
+    // 유저 auth 데이터 셋팅
+    userStore.setUserType(userType);
+    userStore.saveTokenTempToReal(); // temp -> 진짜 토큰으로 셋팅
 
-      router.replace({ name: `${userType}:home` });
+    if (userType === 'hq') {
+      const myInfo = await memberApi.getMyInfo();
+      userStore.setUserData(myInfo); // 내 정보 셋팅
     }
-  });
+
+    // 메인 페이지로 이동할 준비
+    localStorageUtil.handleRememberLoginId(saveAuth.value, id.value); // 로그인 정보 저장할건지?
+    router.replace({ name: `${userType}:home` });
+  } catch (e) {
+    toast.add({
+      severity: 'error',
+      summary: '로그인 실패',
+      detail: e.message || '로그인 중 에러가 발생했습니다.',
+      life: 3000,
+    });
+
+    // 실패한 경우 데이터 clear
+    userStore.clearUserData();
+  }
 };
 
 onMounted(() => {

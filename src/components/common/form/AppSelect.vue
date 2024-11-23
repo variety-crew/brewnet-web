@@ -1,5 +1,5 @@
 <template>
-  <AppFormField :label="label">
+  <AppFormField :label="label" :label-position="labelPosition" :full-width="fullWidth">
     <Select
       :options="options"
       :value="modelValue"
@@ -11,6 +11,8 @@
       placeholder="===선택해주세요==="
       :highlight-on-select="false"
       :name="name"
+      class="app-select"
+      :class="{ full: fullWidth }"
       @change="onSelectChange"
     />
   </AppFormField>
@@ -19,7 +21,7 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { modelValue, options, initialValue, label, name } = defineProps({
+const { modelValue, options, initialValue, label, name, labelPosition, fullWidth } = defineProps({
   // 부모로부터 현재 선택된 값을 받아옴
   modelValue: {
     type: [String, Number],
@@ -38,6 +40,9 @@ const { modelValue, options, initialValue, label, name } = defineProps({
    * }]
    */
 
+  //
+  // required false
+  //
   initialValue: {
     type: String,
     required: false,
@@ -55,6 +60,18 @@ const { modelValue, options, initialValue, label, name } = defineProps({
     required: false,
     default: null,
   },
+
+  labelPosition: {
+    type: String,
+    required: false,
+    default: 'top',
+  },
+
+  fullWidth: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -65,4 +82,8 @@ function onSelectChange(event) {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.app-select.full {
+  flex-grow: 1;
+}
+</style>

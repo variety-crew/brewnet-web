@@ -1,5 +1,5 @@
 <template>
-  <AppFormField :label="label">
+  <AppFormField :label="label" :label-position="labelPosition">
     <div class="app-date-range-picker-wrapper">
       <DatePicker
         :model-value="start"
@@ -27,11 +27,17 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label } = defineProps({
+const { label, labelPosition } = defineProps({
   label: {
     type: String,
     required: false,
     default: '',
+  },
+
+  labelPosition: {
+    type: String,
+    required: false,
+    default: 'top',
   },
 });
 

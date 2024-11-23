@@ -2,19 +2,22 @@
   <div class="empty-content-container">
     <i class="pi pi-times-circle"></i>
     <p>{{ text }}</p>
-    <Button size="small" :label="fallbackLabel" @click="emit('fallback')" />
+    <Button v-if="fallbackLabel" size="small" :label="fallbackLabel" @click="emit('fallback')" />
   </div>
 </template>
 
 <script setup>
 const { fallbackLabel, text } = defineProps({
-  fallbackLabel: {
-    type: String,
-    required: true,
-  },
   text: {
     type: String,
     required: true,
+  },
+
+  // required false
+  fallbackLabel: {
+    type: [String, null],
+    required: false,
+    default: null,
   },
 });
 

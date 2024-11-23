@@ -1,6 +1,10 @@
 <template>
-  <div ref="element" class="app-input-container" :class="{ width100, flexGrow1 }">
-    <label v-if="label">{{ label }}</label>
+  <div
+    ref="element"
+    class="app-input-container"
+    :class="{ width100, flexGrow1, labelTop: labelPosition === 'top', labelLeft: labelPosition === 'left' }"
+  >
+    <AppLabel v-if="label" :label="label" class="app-label" />
     <slot></slot>
   </div>
 </template>
@@ -8,7 +12,9 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-const { label, fullWidth } = defineProps({
+import AppLabel from '../AppLabel.vue';
+
+const { label, fullWidth, labelPosition } = defineProps({
   label: {
     type: String,
     required: false,
@@ -18,6 +24,11 @@ const { label, fullWidth } = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+  labelPosition: {
+    type: String, // top: 상단, left: 왼쪽
+    required: false,
+    default: 'top',
   },
 });
 
@@ -48,13 +59,7 @@ onMounted(() => {
 <style scoped>
 .app-input-container {
   display: flex;
-  flex-direction: column;
   gap: 5px;
-
-  label {
-    font-size: 14px;
-    color: var(--p-surface-600);
-  }
 
   &.flexGrow1 {
     flex-grow: 1;
@@ -62,6 +67,18 @@ onMounted(() => {
 
   &.width100 {
     width: 100%;
+  }
+
+  &.labelTop {
+    flex-direction: column;
+  }
+
+  &.labelLeft {
+    align-items: center;
+
+    .app-label {
+      width: 55px;
+    }
   }
 }
 </style>

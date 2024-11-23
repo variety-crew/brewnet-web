@@ -4,8 +4,8 @@
       <div class="top-area">
         <Tag
           rounded
-          :value="formatKoPurchaseStatus(purchaseDetail.status)"
-          :severity="getPurchaseStatusSeverity(purchaseDetail.status)"
+          :value="formatKoApprovalStatus(purchaseDetail.allApproved)"
+          :severity="getApprovalStatusSeverity(purchaseDetail.allApproved)"
           class="mb-1"
         />
 
@@ -49,11 +49,13 @@
         <table class="approval-line-table">
           <tr>
             <th>기안자</th>
-            <th>결재자</th>
+            <th v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">결재자</th>
           </tr>
           <tr>
-            <td>{{ purchaseDetail.username }}</td>
-            <td></td>
+            <td>{{ purchaseDetail.memberName }}</td>
+            <td v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">
+              {{ approvalLine.approved === APPROVAL_STATUS.APPROVED ? approvalLine.approverName : '' }}
+            </td>
           </tr>
         </table>
 
@@ -61,13 +63,13 @@
           <tbody>
             <tr>
               <th>거래처</th>
-              <td>{{ purchaseDetail.supplierName }}</td>
+              <td>{{ purchaseDetail.correspondentName }}</td>
               <th>입고창고</th>
               <td>{{ purchaseDetail.storageName }}</td>
               <th>발주일자</th>
               <td>{{ purchaseDetail.createdAt }}</td>
               <th>담당자</th>
-              <td>{{ purchaseDetail.username }}</td>
+              <td>{{ purchaseDetail.memberName }}</td>
             </tr>
             <tr>
               <th>품목코드</th>
@@ -77,23 +79,23 @@
               <th>공급가액</th>
               <th>부가세</th>
             </tr>
-            <tr v-for="item in purchaseItems" :key="item.code">
-              <td class="align-center">{{ item.uniqueCode }}</td>
-              <td colspan="3">{{ item.name }}</td>
-              <td></td>
+            <tr v-for="item in purchaseDetail.items" :key="item.itemCode">
+              <td class="align-center">{{ item.itemCode }}</td>
+              <td colspan="3">{{ item.itemName }}</td>
+              <td class="align-center">{{ item.quantity.toLocaleString() }}</td>
               <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
-              <td class="align-right"></td>
-              <td class="align-right"></td>
+              <td class="align-right">{{ item.purchaseSum.toLocaleString() }}</td>
+              <td class="align-right">{{ item.purchaseVat.toLocaleString() }}</td>
             </tr>
             <tr>
               <th>총 발주금액</th>
-              <td colspan="5"></td>
-              <td class="align-right"></td>
-              <td class="align-right"></td>
+              <td colspan="5" class="align-center">{{ purchaseDetail.totalPrice.toLocaleString() }}</td>
+              <td class="align-right">{{ purchaseDetail.sumPrice.toLocaleString() }}</td>
+              <td class="align-right">{{ purchaseDetail.vatPrice.toLocaleString() }}</td>
             </tr>
             <tr style="height: 100px">
               <th>첨언</th>
-              <td colspan="7" class="align-center">{{ purchaseDetail.comment }}</td>
+              <td colspan="7" class="align-center">{{ purchaseDetail.memberComment }}</td>
             </tr>
           </tbody>
         </AppTableStyled>
@@ -104,6 +106,7 @@
         <AppTableStyled full-width>
           <thead>
             <tr>
+              <th>직급</th>
               <th>결재자</th>
               <th>결재상태</th>
               <th>비고사항</th>
@@ -111,11 +114,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="align-center">{결재자이름}</td>
-              <td class="align-center">{결재자의 승인/반려}</td>
-              <td class="align-center">{결재자의 비고사항}</td>
-              <td class="align-center">{결재자의 승인/반려 일자}</td>
+            <tr v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">
+              <td class="align-center">{{ formatKoEmployeePosition(approvalLine.positionName) }}</td>
+              <td class="align-center">{{ approvalLine.approverName }}</td>
+              <td class="align-center">{{ formatKoApprovalStatus(approvalLine.approved) }}</td>
+              <td class="align-center">{{ purchaseDetail.approverComment }}</td>
+              <td class="align-center">{{ approvalLine.approvedAt }}</td>
             </tr>
           </tbody>
         </AppTableStyled>
@@ -131,11 +135,11 @@ import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { PURCHASE_STATUS } from '@/utils/constant';
-import { formatKoPurchaseStatus } from '@/utils/format';
-import { getPurchaseStatusSeverity } from '@/utils/helper';
+import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
+import { APPROVAL_STATUS } from '@/utils/constant';
+import { formatKoApprovalStatus, formatKoEmployeePosition } from '@/utils/format';
+import { getApprovalStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
-import { mockupItems, mockupPurchases } from '@/utils/mockup';
 
 const route = useRoute();
 const router = useRouter();
@@ -143,23 +147,35 @@ const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 
 const purchaseDetail = ref(null);
-const purchaseItems = ref([]);
+const purchaseApprovalLines = ref([]);
 const disabledDeleteButton = computed(() => {
-  return purchaseDetail.value.status !== PURCHASE_STATUS.REQUESTED;
+  return purchaseDetail.value.allApproved !== APPROVAL_STATUS.UNCONFIRMED;
 });
 const isAlreadySend = ref(false);
 const isApproved = computed(() => {
-  return purchaseDetail.value.status === PURCHASE_STATUS.APPROVED;
+  return purchaseDetail.value.allApproved === APPROVAL_STATUS.APPROVED;
 });
 
 const localStorageUtil = new LocalStorageUtil();
+const hqPurchaseApi = new HQPurchaseApi();
+const { purchaseCode } = route.params;
 
 const clickPrintPurchaseDocument = () => {
   // TODO:: 발주서 출력
 };
 
 const clickSendPurchase = () => {
-  // TODO:: 구매품의서 회계팀 전송
+  localStorageUtil.saveSendCompletePurchase(purchaseCode);
+
+  toast.add({
+    severity: 'success',
+    summary: '처리 성공',
+    detail: '구매품의서가 회계부서로 전송되었습니다.',
+    life: 3000,
+  });
+
+  // 보냈다고 가정
+  isAlreadySend.value = true;
 };
 
 const clickPrintPurchase = () => {
@@ -188,10 +204,17 @@ const clickDelete = () => {
 };
 
 onMounted(() => {
+  if (!purchaseCode) return;
+
   // 발주 상세 데이터 셋팅
-  const purchaseCode = route.params.purchaseCode;
-  purchaseDetail.value = mockupPurchases.find(e => e.code == purchaseCode);
-  purchaseItems.value = [...mockupItems];
+  hqPurchaseApi.getPurchase(purchaseCode).then(data => {
+    purchaseDetail.value = data;
+  });
+
+  // 발주 결재라인 조회
+  hqPurchaseApi.getPurchaseApprovalLines(purchaseCode).then(data => {
+    purchaseApprovalLines.value = data.approvers;
+  });
 
   // 이미 회계팀에 보냈는지 확인
   isAlreadySend.value = localStorageUtil.isSendCompletePurchase(Number(purchaseCode));

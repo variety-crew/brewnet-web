@@ -9,12 +9,14 @@
         size="small"
         @change="onChange"
       />
-      <label :for="option.inputId">{{ option.label }}</label>
+      <AppLabel :label-for="option.inputId" :label="option.label" />
     </div>
   </div>
 </template>
 
 <script setup>
+import AppLabel from '../AppLabel.vue';
+
 const { name, options, modelValue } = defineProps({
   name: {
     type: String,
@@ -54,10 +56,6 @@ const onChange = event => {
     display: flex;
     align-items: center;
     gap: 5px;
-
-    label {
-      font-size: 14px;
-    }
   }
 }
 </style>

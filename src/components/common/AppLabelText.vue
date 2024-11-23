@@ -1,12 +1,14 @@
 <template>
   <div class="app-label-text-container">
-    <label>{{ label }}</label>
+    <AppLabel :label="label" />
     <p>{{ text }}</p>
   </div>
 </template>
 
 <script setup>
-const {} = defineProps({
+import AppLabel from './AppLabel.vue';
+
+const { label, text } = defineProps({
   label: {
     type: String,
     required: true,
@@ -24,10 +26,5 @@ const {} = defineProps({
   display: flex;
   flex-direction: column;
   gap: 5px;
-
-  label {
-    font-size: 14px;
-    color: var(--p-surface-600);
-  }
 }
 </style>

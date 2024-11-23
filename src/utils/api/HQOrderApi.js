@@ -4,7 +4,7 @@ import BaseApiService from './BaseApiService';
 
 export default class HQOrderApi extends BaseApiService {
   constructor() {
-    super('/v1/hq/orders');
+    super('/v1/hq/orders/list');
   }
 
   //
@@ -45,5 +45,15 @@ export default class HQOrderApi extends BaseApiService {
     }
 
     return this.get(`?${searchParams.toString()}`);
+  }
+
+  // 주문 상세 조회 설정 (진행중 / s완료X)
+  getOrderDetail({ positionName, kind, seq }) {
+    const requestBody = {
+      positionName,
+      kind,
+      seq,
+    };
+    return this.post('/approver', requestBody);
   }
 }
