@@ -32,12 +32,14 @@ onMounted(() => {
       deliveryKind: DELIVERY_KIND.ORDER,
       deliveryFranchiseName: '낙성대점',
       deliveryStatus: ORDER_STATUS.APPROVED,
+      contact: '01011111111',
     },
     {
       code: 99,
       deliveryKind: DELIVERY_KIND.ORDER,
       deliveryFranchiseName: '숭실대점',
       deliveryStatus: ORDER_STATUS.SHIPPING,
+      contact: '01011111111',
     },
   ];
 });
@@ -47,10 +49,11 @@ onMounted(() => {
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  padding: 0 16px;
 
   .title {
     padding: 16px 0;
+    align-self: center;
   }
 }
 </style>

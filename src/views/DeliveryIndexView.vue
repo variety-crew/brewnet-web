@@ -7,7 +7,7 @@
     <main>
       <RouterView />
     </main>
-    <footer>
+    <footer v-if="$route.name !== 'd:detail'">
       <nav>
         <RouterLink
           v-for="navItem in navItems"
@@ -36,8 +36,8 @@ const authApi = new AuthApi();
 
 const navItems = ref([
   { routerName: 'd:home', title: '주문' },
-  { routerName: 'd:exchange-return', title: '교환/반품' },
-  { routerName: 'd:complete', title: '배송완료' },
+  { routerName: 'd:exchange', title: '교환' },
+  { routerName: 'd:return', title: '반품' },
 ]);
 
 const clickLogout = () => {
