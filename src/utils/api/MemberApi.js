@@ -39,7 +39,7 @@ export default class MemberApi extends BaseApiService {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
     searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
-    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).add(1, 'day').format('YYYY-MM-DD'));
 
     if (approval) {
       searchParams.append('approval', approval);

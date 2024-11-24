@@ -10,6 +10,7 @@ export const useUserStore = defineStore(
     const accessToken = ref('');
     const refreshToken = ref('');
     const userType = ref(''); // hq: 본사, fc: 가맹점, d: 배송기사
+    const memberCode = ref(null);
     const loginId = ref('');
     const username = ref('');
     const franchiseName = ref('');
@@ -37,6 +38,7 @@ export const useUserStore = defineStore(
     const setUserData = memberDTO => {
       loginId.value = memberDTO.id;
       username.value = memberDTO.name;
+      memberCode.value = memberDTO.memberCode;
 
       if (memberDTO.franchiseName) {
         franchiseName.value = memberDTO.franchiseName;
@@ -61,6 +63,7 @@ export const useUserStore = defineStore(
       accessToken,
       refreshToken,
       userType,
+      memberCode,
       loginId,
       username,
       franchiseName,

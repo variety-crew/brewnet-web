@@ -80,5 +80,9 @@ onMounted(() => {
       width: 55px;
     }
   }
+
+  .app-label {
+    flex-shrink: 0;
+  }
 }
 </style>

@@ -14,6 +14,7 @@
         :options="approvalOptions"
         label="결재상태"
         class="criteria radio"
+        label-position="left"
       />
     </SearchArea>
 
@@ -34,18 +35,21 @@
 <script setup>
 import dayjs from 'dayjs';
 import { computed, onMounted, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppRadioList from '@/components/common/form/AppRadioList.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import MemberApi from '@/utils/api/MemberApi';
-import { APPROVAL_STATUS_LIST } from '@/utils/constant';
+import { APPROVAL_STATUS_LIST, DRAFT_KIND } from '@/utils/constant';
 import { formatKoApprovalStatus, formatKoDraftKind } from '@/utils/format';
 import { makeRadioOption, makeSelectOption } from '@/utils/helper';
 
+const router = useRouter();
+
 const APPROVAL_ALL = 'ALL';
-const APPROVAL_OPTION = [APPROVAL_ALL].concat(APPROVAL_STATUS_LIST);
+const APPROVAL_OPTIONS = [APPROVAL_ALL].concat(APPROVAL_STATUS_LIST);
 
 const SORTING_OPTION = {
   DATE_ASC: 'DATE_ASC',
@@ -66,7 +70,7 @@ const getInitialCriteria = () => ({
 const criteria = ref(getInitialCriteria());
 const sorting = ref(SORTING_OPTION.DATE_ASC);
 const approvalOptions = computed(() => {
-  return APPROVAL_OPTION.map(e => makeRadioOption(e === APPROVAL_ALL ? '전체' : formatKoApprovalStatus(e), e, e));
+  return APPROVAL_OPTIONS.map(e => makeRadioOption(e === APPROVAL_ALL ? '전체' : formatKoApprovalStatus(e), e, e));
 });
 const sortingOptions = computed(() => {
   return SORTING_OPTIONS.map(e => makeSelectOption(formatKoSortingOption(e), e));
@@ -77,6 +81,20 @@ const paginatedApprovals = ref([]);
 const totalElements = ref(0);
 
 const memberApi = new MemberApi();
+
+const clickGoDetail = data => {
+  // 기안 타입에 따라 상세보기 페이지 이동
+  if (data.kind === DRAFT_KIND.ORDER) {
+    // 주문 상세로 이동
+  } else if (data.kind === DRAFT_KIND.EXCHANGE) {
+    // 교환 상세로 이동
+  } else if (data.kind === DRAFT_KIND.RETURN) {
+    // 반품 상세로 이동
+  } else if (data.kind === DRAFT_KIND.PURCHASE) {
+    // 발주 상세로 이동
+    router.push({ name: 'hq:purchase:detail', params: { purchaseCode: data.code } });
+  }
+};
 
 const columns = [
   { field: 'kind', header: '구분', render: data => formatKoDraftKind(data.kind) },
@@ -96,6 +114,13 @@ const columns = [
     render: data => formatKoApprovalStatus(data.status),
   },
   { field: 'approverName', header: '결재자' },
+  {
+    field: '',
+    header: '기안서 보기',
+    template: {
+      button: [{ getLabel: () => '상세보기', clickHandler: clickGoDetail }],
+    },
+  },
 ];
 
 const getMyApprovals = () => {
