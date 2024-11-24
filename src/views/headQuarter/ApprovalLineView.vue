@@ -25,7 +25,7 @@ import HQDocumentApi from '@/utils/api/HQDocumentApi';
 import { formatKoApprovalKind, formatKoEmployeePosition } from '@/utils/format';
 
 const EditApprovalLineModalBody = defineAsyncComponent(
-  () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
+    () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
 );
 
 const { openModal } = useModal();

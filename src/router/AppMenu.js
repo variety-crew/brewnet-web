@@ -42,6 +42,10 @@ export default class AppMenu {
     if (currentRouteName.includes('hq:order')) {
       return [
         {
+          label: '주문',
+          items: [this.#makeMenu('주문요청 관리', 'hq:order:list')],
+        },
+        {
           label: '교환',
           items: [this.#makeMenu('교환요청 관리', 'hq:order:exchange:list')],
         },

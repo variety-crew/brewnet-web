@@ -34,10 +34,9 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
-import { useUserStore } from '@/stores/user';
-import FCOrderQueryApi from '@/utils/api/FCOOrderQueryApi';
-import { formatKoOrderStatus } from '@/utils/format';
-import { getOrderStatusSeverity } from '@/utils/helper';
+import HQOrderApi from '@/utils/api/HQOrderApi';
+import { formatKoApproval, formatKoDrafterApproved } from '@/utils/format';
+import { getDrafterApprovedStatusSeverity, getApprovalStatusSeverity } from '@/utils/helper';
 
 const router = useRouter();
 
@@ -56,41 +55,45 @@ const getInitialCriteria = () => ({
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
-const FcOrderApi = new FCOrderQueryApi();
+const hqOrderApi = new HQOrderApi();
 const searchFilter = ref('orderCode');
 const searchOptions = [
   { label: '주문번호', value: 'orderCode' },
-  { label: '주문품목명', value: 'itemName' },
+  { label: '주문지점', value: 'franchiseName' },
+  { label: '주문담당자', value: 'managerName' },
 ];
 
 function clickGoDetail(data) {
-  router.push({ name: 'fc:home:order:detail', params: { orderCode: data.orderCode } });
+  router.push({ name: 'hq:order:detail', params: { orderCode: data.orderCode } });
 }
 
 const columns = [
+  { field: 'orderCode', header: '주문번호', sortable: true },
+  { field: 'orderFranchise.franchiseName', header: '주문지점' },
+  { field: 'orderFranchise.itemName', header: '주문품목명' },
+  { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
   {
-    field: 'recentOrderStatus',
-    header: '주문상태',
-    render: data => formatKoOrderStatus(data.recentOrderStatus),
+    field: 'approvalStatus',
+    header: '결재상태',
+    render: data => formatKoApproval(data.approvalStatus),
     template: {
       tag: {
-        getSeverity: data => getOrderStatusSeverity(data.recentOrderStatus),
+        getSeverity: data => getApprovalStatusSeverity(data.approvalStatus),
       },
     },
   },
-  { field: 'orderCode', header: '주문번호' },
   {
-    field: 'itemName',
-    header: '주문품목명',
-    render: data => data.orderItemList.map(item => item.name).join(', '),
+    field: 'drafterApproved',
+    header: '최초승인여부',
+    render: data => formatKoDrafterApproved(data.drafterApproved),
+    template: {
+      tag: {
+        getSeverity: data => getDrafterApprovedStatusSeverity(data.drafterApproved), //
+      },
+    },
   },
-  { field: 'sumPrice', header: '주문금액', render: data => data.sumPrice.toLocaleString() },
-  { field: 'createdAt', header: '주문일자' },
-  {
-    field: 'recentOrderStatusCreatedAt',
-    header: '완료일자',
-    render: data => (data.recentOrderStatus === 'SHIPPED' ? data.recentOrderStatusCreatedAt : ''), // Display only if status is SHIPPED
-  },
+  { field: 'managerName', header: '주문담당자' },
+  { field: 'createdAt', header: '주문일자', sortable: true },
   {
     field: '',
     header: '',
@@ -106,18 +109,29 @@ const columns = [
 ];
 
 const getOrders = () => {
-  FcOrderApi.getOrders({
-    page: page.value,
-    size: size.value,
-    startDate: criteria.value.startDate,
-    endDate: criteria.value.endDate,
-    orderCode: criteria.value.orderCode,
-    managerName: criteria.value.managerName,
-    franchiseName: useUserStore.franchiseName,
-  }).then(data => {
-    totalElements.value = data.totalElements;
-    paginatedOrders.value = data.content;
-  });
+  hqOrderApi
+    .getOrders({
+      page: page.value,
+      size: size.value,
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      orderCode: criteria.value.orderCode,
+      managerName: criteria.value.managerName,
+      franchiseName: criteria.value.franchiseName,
+    })
+    .then(data => {
+      totalElements.value = data.totalElements;
+      paginatedOrders.value = data.content;
+    });
+};
+
+const reloadData = () => {
+  getOrders();
+};
+
+const onChangePage = event => {
+  page.value = event.page + 1;
+  getOrders();
 };
 
 const onSearch = () => {
@@ -128,15 +142,6 @@ const onSearch = () => {
 const onReset = () => {
   // TODO
   criteria.value = getInitialCriteria();
-  getOrders();
-};
-
-const reloadData = () => {
-  getOrders();
-};
-
-const onChangePage = event => {
-  page.value = event.page + 1;
   getOrders();
 };
 
