@@ -127,6 +127,7 @@ const getMyApprovals = () => {
   memberApi
     .getMyApprovals({
       page: page.value,
+      pageSize: pageSize.value,
       startDate: criteria.value.startDate,
       endDate: criteria.value.endDate,
       approval: criteria.value.approval === APPROVAL_ALL ? undefined : criteria.value.approval,
