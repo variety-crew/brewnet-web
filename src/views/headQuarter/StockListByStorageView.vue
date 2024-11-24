@@ -1,7 +1,14 @@
 <template>
   <div>
     <SearchArea grid @reset="onReset" @search="onSearch">
-      <AppSelect v-model="selectedStorage" :options="storageOptions" label="창고명" label-position="left" full-width />
+      <AppSelect
+        v-model="selectedStorage"
+        :options="storageOptions"
+        label="창고명"
+        label-position="left"
+        full-width
+        :initial-value="selectedStorage"
+      />
       <AppInputText v-model="criteria.keyword" placeholder="품목명으로 검색" class="criteria keyword" />
     </SearchArea>
 
@@ -25,6 +32,7 @@ import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQStorageApi from '@/utils/api/HQStorageApi';
 import { SEARCH_CRITERIA } from '@/utils/constant';
+import { makeSelectOption } from '@/utils/helper';
 
 const page = ref(1);
 const pageSize = ref(15);
@@ -33,8 +41,7 @@ const totalElements = ref(0);
 
 const hqStorageApi = new HQStorageApi();
 
-const initialStorage = ref({ storageCode: 1, storageName: '' });
-const selectedStorage = ref(1);
+const selectedStorage = ref('');
 const storageOptions = ref([]);
 
 const getInitialCriteria = () => ({
@@ -75,14 +82,11 @@ const columns = [
 
 const getStorageList = () => {
   hqStorageApi.getStoraeNames().then(data => {
-    storageOptions.value = data.map(storage => ({
-      label: storage.storageName,
-      value: storage.storageCode,
-    }));
+    // 셀렉트 박스 옵션 목록 셋팅
+    storageOptions.value = data.map(storage => makeSelectOption(storage.storageName, storage.storageCode.toString()));
 
     if (storageOptions.value.length > 0) {
-      initialStorage.value = storageOptions.value[0];
-      selectedStorage.value = initialStorage.value.storageCode;
+      selectedStorage.value = storageOptions.value[0].value;
       getStockList();
     }
   });
