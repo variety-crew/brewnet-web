@@ -1,15 +1,15 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea grid class="order-search">
+    <SearchArea grid class="order-search" @search="onSearch" @form-reset="onReset">
       <AppDateRangePicker
         v-model:start="criteria.startDate"
         v-model:end="criteria.endDate"
         label="작성일자"
         class="criteria created-at"
       />
-      <!-- <AppSelect v-model="searchFilter" label="검색조건" :options="searchOptions" :initial-value="initialFilter" /> -->
-      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
+      <AppSelect v-model="searchFilter" label="검색조건" :options="searchOptions" :initial-value="searchFilter" />
+      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="검색어" />
     </SearchArea>
 
     <AppTable
@@ -27,26 +27,18 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { useToast } from 'primevue';
-import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
-import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { useModal } from '@/hooks/useModal';
 import HQOrderApi from '@/utils/api/HQOrderApi';
-import { ORDER_STATUS, APPROVAL_STATUS } from '@/utils/constant';
-import { formatKoApproval, formatKoDrafterApproved, formatKoOrderStatus } from '@/utils/format';
-import { getOrderStatusSeverity, getDrafterApprovedStatusSeverity, getApprovalStatusSeverity } from '@/utils/helper';
-import LocalStorageUtil from '@/utils/localStorage';
+import { formatKoApproval, formatKoDrafterApproved } from '@/utils/format';
+import { getDrafterApprovedStatusSeverity, getApprovalStatusSeverity } from '@/utils/helper';
 
-const toast = useToast();
 const router = useRouter();
-const { showConfirm } = useAppConfirmModal();
-const { openModal } = useModal();
 
 const nameKeyword = ref('');
 const totalElements = ref(0);
@@ -59,15 +51,17 @@ const getInitialCriteria = () => ({
   orderCode: null,
   managerName: null,
   franchiseName: null,
-  // purchaseCodeKeyword: null,
-  // purchaseMemberKeyword: null,
-  // supplierKeyword: null,
-  // storageKeyword: null,
 });
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
 const hqOrderApi = new HQOrderApi();
+const searchFilter = ref('orderCode');
+const searchOptions = [
+  { label: '주문번호', value: 'orderCode' },
+  { label: '주문지점', value: 'franchiseName' },
+  { label: '주문담당자', value: 'managerName' },
+];
 
 function clickGoDetail(data) {
   router.push({ name: 'hq:order:detail', params: { orderCode: data.orderCode } });
@@ -78,35 +72,23 @@ const columns = [
   { field: 'orderFranchise.franchiseName', header: '주문지점' },
   { field: 'orderFranchise.itemName', header: '주문품목명' },
   { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
-  //   {
-  //     field: 'approvalStatus',
-  //     header: '주문전체 결재 상태',
-  //     render: formatKoApproval,
-  //     template: {
-  //       tag: {
-  //         getSeverity: getApprovalStatusSeverity,
-  //       },
-  //     },
-  //   },
-
-  // 수정필요
-  // {
-  //   field: 'approvalStatus',
-  //   header: '주문상태',
-  //   render: formatKoOrderStatus,
-  //   template: {
-  //     tag: {
-  //       getSeverity: getOrderStatusSeverity,
-  //     },
-  //   },
-  // },
+  {
+    field: 'approvalStatus',
+    header: '결재상태',
+    render: data => formatKoApproval(data.approvalStatus),
+    template: {
+      tag: {
+        getSeverity: data => getApprovalStatusSeverity(data.approvalStatus),
+      },
+    },
+  },
   {
     field: 'drafterApproved',
     header: '최초승인여부',
-    render: formatKoDrafterApproved,
+    render: data => formatKoDrafterApproved(data.drafterApproved),
     template: {
       tag: {
-        getSeverity: getDrafterApprovedStatusSeverity, //
+        getSeverity: data => getDrafterApprovedStatusSeverity(data.drafterApproved), //
       },
     },
   },
@@ -152,6 +134,17 @@ const onChangePage = event => {
   getOrders();
 };
 
+const onSearch = () => {
+  // TODO
+  getOrders();
+};
+
+const onReset = () => {
+  // TODO
+  criteria.value = getInitialCriteria();
+  getOrders();
+};
+
 onMounted(() => {
   getOrders();
 });
@@ -160,7 +153,7 @@ onMounted(() => {
 
 <style scoped>
 .order-search {
-  .criteria.use-date {
+  .criteria.created-at {
     grid-column: 1 / 7;
   }
 }

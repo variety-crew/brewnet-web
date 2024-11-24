@@ -445,7 +445,7 @@ const routes = [
             },
           },
           {
-            path: ':orderCode/detail',
+            path: 'order/:orderCode/detail',
             name: 'fc:home:order:detail',
             component: () => import('@/views/franchise/OrderDetailView.vue'),
             meta: {

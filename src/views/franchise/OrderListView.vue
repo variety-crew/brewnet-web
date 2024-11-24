@@ -1,15 +1,15 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea grid class="order-search">
+    <SearchArea grid class="order-search" @search="onSearch" @form-reset="onReset">
       <AppDateRangePicker
         v-model:start="criteria.startDate"
         v-model:end="criteria.endDate"
         label="작성일자"
         class="criteria created-at"
       />
-      <!-- <AppSelect v-model="searchFilter" label="검색조건" :options="searchOptions" :initial-value="initialFilter" /> -->
-      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
+      <AppSelect v-model="searchFilter" label="검색조건" :options="searchOptions" :initial-value="searchFilter" />
+      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="검색어" />
     </SearchArea>
 
     <AppTable
@@ -27,29 +27,19 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { useToast } from 'primevue';
-import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
-import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import FCOrderQueryApi from '@/utils/api/FCOOrderQueryApi';
-import { ORDER_STATUS, APPROVAL_STATUS } from '@/utils/constant';
-import { formatKoApproval, formatKoDrafterApproved, formatKoOrderStatus } from '@/utils/format';
-import { getOrderStatusSeverity, getDrafterApprovedStatusSeverity, getApprovalStatusSeverity } from '@/utils/helper';
-import LocalStorageUtil from '@/utils/localStorage';
+import { formatKoOrderStatus } from '@/utils/format';
+import { getOrderStatusSeverity } from '@/utils/helper';
 
-const toast = useToast();
 const router = useRouter();
-const { showConfirm } = useAppConfirmModal();
-const { openModal } = useModal();
-
-const userStore = useUserStore();
 
 const nameKeyword = ref('');
 const totalElements = ref(0);
@@ -62,49 +52,45 @@ const getInitialCriteria = () => ({
   orderCode: null,
   managerName: null,
   franchiseName: null,
-  // purchaseCodeKeyword: null,
-  // purchaseMemberKeyword: null,
-  // supplierKeyword: null,
-  // storageKeyword: null,
 });
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
 const FcOrderApi = new FCOrderQueryApi();
+const searchFilter = ref('orderCode');
+const searchOptions = [
+  { label: '주문번호', value: 'orderCode' },
+  { label: '주문품목명', value: 'itemName' },
+];
 
 function clickGoDetail(data) {
-  router.push({ name: 'hq:order:detail', params: { orderCode: data.orderCode } });
+  router.push({ name: 'fc:home:order:detail', params: { orderCode: data.orderCode } });
 }
 
 const columns = [
-  { field: 'orderCode', header: '주문번호', sortable: true },
-  { field: 'orderFranchise.franchiseName', header: '주문지점' },
-  { field: 'orderFranchise.itemName', header: '주문품목명' },
-  { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
-
-  // 수정필요
-  // {
-  //   field: 'approvalStatus',
-  //   header: '주문상태',
-  //   render: formatKoOrderStatus,
-  //   template: {
-  //     tag: {
-  //       getSeverity: getOrderStatusSeverity,
-  //     },
-  //   },
-  // },
   {
-    field: 'drafterApproved',
-    header: '최초승인여부',
-    render: formatKoDrafterApproved,
+    field: 'recentOrderStatus',
+    header: '주문상태',
+    render: data => formatKoOrderStatus(data.recentOrderStatus),
     template: {
       tag: {
-        getSeverity: getDrafterApprovedStatusSeverity, //
+        getSeverity: data => getOrderStatusSeverity(data.recentOrderStatus),
       },
     },
   },
-  { field: 'managerName', header: '주문담당자' },
-  { field: 'createdAt', header: '주문일자', sortable: true },
+  { field: 'orderCode', header: '주문번호' },
+  {
+    field: 'itemName',
+    header: '주문품목명',
+    render: data => data.orderItemList.map(item => item.name).join(', '),
+  },
+  { field: 'sumPrice', header: '주문금액', render: data => data.sumPrice.toLocaleString() },
+  { field: 'createdAt', header: '주문일자' },
+  {
+    field: 'recentOrderStatusCreatedAt',
+    header: '완료일자',
+    render: data => (data.recentOrderStatus === 'SHIPPED' ? data.recentOrderStatusCreatedAt : ''), // Display only if status is SHIPPED
+  },
   {
     field: '',
     header: '',
@@ -134,6 +120,17 @@ const getOrders = () => {
   });
 };
 
+const onSearch = () => {
+  // TODO
+  getOrders();
+};
+
+const onReset = () => {
+  // TODO
+  criteria.value = getInitialCriteria();
+  getOrders();
+};
+
 const reloadData = () => {
   getOrders();
 };
@@ -151,7 +148,7 @@ onMounted(() => {
 
 <style scoped>
 .order-search {
-  .criteria.use-date {
+  .criteria.created-at {
     grid-column: 1 / 7;
   }
 }

@@ -2,21 +2,13 @@
   <div class="order-detail-container">
     <template v-if="orderDetail">
       <div class="top-area">
-        <!-- <Tags
+        <!-- <Tag
           rounded
-          :value="formatKoOrderStatus(orderDetail.approvalStatus)"
-          :severity="getOrderStatusSeverity(orderDetail.approvalStatus)"
+          :value="formatKoApproval(orderDetail.approvalStatus)"
+          :severity="getApprovalStatusSeverity(orderDetail.approvalStatus)"
           class="mb-1"
         /> -->
-        <Tags class="mb-1" />
         <div class="top-buttons">
-          <!-- <Button
-            label="결재 라인 조회"
-            variant="outlined"
-            size="small"
-            :disabled="isRequested"
-            @click="clickSendApprovalLine"
-          /> -->
           <Button
             label="결재요청하기"
             variant="outlined"
@@ -93,13 +85,7 @@
             <tr>
               <th>총 주문금액</th>
               <td class="align-right" colspan="7">{{ totalPrice.toLocaleString() }}</td>
-              <!-- <td class="align-right"></td> -->
             </tr>
-            <!-- <tr style="height: 100px">
-              <th>첨언</th>
-              <td colspan="7" class="align-center">{{ orderDetail.comment }}</td>
-              <td colspan="7" class="align-center">첨언이 입력되는 곳</td>
-            </tr> -->
           </tbody>
         </AppTableStyled>
       </div>
@@ -141,10 +127,9 @@ import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
 import { ORDER_STATUS } from '@/utils/constant';
-import { formatKoApprovalStatus, formatKoEmployeePosition } from '@/utils/format';
-import { getOrderStatusSeverity } from '@/utils/helper';
+import { formatKoApproval, formatKoApprovalStatus, formatKoEmployeePosition } from '@/utils/format';
+import { getApprovalStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
-import { mockupItems, mockupOrders } from '@/utils/mockup';
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -157,7 +142,7 @@ const orderApprovalLines = ref([]);
 const disabledCancelButton = computed(() => {
   return orderDetail.value.managerName !== useUserStore.username;
 });
-// const isAlreadySend = ref(false);
+
 const isRequested = computed(() => {
   return orderDetail.value.approvalStatus === ORDER_STATUS.REQUESTED;
 });
@@ -166,11 +151,9 @@ const isCompleted = computed(() => {
   return orderDetail.value.approvalStatus === ORDER_STATUS.SHIPPED;
 });
 
-const localStorageUtil = new LocalStorageUtil();
 const hqOrderApi = new HQOrderApi();
 const { orderCode } = route.params;
 const totalPrice = computed(() => {
-  // orderDetail.value가 존재하고, orderItemList가 있는 경우에만 계산
   if (orderDetail.value && orderDetail.value.orderItemList) {
     const totalPartSum = orderDetail.value.orderItemList.reduce((sum, item) => {
       return sum + item.partSum;
@@ -179,10 +162,6 @@ const totalPrice = computed(() => {
   }
   return '0';
 });
-
-const clickSendApprovalLine = () => {
-  // TODO:: 결재 라인 조회
-};
 
 const clickRequestApproval = () => {
   // TODO:: 결재요청
