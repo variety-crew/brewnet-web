@@ -42,6 +42,10 @@ export default class AppMenu {
     if (currentRouteName.includes('hq:order')) {
       return [
         {
+          label: '주문',
+          items: [this.#makeMenu('주문요청 관리', 'hq:order:list')],
+        },
+        {
           label: '교환',
           items: [this.#makeMenu('교환요청 관리', 'hq:order:exchange:list')],
         },
@@ -85,6 +89,7 @@ export default class AppMenu {
             this.#makeMenu('가맹점 계정 등록', 'hq:partner:franchise-account:create'),
           ],
         },
+        { label: '거래처', items: [this.#makeMenu('거래처 조회', 'hq:partner:correspondent:list')] },
       ];
     }
 
@@ -109,6 +114,10 @@ export default class AppMenu {
             this.#makeMenu('비밀번호 변경', 'hq:my:change-password'),
             this.#makeMenu('서명 등록', 'hq:my:upload-signature'),
           ],
+        },
+        {
+          label: 'My 문서',
+          items: [this.#makeMenu('내 기안함', 'hq:my:draft'), this.#makeMenu('내 결재함', 'hq:my:approval')],
         },
       ];
     }

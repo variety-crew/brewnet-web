@@ -1,7 +1,7 @@
 <template>
   <div v-if="currentDeliveryDetail" class="container">
     <div class="title-area">
-      <h1>{{ formatKoDeliveryKind(currentDeliveryDetail.deliveryKind) }} 배송</h1>
+      <h1>{{ formatKoDraftKind(currentDeliveryDetail.deliveryKind) }} 배송</h1>
       <h3 class="sub">배송 코드: {{ currentDeliveryDetail.code }}</h3>
     </div>
 
@@ -61,19 +61,14 @@ import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
 import {
-  DELIVERY_KIND,
+  DRAFT_KIND,
   EXCHANGE_DELIVERY_STEP_LIST,
   EXCHANGE_STATUS,
   ORDER_DELIVERY_STEP_LIST,
   ORDER_STATUS,
   RETURN_DELIVERY_STEP_LIST,
 } from '@/utils/constant';
-import {
-  formatKoDeliveryKind,
-  formatKoExchangeStatus,
-  formatKoOrderStatus,
-  formatKoReturnStatus,
-} from '@/utils/format';
+import { formatKoDraftKind, formatKoExchangeStatus, formatKoOrderStatus, formatKoReturnStatus } from '@/utils/format';
 
 const toast = useToast();
 const { showConfirm } = useAppConfirmModal();
@@ -81,15 +76,15 @@ const { showConfirm } = useAppConfirmModal();
 const currentDeliveryDetail = ref(null);
 
 const getStepTitle = stepValue => {
-  if (currentDeliveryDetail.value?.deliveryKind === DELIVERY_KIND.ORDER) {
+  if (currentDeliveryDetail.value?.deliveryKind === DRAFT_KIND.ORDER) {
     return formatKoOrderStatus(stepValue);
   }
 
-  if (currentDeliveryDetail.value?.deliveryKind === DELIVERY_KIND.EXCHANGE) {
+  if (currentDeliveryDetail.value?.deliveryKind === DRAFT_KIND.EXCHANGE) {
     return formatKoExchangeStatus(stepValue);
   }
 
-  if (currentDeliveryDetail.value?.deliveryKind === DELIVERY_KIND.RETURN) {
+  if (currentDeliveryDetail.value?.deliveryKind === DRAFT_KIND.RETURN) {
     return formatKoReturnStatus(stepValue);
   }
 };
@@ -123,15 +118,15 @@ const makeStepItem = stepValue => {
 const deliveryStepList = computed(() => {
   if (!currentDeliveryDetail.value) return [];
 
-  if (currentDeliveryDetail.value.deliveryKind === DELIVERY_KIND.ORDER) {
+  if (currentDeliveryDetail.value.deliveryKind === DRAFT_KIND.ORDER) {
     return ORDER_DELIVERY_STEP_LIST.map(e => makeStepItem(e));
   }
 
-  if (currentDeliveryDetail.value.deliveryKind === DELIVERY_KIND.EXCHANGE) {
+  if (currentDeliveryDetail.value.deliveryKind === DRAFT_KIND.EXCHANGE) {
     return EXCHANGE_DELIVERY_STEP_LIST.map(e => makeStepItem(e));
   }
 
-  if (currentDeliveryDetail.value.deliveryKind === DELIVERY_KIND.RETURN) {
+  if (currentDeliveryDetail.value.deliveryKind === DRAFT_KIND.RETURN) {
     return RETURN_DELIVERY_STEP_LIST.map(e => makeStepItem(e));
   }
 

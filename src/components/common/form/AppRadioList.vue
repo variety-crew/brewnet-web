@@ -1,23 +1,26 @@
 <template>
-  <div class="app-radio-list-container">
-    <div v-for="option in options" :key="option.id" class="radio-item">
-      <RadioButton
-        :value="option.value"
-        :input-id="option.inputId"
-        :model-value="modelValue"
-        :name="name"
-        size="small"
-        @change="onChange"
-      />
-      <AppLabel :label-for="option.inputId" :label="option.label" />
+  <AppFormField :label="label" :label-position="labelPosition">
+    <div class="radio-list">
+      <div v-for="option in options" :key="option.id" class="radio-item">
+        <RadioButton
+          :value="option.value"
+          :input-id="option.inputId"
+          :model-value="modelValue"
+          :name="name"
+          size="small"
+          @change="onChange"
+        />
+        <AppLabel :label-for="option.inputId" :label="option.label" />
+      </div>
     </div>
-  </div>
+  </AppFormField>
 </template>
 
 <script setup>
 import AppLabel from '../AppLabel.vue';
+import AppFormField from './AppFormField.vue';
 
-const { name, options, modelValue } = defineProps({
+const { name, options, modelValue, label, labelPosition } = defineProps({
   name: {
     type: String,
     required: true,
@@ -37,6 +40,18 @@ const { name, options, modelValue } = defineProps({
     type: String,
     required: true,
   },
+
+  // required false
+  label: {
+    type: [String, null],
+    required: false,
+    default: null,
+  },
+  labelPosition: {
+    type: String,
+    required: false,
+    default: 'top',
+  },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -47,7 +62,7 @@ const onChange = event => {
 </script>
 
 <style scoped>
-.app-radio-list-container {
+.radio-list {
   display: flex;
   align-items: center;
   gap: 10px;

@@ -33,6 +33,12 @@
           <p>총 {{ totalElements || 0 }}건</p>
 
           <div class="right">
+            <AppSelect
+              v-if="sorting && sortingOptions.length > 0"
+              v-model="sorting"
+              :options="sortingOptions"
+              :initial-value="sorting"
+            />
             <Button
               icon="pi pi-refresh"
               variant="outlined"
@@ -103,7 +109,7 @@
               :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
               :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"
               :icon="button.getIcon ? button.getIcon(data) : undefined"
-              @click="button.clickHandler(data)"
+              @click="button.clickHandler ? button.clickHandler(data) : undefined"
             />
           </div>
         </template>
@@ -134,7 +140,9 @@
 <script setup>
 import { ref } from 'vue';
 
-const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcelExport } = defineProps({
+import AppSelect from './form/AppSelect.vue';
+
+const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcelExport, sortingOptions } = defineProps({
   paginatedData: {
     type: Array,
     required: true,
@@ -199,9 +207,15 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
     required: false,
     default: false,
   },
+  sortingOptions: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
 });
 
 const emit = defineEmits(['changePage', 'reload']);
+const sorting = defineModel('sorting', { type: String, required: false });
 
 const dt = ref();
 const exportCSV = () => {

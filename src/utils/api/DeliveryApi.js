@@ -1,4 +1,4 @@
-import { DELIVERY_KIND } from '../constant';
+import { DRAFT_KIND } from '../constant';
 import BaseApiService from './BaseApiService';
 
 export default class DeliverApi extends BaseApiService {
@@ -11,7 +11,7 @@ export default class DeliverApi extends BaseApiService {
   //
 
   // 주문 배송 목록 조회
-  getDeliveryList({ page = 0, pageSize = 15, deliveryKind = DELIVERY_KIND.ORDER }) {
+  getDeliveryList({ page = 0, pageSize = 15, deliveryKind = DRAFT_KIND.ORDER }) {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
     searchParams.append('size', pageSize);

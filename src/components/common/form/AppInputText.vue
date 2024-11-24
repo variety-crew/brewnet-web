@@ -1,5 +1,5 @@
 <template>
-  <AppFormField :label="label" :full-width="fullWidth">
+  <AppFormField :label="label" :full-width="fullWidth" :label-position="labelPosition">
     <IconField v-if="icon">
       <InputIcon v-if="iconPosition === 'start'" :class="icon" />
       <InputText
@@ -61,6 +61,7 @@ const {
   disabled,
   numberMode,
   textAlign,
+  labelPosition,
 } = defineProps({
   label: {
     type: String,
@@ -117,6 +118,11 @@ const {
     type: [String, null],
     required: false,
     default: null,
+  },
+  labelPosition: {
+    type: String,
+    required: false,
+    default: 'top',
   },
 });
 

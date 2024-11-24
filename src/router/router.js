@@ -110,6 +110,22 @@ const routes = [
         },
         children: [
           {
+            path: 'list',
+            name: 'hq:order:list',
+            component: () => import('@/views/headQuarter/OrderListView.vue'),
+            meta: {
+              breadcrumb: '주문요청 관리',
+            },
+          },
+          {
+            path: ':orderCode/detail',
+            name: 'hq:order:detail',
+            component: () => import('@/views/headQuarter/OrderDetailView.vue'),
+            meta: {
+              breadcrumb: '주문요청 상세',
+            },
+          },
+          {
             path: 'exchange/list',
             name: 'hq:order:exchange:list',
             component: () => import('@/views/headQuarter/ExchangeListView.vue'),
@@ -197,6 +213,14 @@ const routes = [
             component: () => import('@/views/headQuarter/FranchiseAccountFormView.vue'),
             meta: {
               breadcrumb: '가맹점 계정 수정',
+            },
+          },
+          {
+            path: 'correspondent/list',
+            name: 'hq:partner:correspondent:list',
+            component: () => import('@/views/headQuarter/CorrespondentListView.vue'),
+            meta: {
+              breadcrumb: '거래처 조회',
             },
           },
         ],
@@ -398,6 +422,18 @@ const routes = [
             component: () => import('@/views/headQuarter/SignatureUploadView.vue'),
             meta: { breadcrumb: '서명 등록' },
           },
+          {
+            path: 'draft',
+            name: 'hq:my:draft',
+            component: () => import('@/views/headQuarter/MyDraftView.vue'),
+            meta: { breadcrumb: '내 기안함' },
+          },
+          {
+            path: 'approval',
+            name: 'hq:my:approval',
+            component: () => import('@/views/headQuarter/MyApprovalView.vue'),
+            meta: { breadcrumb: '내 결재함' },
+          },
         ],
       },
     ],
@@ -429,7 +465,7 @@ const routes = [
             },
           },
           {
-            path: ':orderCode/detail',
+            path: 'order/:orderCode/detail',
             name: 'fc:home:order:detail',
             component: () => import('@/views/franchise/OrderDetailView.vue'),
             meta: {
@@ -594,6 +630,12 @@ router.beforeEach((to, from) => {
   }
 
   // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 본사
+  if (to.name === 'hq:order') {
+    return {
+      name: 'hq:order:list',
+    };
+  }
+
   if (to.name === 'hq:purchase') {
     return {
       name: 'hq:purchase:list',

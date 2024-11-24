@@ -19,8 +19,8 @@ import { onMounted, ref } from 'vue';
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
-import { DELIVERY_KIND, EXCHANGE_STATUS, RETURN_STATUS } from '@/utils/constant';
-import { formatKoDeliveryKind, formatKoExchangeStatus, formatKoReturnStatus } from '@/utils/format';
+import { DRAFT_KIND, EXCHANGE_STATUS, RETURN_STATUS } from '@/utils/constant';
+import { formatKoDraftKind, formatKoExchangeStatus, formatKoReturnStatus } from '@/utils/format';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -74,7 +74,7 @@ const clickChangeStatus = data => {
   let message = '';
   let toStatus = null;
 
-  if (data.deliveryKind === DELIVERY_KIND.EXCHANGE) {
+  if (data.deliveryKind === DRAFT_KIND.EXCHANGE) {
     // 교환일 때
     if (currentStatus === EXCHANGE_STATUS.APPROVED) {
       header = '회수 시작';
@@ -82,7 +82,7 @@ const clickChangeStatus = data => {
       message = '회수를 시작하시겠습니까?';
       toStatus = EXCHANGE_STATUS.PICKING;
     }
-  } else if (data.deliveryKind === DELIVERY_KIND.RETURN) {
+  } else if (data.deliveryKind === DRAFT_KIND.RETURN) {
     // 반품일 때
     if (currentStatus === RETURN_STATUS.APPROVED) {
       header = '회수 시작';
@@ -114,7 +114,7 @@ const clickChangeStatus = data => {
 
 const isShowActionButton = (deliveryKind, deliveryStatus) => {
   // 교환/반품 -> APPROVED 상태일 때에만
-  if (deliveryKind === DELIVERY_KIND.EXCHANGE) {
+  if (deliveryKind === DRAFT_KIND.EXCHANGE) {
     return deliveryStatus === EXCHANGE_STATUS.APPROVED;
   }
 
@@ -126,7 +126,7 @@ const columns = [
     field: 'code',
     header: '주문코드',
   },
-  { field: 'deliveryKind', header: '구분', render: data => formatKoDeliveryKind(data.deliveryKind) },
+  { field: 'deliveryKind', header: '구분', render: data => formatKoDraftKind(data.deliveryKind) },
   { field: 'deliveryFranchiseName', header: '배송지' },
   {
     field: '',
@@ -155,7 +155,7 @@ const columns = [
             }
 
             // 나머지 상태는 현재 상태 그대로 보여주기
-            if (data.deliveryKind === DELIVERY_KIND.EXCHANGE) {
+            if (data.deliveryKind === DRAFT_KIND.EXCHANGE) {
               return formatKoExchangeStatus(data.deliveryStatus);
             }
 
@@ -177,7 +177,7 @@ const columns = [
 
 const getDeliveryList = () => {
   deliveryApi
-    .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DELIVERY_KIND.EXCHANGE })
+    .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DRAFT_KIND.EXCHANGE })
     .then(data => {
       paginatedExchangeDeliveries.value = data.content;
       totalElements.value = data.totalElements;
@@ -198,42 +198,42 @@ onMounted(() => {
   // paginatedExchangeDeliveries.value = [
   //   {
   //     code: 100,
-  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryKind: DRAFT_KIND.EXCHANGE,
   //     deliveryFranchiseName: '낙성대점',
   //     deliveryStatus: EXCHANGE_STATUS.APPROVED,
   //     contact: '01011111111',
   //   },
   //   {
   //     code: 99,
-  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryKind: DRAFT_KIND.EXCHANGE,
   //     deliveryFranchiseName: '숭실대점',
   //     deliveryStatus: EXCHANGE_STATUS.PICKING,
   //     contact: '01011111111',
   //   },
   //   {
   //     code: 98,
-  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryKind: DRAFT_KIND.EXCHANGE,
   //     deliveryFranchiseName: '미아점',
   //     deliveryStatus: EXCHANGE_STATUS.PICKED,
   //     contact: '01011111111',
   //   },
   //   {
   //     code: 97,
-  //     deliveryKind: DELIVERY_KIND.EXCHANGE,
+  //     deliveryKind: DRAFT_KIND.EXCHANGE,
   //     deliveryFranchiseName: '미아사거리점',
   //     deliveryStatus: EXCHANGE_STATUS.SHIPPING,
   //     contact: '01011111111',
   //   },
   //   {
   //     code: 96,
-  //     deliveryKind: DELIVERY_KIND.RETURN,
+  //     deliveryKind: DRAFT_KIND.RETURN,
   //     deliveryFranchiseName: '낙성대점',
   //     deliveryStatus: RETURN_STATUS.APPROVED,
   //     contact: '01011111111',
   //   },
   //   {
   //     code: 95,
-  //     deliveryKind: DELIVERY_KIND.RETURN,
+  //     deliveryKind: DRAFT_KIND.RETURN,
   //     deliveryFranchiseName: '숭실대점',
   //     deliveryStatus: RETURN_STATUS.PICKING,
   //     contact: '01011111111',
