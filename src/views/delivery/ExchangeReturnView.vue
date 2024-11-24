@@ -20,7 +20,7 @@ import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
 import { DELIVERY_KIND, EXCHANGE_STATUS, RETURN_STATUS } from '@/utils/constant';
-import { formatKoDeliveryKind, formatKoExchangeStatus, formatKoReturnStatus } from '@/utils/format';
+import { formatKoDraftKind, formatKoExchangeStatus, formatKoReturnStatus } from '@/utils/format';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -126,7 +126,7 @@ const columns = [
     field: 'code',
     header: '주문코드',
   },
-  { field: 'deliveryKind', header: '구분', render: data => formatKoDeliveryKind(data.deliveryKind) },
+  { field: 'deliveryKind', header: '구분', render: data => formatKoDraftKind(data.deliveryKind) },
   { field: 'deliveryFranchiseName', header: '배송지' },
   {
     field: '',

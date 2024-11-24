@@ -1,7 +1,7 @@
 <template>
   <div v-if="currentDeliveryDetail" class="container">
     <div class="title-area">
-      <h1>{{ formatKoDeliveryKind(currentDeliveryDetail.deliveryKind) }} 배송</h1>
+      <h1>{{ formatKoDraftKind(currentDeliveryDetail.deliveryKind) }} 배송</h1>
       <h3 class="sub">배송 코드: {{ currentDeliveryDetail.code }}</h3>
     </div>
 
@@ -69,7 +69,7 @@ import {
   RETURN_DELIVERY_STEP_LIST,
 } from '@/utils/constant';
 import {
-  formatKoDeliveryKind,
+  formatKoDraftKind,
   formatKoExchangeStatus,
   formatKoOrderStatus,
   formatKoReturnStatus,

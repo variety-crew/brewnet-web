@@ -250,7 +250,7 @@ export const formatKoDeliveryStatus = orderStatus => {
   }
 };
 
-export const formatKoDeliveryKind = kind => {
+export const formatKoDraftKind = kind => {
   switch (kind) {
     case DELIVERY_KIND.ORDER:
       return '주문';
