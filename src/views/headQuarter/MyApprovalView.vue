@@ -25,7 +25,6 @@
       :paginated-data="paginatedApprovals"
       :total-elements="totalElements"
       :sorting-options="sortingOptions"
-      :initial-sorting="sorting"
       @reload="onReload"
       @change-page="onChangePage"
     />

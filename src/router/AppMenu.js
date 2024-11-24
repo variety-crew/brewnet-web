@@ -89,6 +89,7 @@ export default class AppMenu {
             this.#makeMenu('가맹점 계정 등록', 'hq:partner:franchise-account:create'),
           ],
         },
+        { label: '거래처', items: [this.#makeMenu('거래처 조회', 'hq:partner:correspondent:list')] },
       ];
     }
 

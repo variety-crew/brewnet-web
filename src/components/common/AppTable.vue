@@ -37,7 +37,7 @@
               v-if="sorting && sortingOptions.length > 0"
               v-model="sorting"
               :options="sortingOptions"
-              :initial-value="initialSorting"
+              :initial-value="sorting"
             />
             <Button
               icon="pi pi-refresh"
@@ -109,7 +109,7 @@
               :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
               :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"
               :icon="button.getIcon ? button.getIcon(data) : undefined"
-              @click="button.clickHandler(data)"
+              @click="button.clickHandler ? button.clickHandler(data) : undefined"
             />
           </div>
         </template>
@@ -142,16 +142,7 @@ import { ref } from 'vue';
 
 import AppSelect from './form/AppSelect.vue';
 
-const {
-  paginatedData,
-  columns,
-  rowsPerPage,
-  totalElements,
-  addButton,
-  showExcelExport,
-  sortingOptions,
-  initialSorting,
-} = defineProps({
+const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcelExport, sortingOptions } = defineProps({
   paginatedData: {
     type: Array,
     required: true,
@@ -220,11 +211,6 @@ const {
     type: Array,
     required: false,
     default: () => [],
-  },
-  initialSorting: {
-    type: [String, null],
-    required: false,
-    default: null,
   },
 });
 
