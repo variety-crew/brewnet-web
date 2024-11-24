@@ -398,6 +398,18 @@ const routes = [
             component: () => import('@/views/headQuarter/SignatureUploadView.vue'),
             meta: { breadcrumb: '서명 등록' },
           },
+          {
+            path: 'draft',
+            name: 'hq:my:draft',
+            component: () => import('@/views/headQuarter/MyDraftView.vue'),
+            meta: { breadcrumb: '내 기안함' },
+          },
+          {
+            path: 'approval',
+            name: 'hq:my:approval',
+            component: () => import('@/views/headQuarter/MyApprovalView.vue'),
+            meta: { breadcrumb: '내 결재함' },
+          },
         ],
       },
     ],
