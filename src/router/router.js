@@ -215,6 +215,14 @@ const routes = [
               breadcrumb: '가맹점 계정 수정',
             },
           },
+          {
+            path: 'correspondent/list',
+            name: 'hq:partner:correspondent:list',
+            component: () => import('@/views/headQuarter/CorrespondentListView.vue'),
+            meta: {
+              breadcrumb: '거래처 조회',
+            },
+          },
         ],
       },
       {
