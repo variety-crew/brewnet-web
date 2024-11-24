@@ -110,6 +110,22 @@ const routes = [
         },
         children: [
           {
+            path: 'list',
+            name: 'hq:order:list',
+            component: () => import('@/views/headQuarter/OrderListView.vue'),
+            meta: {
+              breadcrumb: '주문요청 관리',
+            },
+          },
+          {
+            path: ':orderCode/detail',
+            name: 'hq:order:detail',
+            component: () => import('@/views/headQuarter/OrderDetailView.vue'),
+            meta: {
+              breadcrumb: '주문요청 상세',
+            },
+          },
+          {
             path: 'exchange/list',
             name: 'hq:order:exchange:list',
             component: () => import('@/views/headQuarter/ExchangeListView.vue'),
@@ -441,7 +457,7 @@ const routes = [
             },
           },
           {
-            path: ':orderCode/detail',
+            path: 'order/:orderCode/detail',
             name: 'fc:home:order:detail',
             component: () => import('@/views/franchise/OrderDetailView.vue'),
             meta: {
@@ -606,6 +622,12 @@ router.beforeEach((to, from) => {
   }
 
   // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 본사
+  if (to.name === 'hq:order') {
+    return {
+      name: 'hq:order:list',
+    };
+  }
+
   if (to.name === 'hq:purchase') {
     return {
       name: 'hq:purchase:list',

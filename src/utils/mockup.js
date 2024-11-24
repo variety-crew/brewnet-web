@@ -319,6 +319,68 @@ export const mockupExchanges = [
   makeMockExchange('15', '메가커피 성수점', '얼음컵(L), 종이컵(M)', 'DAMAGED', null, '2024-11-15', 'REQUESTED', 'NONE'),
 ];
 
+// 주문
+function makeMockOrder(
+  orderCode,
+  franchiseName,
+  itemName,
+  sumPrice,
+  approvalStatus,
+  drafterApproved,
+  managerName,
+  createdAt,
+) {
+  return { orderCode, franchiseName, itemName, sumPrice, approvalStatus, drafterApproved, managerName, createdAt };
+}
+export const mockupOrders = [
+  makeMockOrder(10, '메가커피 신대방삼거리점', '종이컵(S), 종이컵(M)', 12000, 'REQUESTED', 'NONE', null, '2024-11-10'),
+  makeMockOrder(
+    9,
+    '메가커피 안양점',
+    '헤이즐넛시럽(1L), 바닐라시럽(1L)',
+    25000,
+    'PENDING',
+    'REJECT',
+    '담당자 B',
+    '2024-11-09',
+  ),
+  makeMockOrder(8, '메가커피 강남역점', '아이스컵(L), 빨대', 15000, 'APPROVED', 'APPROVE', '담당자 C', '2024-11-08'),
+  makeMockOrder(
+    7,
+    '메가커피 신림점',
+    '카라멜시럽(1L), 에스프레소빈(1kg)',
+    30000,
+    'REJECTED',
+    'REJECT',
+    '담당자 D',
+    '2024-11-07',
+  ),
+  makeMockOrder(6, '메가커피 종각역점', '우유(1L), 초코파우더', 8000, 'CANCELED', 'NONE', null, '2024-11-06'),
+  makeMockOrder(5, '메가커피 혜화점', '컵홀더, 종이컵(L)', 18000, 'SHIPPING', 'APPROVE', '담당자 F', '2024-11-05'),
+  makeMockOrder(4, '메가커피 이대점', '자몽시럽(1L), 레몬청(1kg)', 22000, 'REQUESTED', 'NONE', null, '2024-11-04'),
+  makeMockOrder(3, '메가커피 역삼점', '얼음컵(M), 컵 뚜껑', 10000, 'PENDING', 'APPROVE', '담당자 H', '2024-11-03'),
+  makeMockOrder(
+    2,
+    '메가커피 홍대입구점',
+    '설탕(1kg), 시나몬파우더',
+    14000,
+    'REJECTED',
+    'REJECT',
+    '담당자 I',
+    '2024-11-02',
+  ),
+  makeMockOrder(
+    1,
+    '메가커피 연신내점',
+    '티백(녹차), 플라스틱 스푼',
+    16000,
+    'APPROVED',
+    'APPROVE',
+    '담당자 J',
+    '2024-11-01',
+  ),
+];
+
 // 거래처
 function makeMockSupplier(code, name, managerName, address, detailAddress, contact, email) {
   return { code, name, managerName, address, detailAddress, contact, email };
