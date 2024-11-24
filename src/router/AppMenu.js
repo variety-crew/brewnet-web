@@ -114,6 +114,10 @@ export default class AppMenu {
             this.#makeMenu('서명 등록', 'hq:my:upload-signature'),
           ],
         },
+        {
+          label: 'My 문서',
+          items: [this.#makeMenu('내 기안함', 'hq:my:draft'), this.#makeMenu('내 결재함', 'hq:my:approval')],
+        },
       ];
     }
 

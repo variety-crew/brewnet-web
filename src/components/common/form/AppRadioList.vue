@@ -1,5 +1,6 @@
 <template>
   <div class="app-radio-list-container">
+    <AppLabel :label="label" />
     <div v-for="option in options" :key="option.id" class="radio-item">
       <RadioButton
         :value="option.value"
@@ -17,7 +18,7 @@
 <script setup>
 import AppLabel from '../AppLabel.vue';
 
-const { name, options, modelValue } = defineProps({
+const { name, options, modelValue, label } = defineProps({
   name: {
     type: String,
     required: true,
@@ -36,6 +37,13 @@ const { name, options, modelValue } = defineProps({
   modelValue: {
     type: String,
     required: true,
+  },
+
+  // required false
+  label: {
+    type: [String, null],
+    required: false,
+    default: null,
   },
 });
 

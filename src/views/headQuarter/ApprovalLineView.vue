@@ -2,7 +2,7 @@
   <div class="approval-line-container">
     <AppTableStyled full-width>
       <tr v-for="approvalLine in approvalLines" :key="approvalLine.kind">
-        <th>{{ formatKoApprovalKind(approvalLine.kind) }} 결재라인</th>
+        <th>{{ formatKoDraftKind(approvalLine.kind) }} 결재라인</th>
         <td>
           <p>결재자(직급): {{ formatKoEmployeePosition(approvalLine.positionName) }}</p>
         </td>
@@ -22,7 +22,7 @@ import { defineAsyncComponent, onMounted, ref } from 'vue';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useModal } from '@/hooks/useModal';
 import HQDocumentApi from '@/utils/api/HQDocumentApi';
-import { formatKoApprovalKind, formatKoEmployeePosition } from '@/utils/format';
+import { formatKoDraftKind, formatKoEmployeePosition } from '@/utils/format';
 
 const EditApprovalLineModalBody = defineAsyncComponent(
     () => import('@/components/headQuarter/EditApprovalLineModalBody.vue'),
@@ -43,7 +43,7 @@ const getApprovalLines = () => {
 const clickEdit = target => {
   openModal({
     component: EditApprovalLineModalBody,
-    header: `${formatKoApprovalKind(target.kind)} 결재라인 수정`,
+    header: `${formatKoDraftKind(target.kind)} 결재라인 수정`,
     data: {
       targetApprovalLine: target,
     },
