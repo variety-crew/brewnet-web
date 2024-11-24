@@ -250,6 +250,14 @@ const routes = [
             },
           },
           {
+            path: 'storage/:storageCode/detail',
+            name: 'hq:stock:storage:detail',
+            component: () => import('@/views/headQuarter/StorageDetailView.vue'),
+            meta: {
+              breadcrumb: '창고 상세보기',
+            },
+          },
+          {
             path: 'storage/create',
             name: 'hq:stock:storage:create',
             component: () => import('@/views/headQuarter/StorageFormView.vue'),
