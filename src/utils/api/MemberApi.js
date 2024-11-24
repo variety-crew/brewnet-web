@@ -31,6 +31,7 @@ export default class MemberApi extends BaseApiService {
   // 나의 결재목록 조회(내가 결재자인 경우)
   getMyApprovals({
     page = 0,
+    pageSize = 15,
     startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
     endDate = dayjs().format('YYYY-MM-DD'),
     approval,
@@ -38,8 +39,9 @@ export default class MemberApi extends BaseApiService {
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
+    searchParams.append('size', pageSize);
     searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
-    searchParams.append('endDate', dayjs(endDate).add(1, 'day').format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).add(1, 'day').format('YYYY-MM-DD')); // +1 day
 
     if (approval) {
       searchParams.append('approval', approval);
@@ -50,5 +52,31 @@ export default class MemberApi extends BaseApiService {
     }
 
     return this.get(`/my-approval?${searchParams.toString()}`);
+  }
+
+  // 나의 기안서목록 조회
+  getMyDrafts({
+    page = 0,
+    pageSize = 15,
+    startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
+    endDate = dayjs().format('YYYY-MM-DD'),
+    approval,
+    dateSort,
+  }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('page', page);
+    searchParams.append('size', pageSize);
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).add(1, 'day').format('YYYY-MM-DD')); // +1 day
+
+    if (approval) {
+      searchParams.append('approval', approval);
+    }
+
+    if (dateSort) {
+      searchParams.append('dateSort', dateSort);
+    }
+
+    return this.get(`/my-draft?${searchParams.toString()}`);
   }
 }
