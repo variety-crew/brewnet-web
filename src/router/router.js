@@ -221,6 +221,51 @@ const routes = [
         path: 'stock',
         name: 'hq:stock',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
+        meta: {
+          breadcrumb: '창고/품목',
+        },
+        children: [
+          {
+            path: 'storage-stock',
+            name: 'hq:stock:storage-stock',
+            component: () => import('@/views/headQuarter/StockListByStorageView.vue'),
+            meta: {
+              breadcrumb: '창고별 재고 조회',
+            },
+          },
+          {
+            path: 'storage/list',
+            name: 'hq:stock:storage:list',
+            component: () => import('@/views/headQuarter/StorageListView.vue'),
+            meta: {
+              breadcrumb: '창고 목록',
+            },
+          },
+          {
+            path: 'storage/create',
+            name: 'hq:stock:storage:create',
+            component: () => import('@/views/headQuarter/StorageFormView.vue'),
+            meta: {
+              breadcrumb: '창고 등록',
+            },
+          },
+          {
+            path: 'item-category',
+            name: 'hq:stock:item-category',
+            component: () => import('@/views/headQuarter/ItemCategoryView.vue'),
+            meta: {
+              breadcrumb: '품목 카테고리 관리',
+            },
+          },
+          {
+            path: 'item/list',
+            name: 'hq:stock:item:list',
+            component: () => import('@/views/headQuarter/ItemListView.vue'),
+            meta: {
+              breadcrumb: '품목 조회',
+            },
+          },
+        ],
       },
       {
         path: 'approval',
@@ -400,6 +445,14 @@ const routes = [
             },
           },
           {
+            path: ':orderCode/detail',
+            name: 'fc:home:order:detail',
+            component: () => import('@/views/franchise/OrderDetailView.vue'),
+            meta: {
+              breadcrumb: '주문 상세',
+            },
+          },
+          {
             path: 'order/form',
             name: 'fc:home:order:form',
             component: () => import('@/views/franchise/OrderFormView.vue'),
@@ -462,16 +515,25 @@ const routes = [
         path: 'home',
         name: 'd:home',
         component: () => import('@/views/delivery/HomeView.vue'),
+        meta: {
+          pageTitle: '주문',
+        },
       },
       {
         path: 'exchange-return',
         name: 'd:exchange-return',
         component: () => import('@/views/delivery/ExchangeReturnView.vue'),
+        meta: {
+          pageTitle: '교환/반품',
+        },
       },
       {
-        path: 'complete',
-        name: 'd:complete',
-        component: () => import('@/views/delivery/CompleteView.vue'),
+        path: 'now-delivery',
+        name: 'd:detail',
+        component: () => import('@/views/delivery/DetailView.vue'),
+        meta: {
+          pageTitle: '배송 현황',
+        },
       },
     ],
   },
@@ -580,6 +642,10 @@ router.beforeEach((to, from) => {
 
   if (to.name === 'hq:my') {
     return { name: 'hq:my:info' };
+  }
+
+  if (to.name === 'hq:stock') {
+    return { name: 'hq:stock:storage-stock' };
   }
 
   // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 가맹점

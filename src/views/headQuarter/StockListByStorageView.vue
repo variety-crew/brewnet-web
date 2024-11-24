@@ -1,5 +1,5 @@
 <template>
-  <div>배송완료 페이지</div>
+  <div>창고별 재고</div>
 </template>
 
 <script setup></script>

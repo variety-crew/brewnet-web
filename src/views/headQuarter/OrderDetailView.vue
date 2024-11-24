@@ -219,7 +219,6 @@ const clickCancel = () => {
 
 onMounted(() => {
   // 주문 상세 데이터 셋팅
-  console.log('call start');
   hqOrderApi.getOrderDetail(orderCode).then(data => {
     orderDetail.value = data;
   });

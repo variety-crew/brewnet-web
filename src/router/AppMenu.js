@@ -117,6 +117,26 @@ export default class AppMenu {
       ];
     }
 
+    if (currentRouteName.includes('hq:stock')) {
+      return [
+        {
+          label: '창고',
+          items: [
+            this.#makeMenu('창고별 재고 조회', 'hq:stock:storage-stock'),
+            this.#makeMenu('창고 목록', 'hq:stock:storage:list'),
+            this.#makeMenu('창고 등록', 'hq:stock:storage:create'),
+          ],
+        },
+        {
+          label: '품목',
+          items: [
+            this.#makeMenu('품목 카테고리 관리', 'hq:stock:item-category'),
+            this.#makeMenu('품목 조회', 'hq:stock:item:list'),
+          ],
+        },
+      ];
+    }
+
     // 가맹점
     if (currentRouteName.includes('fc:home')) {
       return [

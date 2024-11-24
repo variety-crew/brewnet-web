@@ -83,10 +83,10 @@ const columns = [
   {
     field: 'approved',
     header: '결재상태',
-    render: formatKoApprovalStatus,
+    render: data => formatKoApprovalStatus(data.approved),
     template: {
       tag: {
-        getSeverity: getApprovalStatusSeverity,
+        getSeverity: data => getApprovalStatusSeverity(data.approved),
       },
     },
   },

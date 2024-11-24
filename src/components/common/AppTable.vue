@@ -60,6 +60,7 @@
           </div>
         </div>
       </template>
+      <template #empty>데이터가 없습니다.</template>
       <Column
         v-for="(col, colIndex) of columns"
         :key="`field${colIndex}`"
@@ -83,15 +84,15 @@
         <!-- 태그로 표시할 경우 -->
         <template v-if="col.template?.tag" #body="{ data }">
           <Tag
-            :value="col.render ? col.render(data[col.field]) : data[col.field]"
-            :severity="col.template.tag.getSeverity(data[col.field])"
+            :value="col.render ? col.render(data) : data[col.field]"
+            :severity="col.template.tag.getSeverity(data)"
             rounded
           />
         </template>
 
         <!-- 버튼 리스트를 표시할 경우 -->
         <template v-else-if="col.template?.button" #body="{ data }">
-          <div>
+          <div class="buttons">
             <Button
               v-for="button in col.template.button"
               :key="button.getLabel(data)"
@@ -101,9 +102,15 @@
               :variant="button.getVariant ? button.getVariant(data) : 'text'"
               :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
               :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"
+              :icon="button.getIcon ? button.getIcon(data) : undefined"
               @click="button.clickHandler(data)"
             />
           </div>
+        </template>
+
+        <!-- 이미지로 표시할 경우 -->
+        <template v-else-if="col.template?.image" #body="{ data }">
+          <Image v-if="col.template.image.getSrc" :src="col.template.image.getSrc(data)" preview class="image" />
         </template>
 
         <!-- 
@@ -162,8 +169,12 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *         getVariant: (data: T) => string   // 프라임뷰 버튼 variant 값
    *         getDisabled: (data: T) => boolean // 버튼 disabled 여부
    *         getHidden: (data: T) => boolean   // 버튼 숨기는지?
+   *         getIcon: (data: T) => string      // 프라임뷰 아이콘
    *       }
-   *     ]}
+   *     ]},
+   *     image: {
+   *       getSrc: (data: T) => string         // 이미지 src
+   *     }
    *   }
    *   alignment: string              // 정렬 ('left', 'center', 'right')
    * }]
@@ -216,6 +227,18 @@ const exportCSV = () => {
     & .hidden {
       display: none;
     }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
   }
 }
 </style>
