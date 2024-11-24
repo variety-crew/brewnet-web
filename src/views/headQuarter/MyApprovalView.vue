@@ -14,6 +14,7 @@
         :options="approvalOptions"
         label="결재상태"
         class="criteria radio"
+        label-position="left"
       />
     </SearchArea>
 
@@ -48,7 +49,7 @@ import { makeRadioOption, makeSelectOption } from '@/utils/helper';
 const router = useRouter();
 
 const APPROVAL_ALL = 'ALL';
-const APPROVAL_OPTION = [APPROVAL_ALL].concat(APPROVAL_STATUS_LIST);
+const APPROVAL_OPTIONS = [APPROVAL_ALL].concat(APPROVAL_STATUS_LIST);
 
 const SORTING_OPTION = {
   DATE_ASC: 'DATE_ASC',
@@ -69,7 +70,7 @@ const getInitialCriteria = () => ({
 const criteria = ref(getInitialCriteria());
 const sorting = ref(SORTING_OPTION.DATE_ASC);
 const approvalOptions = computed(() => {
-  return APPROVAL_OPTION.map(e => makeRadioOption(e === APPROVAL_ALL ? '전체' : formatKoApprovalStatus(e), e, e));
+  return APPROVAL_OPTIONS.map(e => makeRadioOption(e === APPROVAL_ALL ? '전체' : formatKoApprovalStatus(e), e, e));
 });
 const sortingOptions = computed(() => {
   return SORTING_OPTIONS.map(e => makeSelectOption(formatKoSortingOption(e), e));

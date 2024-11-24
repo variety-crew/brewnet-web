@@ -117,7 +117,14 @@
             <tr v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">
               <td class="align-center">{{ formatKoEmployeePosition(approvalLine.positionName) }}</td>
               <td class="align-center">{{ approvalLine.approverName }}</td>
-              <td class="align-center">{{ formatKoApproverApprovedStatus(approvalLine.approved) }}</td>
+              <td class="align-center">
+                <template v-if="isNeedMyApproval(approvalLine.approverCode, approvalLine.approved)">
+                  <Button label="결재 진행" size="small" @click="clickDoApproval" />
+                </template>
+                <template v-else>
+                  {{ formatKoApproverApprovedStatus(approvalLine.approved) }}
+                </template>
+              </td>
               <td class="align-center">{{ purchaseDetail.approverComment }}</td>
               <td class="align-center">{{ approvalLine.approvedAt }}</td>
             </tr>
@@ -125,26 +132,34 @@
         </AppTableStyled>
       </div>
     </template>
+
+    <DynamicDialog />
   </div>
 </template>
 
 <script setup>
 import { useToast } from 'primevue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { useModal } from '@/hooks/useModal';
+import { useUserStore } from '@/stores/user';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import { APPROVAL_STATUS, APPROVER_APPROVED_STATUS } from '@/utils/constant';
 import { formatKoApprovalStatus, formatKoApproverApprovedStatus, formatKoEmployeePosition } from '@/utils/format';
 import { getApprovalStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
 
+const ApprovalModalBody = defineAsyncComponent(() => import('@/components/headQuarter/ApprovalModalBody.vue'));
+
 const route = useRoute();
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
+const userStore = useUserStore();
+const { openModal } = useModal();
 
 const purchaseDetail = ref(null);
 const purchaseApprovalLines = ref([]);
@@ -155,6 +170,11 @@ const isAlreadySend = ref(false);
 const isApproved = computed(() => {
   return purchaseDetail.value.allApproved === APPROVAL_STATUS.APPROVED;
 });
+
+// 내 결재가 필요한 단계인가?
+const isNeedMyApproval = (approverCode, approvedStatus) => {
+  return approverCode === userStore.memberCode && approvedStatus === APPROVER_APPROVED_STATUS.UNCONFIRMED;
+};
 
 const localStorageUtil = new LocalStorageUtil();
 const hqPurchaseApi = new HQPurchaseApi();
@@ -203,18 +223,60 @@ const clickDelete = () => {
   });
 };
 
+const getPurchaseDetail = () => {
+  hqPurchaseApi.getPurchase(purchaseCode).then(data => {
+    purchaseDetail.value = data;
+  });
+};
+
+const getPurchaseApprovalLines = () => {
+  hqPurchaseApi.getPurchaseApprovalLines(purchaseCode).then(data => {
+    purchaseApprovalLines.value = data.approvers;
+  });
+};
+
+const getPurchaseDetailPageData = () => {
+  getPurchaseDetail();
+  getPurchaseApprovalLines();
+};
+
+const doingApproval = async (approved, comment) => {
+  if (approved === APPROVER_APPROVED_STATUS.APPROVED) {
+    // 결재 승인
+    await hqPurchaseApi.approvePurchase({ purchaseCode, comment });
+  } else if (approved === APPROVER_APPROVED_STATUS.REJECTED) {
+    // 결재 반려
+    await hqPurchaseApi.rejectPurchase({ purchaseCode, comment });
+  }
+
+  toast.add({ severity: 'success', summary: '처리 성공', detail: '결재가 저장되었습니다.', life: 3000 });
+
+  // 데이터 새로고침
+  getPurchaseDetailPageData();
+};
+
+const clickDoApproval = () => {
+  openModal({
+    component: ApprovalModalBody,
+    header: '결재 진행',
+    data: {
+      draftCode: purchaseCode,
+    },
+    onClose: opt => {
+      const callbackParams = opt.data;
+      if (!callbackParams) return;
+
+      const { approved, comment } = callbackParams;
+      doingApproval(approved, comment);
+    },
+  });
+};
+
 onMounted(() => {
   if (!purchaseCode) return;
 
   // 발주 상세 데이터 셋팅
-  hqPurchaseApi.getPurchase(purchaseCode).then(data => {
-    purchaseDetail.value = data;
-  });
-
-  // 발주 결재라인 조회
-  hqPurchaseApi.getPurchaseApprovalLines(purchaseCode).then(data => {
-    purchaseApprovalLines.value = data.approvers;
-  });
+  getPurchaseDetailPageData();
 
   // 이미 회계팀에 보냈는지 확인
   isAlreadySend.value = localStorageUtil.isSendCompletePurchase(Number(purchaseCode));
