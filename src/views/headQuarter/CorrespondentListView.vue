@@ -20,20 +20,29 @@
       @reload="onReload"
       @change-page="onChangePage"
     />
+
+    <DynamicDialog />
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useModal } from '@/hooks/useModal';
 import CorrespondentApi from '@/utils/api/CorrespondentApi';
 import { CRITERIA_CORRESPONDENT_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
+
+const CorrespondentItemsModalBody = defineAsyncComponent(
+  () => import('@/components/headQuarter/CorrespondentItemsModalBody.vue'),
+);
+
+const { openModal } = useModal();
 
 const page = ref(1);
 const pageSize = ref(15);
@@ -50,6 +59,16 @@ const criteriaOptions = computed(() => {
 });
 
 const correspondentApi = new CorrespondentApi();
+
+const viewItems = data => {
+  openModal({
+    component: CorrespondentItemsModalBody,
+    header: `[${data.correspondentName}] 품목 조회`,
+    data: {
+      correspondentCode: data.correspondentCode,
+    },
+  });
+};
 
 const columns = [
   {
@@ -86,6 +105,7 @@ const columns = [
         },
         {
           getLabel: () => '품목조회',
+          clickHandler: viewItems,
         },
         {
           getLabel: () => '삭제',
