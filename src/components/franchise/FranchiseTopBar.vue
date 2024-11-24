@@ -28,7 +28,7 @@
             aria-haspopup="true"
             aria-controls="overlay_menu"
             aria-label="User Menu"
-            :label="`${userStore.username} 님`"
+            :label="`[${userStore.franchiseName}] ${userStore.username} 님`"
             severity="secondary"
             size="small"
             icon-pos="right"
