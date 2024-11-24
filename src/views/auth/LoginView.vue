@@ -91,7 +91,7 @@ const login = async () => {
     userStore.setUserType(userType);
     userStore.saveTokenTempToReal(); // temp -> 진짜 토큰으로 셋팅
 
-    if (userType === 'hq') {
+    if (userType === 'hq' || userType === 'fc') {
       const myInfo = await memberApi.getMyInfo();
       userStore.setUserData(myInfo); // 내 정보 셋팅
     }
