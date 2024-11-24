@@ -18,10 +18,13 @@
     </SearchArea>
 
     <AppTable
+      v-model:sorting="sorting"
       :columns="columns"
       :rows-per-page="pageSize"
       :paginated-data="paginatedApprovals"
       :total-elements="totalElements"
+      :sorting-options="sortingOptions"
+      :initial-sorting="sorting"
       @reload="onReload"
       @change-page="onChangePage"
     />
@@ -30,7 +33,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
@@ -39,10 +42,21 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import MemberApi from '@/utils/api/MemberApi';
 import { APPROVAL_STATUS_LIST } from '@/utils/constant';
 import { formatKoApprovalStatus, formatKoDraftKind } from '@/utils/format';
-import { makeRadioOption } from '@/utils/helper';
+import { makeRadioOption, makeSelectOption } from '@/utils/helper';
 
 const APPROVAL_ALL = 'ALL';
 const APPROVAL_OPTION = [APPROVAL_ALL].concat(APPROVAL_STATUS_LIST);
+
+const SORTING_OPTION = {
+  DATE_ASC: 'DATE_ASC',
+  DATE_DESC: 'DATE_DESC',
+};
+const SORTING_OPTIONS = [SORTING_OPTION.DATE_ASC, SORTING_OPTION.DATE_DESC];
+const formatKoSortingOption = opt => {
+  if (opt === SORTING_OPTION.DATE_ASC) return '기안일 오래된 순';
+  if (opt === SORTING_OPTION.DATE_DESC) return '기안일 최근 순';
+  return '';
+};
 
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
@@ -50,8 +64,12 @@ const getInitialCriteria = () => ({
   approval: APPROVAL_ALL,
 });
 const criteria = ref(getInitialCriteria());
+const sorting = ref(SORTING_OPTION.DATE_ASC);
 const approvalOptions = computed(() => {
   return APPROVAL_OPTION.map(e => makeRadioOption(e === APPROVAL_ALL ? '전체' : formatKoApprovalStatus(e), e, e));
+});
+const sortingOptions = computed(() => {
+  return SORTING_OPTIONS.map(e => makeSelectOption(formatKoSortingOption(e), e));
 });
 const page = ref(0);
 const pageSize = ref(15);
@@ -87,6 +105,7 @@ const getMyApprovals = () => {
       startDate: criteria.value.startDate,
       endDate: criteria.value.endDate,
       approval: criteria.value.approval === APPROVAL_ALL ? undefined : criteria.value.approval,
+      dateSort: sorting.value === SORTING_OPTION.DATE_ASC ? 'ASC' : 'DESC',
     })
     .then(data => {
       paginatedApprovals.value = data.content;
@@ -114,6 +133,11 @@ const onReload = () => {
 };
 
 onMounted(() => {
+  getMyApprovals();
+});
+
+// 정렬기준이 바뀌면 API 호출
+watch(sorting, () => {
   getMyApprovals();
 });
 </script>

@@ -33,6 +33,12 @@
           <p>총 {{ totalElements || 0 }}건</p>
 
           <div class="right">
+            <AppSelect
+              v-if="sorting && sortingOptions.length > 0"
+              v-model="sorting"
+              :options="sortingOptions"
+              :initial-value="initialSorting"
+            />
             <Button
               icon="pi pi-refresh"
               variant="outlined"
@@ -134,7 +140,18 @@
 <script setup>
 import { ref } from 'vue';
 
-const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcelExport } = defineProps({
+import AppSelect from './form/AppSelect.vue';
+
+const {
+  paginatedData,
+  columns,
+  rowsPerPage,
+  totalElements,
+  addButton,
+  showExcelExport,
+  sortingOptions,
+  initialSorting,
+} = defineProps({
   paginatedData: {
     type: Array,
     required: true,
@@ -199,9 +216,20 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
     required: false,
     default: false,
   },
+  sortingOptions: {
+    type: Array,
+    required: false,
+    default: () => [],
+  },
+  initialSorting: {
+    type: [String, null],
+    required: false,
+    default: null,
+  },
 });
 
 const emit = defineEmits(['changePage', 'reload']);
+const sorting = defineModel('sorting', { type: String, required: false });
 
 const dt = ref();
 const exportCSV = () => {

@@ -34,6 +34,7 @@ export default class MemberApi extends BaseApiService {
     startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
     endDate = dayjs().format('YYYY-MM-DD'),
     approval,
+    dateSort,
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
@@ -42,6 +43,10 @@ export default class MemberApi extends BaseApiService {
 
     if (approval) {
       searchParams.append('approval', approval);
+    }
+
+    if (dateSort) {
+      searchParams.append('dateSort', dateSort);
     }
 
     return this.get(`/my-approval?${searchParams.toString()}`);
