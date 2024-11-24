@@ -33,6 +33,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { computed, onMounted, ref, watch } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -46,8 +47,10 @@ import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import { CRITERIA_IN_STOCK, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption, makeTabs } from '@/utils/helper';
+import LocalStorageUtil from '@/utils/localStorage';
 
 const { showConfirm } = useAppConfirmModal();
+const toast = useToast();
 
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
@@ -80,9 +83,13 @@ const tabItems = computed(() => {
 });
 
 const hqPurchaseApi = new HQPurchaseApi();
+const localStorageUtil = new LocalStorageUtil();
 
 const onStockUncheckToCheck = data => {
   hqPurchaseApi.stockIn({ itemCode: data.itemCode, purchaseCode: data.purchaseCode }).then(() => {
+    localStorageUtil.saveCompleteInStock(data.purchaseCode);
+
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '입고처리되었습니다.', life: 3000 });
     onReload();
   });
 };
@@ -118,8 +125,18 @@ const columns = [
     template: {
       button: [
         {
-          getLabel: data => '입고확인',
+          getLabel: data => {
+            if (localStorageUtil.isCompleteInStock(data.purchaseCode)) {
+              return '입고완료';
+            }
+            return '입고확인';
+          },
           clickHandler: handleStockIn,
+          getDisabled: data => localStorageUtil.isCompleteInStock(data.purchaseCode),
+          getSeverity: data => {
+            if (localStorageUtil.isCompleteInStock(data.purchaseCode)) return 'secondary';
+            return undefined;
+          },
         },
       ],
     },
