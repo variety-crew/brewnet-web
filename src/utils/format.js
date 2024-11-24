@@ -260,6 +260,9 @@ export const formatKoSearchCriteria = criteria => {
     case SEARCH_CRITERIA.STORAGE_NAME:
       return '창고명';
 
+    case SEARCH_CRITERIA.STORAGE_CODE:
+      return '창고코드';
+
     default:
       return '';
   }
