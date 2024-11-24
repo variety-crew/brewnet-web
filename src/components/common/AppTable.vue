@@ -109,7 +109,7 @@
               :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
               :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"
               :icon="button.getIcon ? button.getIcon(data) : undefined"
-              @click="button.clickHandler(data)"
+              @click="button.clickHandler ? button.clickHandler(data) : undefined"
             />
           </div>
         </template>

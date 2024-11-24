@@ -254,6 +254,9 @@ export const formatKoSearchCriteria = criteria => {
     case SEARCH_CRITERIA.CORRESPONDENT_NAME:
       return '거래처명';
 
+    case SEARCH_CRITERIA.CORRESPONDENT_CODE:
+      return '거래처코드';
+
     case SEARCH_CRITERIA.STORAGE_NAME:
       return '창고명';
 
