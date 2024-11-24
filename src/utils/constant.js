@@ -40,8 +40,8 @@ export const PURCHASE_STATUS = {
   REJECTED: 'REJECTED',
 };
 
-// 결재라인 종류
-export const APPROVAL_KIND = {
+// 기안 종류
+export const DRAFT_KIND = {
   PURCHASE: 'PURCHASE',
   ORDER: 'ORDER',
   EXCHANGE: 'EXCHANGE',
@@ -50,6 +50,21 @@ export const APPROVAL_KIND = {
 
 // 결재상태
 export const APPROVAL_STATUS = {
+  UNCONFIRMED: 'UNCONFIRMED',
+  CANCELED: 'CANCELED',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+};
+// 결재상태(배열)
+export const APPROVAL_STATUS_LIST = [
+  APPROVAL_STATUS.UNCONFIRMED,
+  APPROVAL_STATUS.CANCELED,
+  APPROVAL_STATUS.APPROVED,
+  APPROVAL_STATUS.REJECTED,
+];
+
+// 결재자의 결재상태
+export const APPROVER_APPROVED_STATUS = {
   UNCONFIRMED: 'UNCONFIRMED',
   APPROVED: 'APPROVED',
   REJECTED: 'REJECTED',
@@ -73,13 +88,6 @@ export const CRITERIA_IN_STOCK = [
 ];
 // 품목 목록 페이지 criteria
 export const CRITERIA_ITEM_LIST = [SEARCH_CRITERIA.ITEM_NAME];
-
-// 배송 종류
-export const DELIVERY_KIND = {
-  ORDER: 'ORDER',
-  EXCHANGE: 'EXCHANGE',
-  RETURN: 'RETURN',
-};
 
 // 주문 상태
 export const ORDER_STATUS = {

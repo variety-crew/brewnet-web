@@ -54,7 +54,7 @@
           <tr>
             <td>{{ purchaseDetail.memberName }}</td>
             <td v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">
-              {{ approvalLine.approved === APPROVAL_STATUS.APPROVED ? approvalLine.approverName : '' }}
+              {{ approvalLine.approved === APPROVER_APPROVED_STATUS.APPROVED ? approvalLine.approverName : '' }}
             </td>
           </tr>
         </table>
@@ -117,7 +117,7 @@
             <tr v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">
               <td class="align-center">{{ formatKoEmployeePosition(approvalLine.positionName) }}</td>
               <td class="align-center">{{ approvalLine.approverName }}</td>
-              <td class="align-center">{{ formatKoApprovalStatus(approvalLine.approved) }}</td>
+              <td class="align-center">{{ formatKoApproverApprovedStatus(approvalLine.approved) }}</td>
               <td class="align-center">{{ purchaseDetail.approverComment }}</td>
               <td class="align-center">{{ approvalLine.approvedAt }}</td>
             </tr>
@@ -136,8 +136,8 @@ import { useRoute, useRouter } from 'vue-router';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
-import { APPROVAL_STATUS } from '@/utils/constant';
-import { formatKoApprovalStatus, formatKoEmployeePosition } from '@/utils/format';
+import { APPROVAL_STATUS, APPROVER_APPROVED_STATUS } from '@/utils/constant';
+import { formatKoApprovalStatus, formatKoApproverApprovedStatus, formatKoEmployeePosition } from '@/utils/format';
 import { getApprovalStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
 

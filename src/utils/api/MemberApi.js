@@ -29,7 +29,7 @@ export default class MemberApi extends BaseApiService {
   }
 
   // 나의 결재목록 조회(내가 결재자인 경우)
-  getMyApproval({
+  getMyApprovals({
     page = 0,
     startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
     endDate = dayjs().format('YYYY-MM-DD'),
@@ -37,8 +37,8 @@ export default class MemberApi extends BaseApiService {
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
-    searchParams.append('startDate', startDate);
-    searchParams.append('endDate', endDate);
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
 
     if (approval) {
       searchParams.append('approval', approval);

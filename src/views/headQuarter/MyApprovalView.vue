@@ -1,7 +1,131 @@
 <template>
-  <div>나의 결재함</div>
+  <div class="my-approval-container">
+    <SearchArea grid @search="onSearch" @form-reset="onReset">
+      <AppDateRangePicker
+        v-model:start="criteria.startDate"
+        v-model:end="criteria.endDate"
+        label="기안일자"
+        label-position="left"
+        class="criteria date"
+      />
+      <AppRadioList
+        v-model="criteria.approval"
+        name="search-area-approval"
+        :options="approvalOptions"
+        label="결재상태"
+        class="criteria radio"
+      />
+    </SearchArea>
+
+    <AppTable
+      :columns="columns"
+      :rows-per-page="pageSize"
+      :paginated-data="paginatedApprovals"
+      :total-elements="totalElements"
+      @reload="onReload"
+      @change-page="onChangePage"
+    />
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import dayjs from 'dayjs';
+import { computed, onMounted, ref } from 'vue';
 
-<style scoped></style>
+import AppTable from '@/components/common/AppTable.vue';
+import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
+import AppRadioList from '@/components/common/form/AppRadioList.vue';
+import SearchArea from '@/components/common/SearchArea.vue';
+import MemberApi from '@/utils/api/MemberApi';
+import { APPROVAL_STATUS_LIST } from '@/utils/constant';
+import { formatKoApprovalStatus, formatKoDraftKind } from '@/utils/format';
+import { makeRadioOption } from '@/utils/helper';
+
+const APPROVAL_ALL = 'ALL';
+const APPROVAL_OPTION = [APPROVAL_ALL].concat(APPROVAL_STATUS_LIST);
+
+const getInitialCriteria = () => ({
+  startDate: dayjs().subtract(1, 'year').toDate(),
+  endDate: new Date(),
+  approval: APPROVAL_ALL,
+});
+const criteria = ref(getInitialCriteria());
+const approvalOptions = computed(() => {
+  return APPROVAL_OPTION.map(e => makeRadioOption(e === APPROVAL_ALL ? '전체' : formatKoApprovalStatus(e), e, e));
+});
+const page = ref(0);
+const pageSize = ref(15);
+const paginatedApprovals = ref([]);
+const totalElements = ref(0);
+
+const memberApi = new MemberApi();
+
+const columns = [
+  { field: 'kind', header: '구분', render: data => formatKoDraftKind(data.kind) },
+  {
+    field: 'code',
+    header: '구분코드',
+  },
+  {
+    field: 'title',
+    header: '문서 제목',
+  },
+  { field: 'drafterName', header: '기안자' },
+  { field: 'date', header: '기안일' },
+  {
+    field: 'status',
+    header: '결재상태',
+    render: data => formatKoApprovalStatus(data.status),
+  },
+  { field: 'approverName', header: '결재자' },
+];
+
+const getMyApprovals = () => {
+  memberApi
+    .getMyApprovals({
+      page: page.value,
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      approval: criteria.value.approval === APPROVAL_ALL ? undefined : criteria.value.approval,
+    })
+    .then(data => {
+      paginatedApprovals.value = data.content;
+      totalElements.value = data.totalElements;
+    });
+};
+
+const onSearch = () => {
+  getMyApprovals();
+};
+
+const onReset = () => {
+  page.value = 0;
+  criteria.value = getInitialCriteria();
+  getMyApprovals();
+};
+
+const onChangePage = event => {
+  page.value = event.page;
+  getMyApprovals();
+};
+
+const onReload = () => {
+  getMyApprovals();
+};
+
+onMounted(() => {
+  getMyApprovals();
+});
+</script>
+
+<style scoped>
+.my-approval-container {
+  .criteria.date {
+    grid-column: 1 / 7;
+  }
+
+  .criteria.radio {
+    grid-column: 1 / 4;
+  }
+}
+</style>

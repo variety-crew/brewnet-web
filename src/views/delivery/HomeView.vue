@@ -19,7 +19,7 @@ import { onMounted, ref } from 'vue';
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
-import { DELIVERY_KIND, ORDER_STATUS } from '@/utils/constant';
+import { DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
 import { formatKoOrderStatus } from '@/utils/format';
 
 const { showConfirm } = useAppConfirmModal();
@@ -50,7 +50,7 @@ const changeDeliveryStatus = (orderCode, toStatus) => {
   deliveryApi
     .changeDeliveryStatus({
       code: orderCode,
-      deliveryKind: DELIVERY_KIND.ORDER,
+      deliveryKind: DRAFT_KIND.ORDER,
       deliveryStatus: toStatus,
     })
     .then(() => {
@@ -148,7 +148,7 @@ const columns = [
 
 const getDeliveryList = () => {
   deliveryApi
-    .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DELIVERY_KIND.ORDER })
+    .getDeliveryList({ page: page.value, pageSize: pageSize.value, deliveryKind: DRAFT_KIND.ORDER })
     .then(data => {
       paginatedOrderDeliveries.value = data.content;
       totalElements.value = data.totalElements;
@@ -169,14 +169,14 @@ onMounted(() => {
   // paginatedOrderDeliveries.value = [
   //   {
   //     code: 100,
-  //     deliveryKind: DELIVERY_KIND.ORDER,
+  //     deliveryKind: DRAFT_KIND.ORDER,
   //     deliveryFranchiseName: '낙성대점',
   //     deliveryStatus: ORDER_STATUS.APPROVED,
   //     contact: '01011111111',
   //   },
   //   {
   //     code: 99,
-  //     deliveryKind: DELIVERY_KIND.ORDER,
+  //     deliveryKind: DRAFT_KIND.ORDER,
   //     deliveryFranchiseName: '숭실대점',
   //     deliveryStatus: ORDER_STATUS.SHIPPING,
   //     contact: '01011111111',
