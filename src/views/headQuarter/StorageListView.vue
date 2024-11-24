@@ -27,6 +27,7 @@
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
@@ -36,6 +37,8 @@ import HQStorageApi from '@/utils/api/HQStorageApi';
 import { CRITERIA_STORAGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
+
+const router = useRouter();
 
 const page = ref(1);
 const pageSize = ref(15);
@@ -53,7 +56,9 @@ const criteriaOptions = computed(() => {
 
 const hqStorageApi = new HQStorageApi();
 
-const viewDetail = data => {};
+const viewDetail = data => {
+  router.push({ name: 'hq:stock:storage:detail', params: { storageCode: data.storageCode } });
+};
 
 const columns = [
   {
