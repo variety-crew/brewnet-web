@@ -23,4 +23,9 @@ export default class HQStorageApi extends BaseApiService {
 
     return this.get(`?${searchParams.toString()}`);
   }
+
+  // 창고 상세 조회
+  getStorage(storageCode) {
+    return this.get(`/${storageCode}`);
+  }
 }
