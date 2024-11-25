@@ -100,13 +100,6 @@ const login = async () => {
     localStorageUtil.handleRememberLoginId(saveAuth.value, id.value); // 로그인 정보 저장할건지?
     router.replace({ name: `${userType}:home` });
   } catch (e) {
-    toast.add({
-      severity: 'error',
-      summary: '로그인 실패',
-      detail: e.message || '로그인 중 에러가 발생했습니다.',
-      life: 3000,
-    });
-
     // 실패한 경우 데이터 clear
     userStore.clearUserData();
   }
