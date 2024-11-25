@@ -10,11 +10,15 @@
       <!-- 하단: 화면 View -->
       <RouterView />
     </div>
+
+    <LoadingSpinner />
   </main>
 </template>
 
 <script setup>
 import { RouterView } from 'vue-router';
+
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 </script>
 
 <style scoped>
@@ -24,6 +28,7 @@ main.auth-main {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 
   .wrapper {
     display: flex;

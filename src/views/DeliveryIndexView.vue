@@ -7,6 +7,8 @@
     </header>
     <main>
       <RouterView />
+
+      <LoadingSpinner />
     </main>
     <footer>
       <nav>
@@ -27,6 +29,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import { useUserStore } from '@/stores/user';
 import AuthApi from '@/utils/api/AuthApi';
 
@@ -73,6 +76,7 @@ const clickLogout = () => {
 
   main {
     flex-grow: 1;
+    position: relative;
   }
 
   footer {

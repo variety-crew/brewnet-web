@@ -1,3 +1,4 @@
+import { useLoadingStore } from '@/stores/loading';
 import { useUserStore } from '@/stores/user';
 
 import DOMEvent from '../domEvent';
@@ -6,16 +7,20 @@ export default class BaseApiService {
   #baseUrl = 'http://localhost:8080/api';
   #resource;
   #userStore;
+  #loadingStore;
 
   constructor(resource) {
     if (!resource) throw new Error('Resource is not provided');
     this.#resource = resource;
 
     this.#userStore = useUserStore();
+    this.#loadingStore = useLoadingStore();
   }
 
   async #callApi(endpoint, fetchOptions) {
     try {
+      this.#loadingStore.setLoading(true);
+
       const requestUrl = `${this.#baseUrl}${this.#resource}${endpoint}`;
       const requestHeaders = new Headers();
 
@@ -72,6 +77,8 @@ export default class BaseApiService {
 
       DOMEvent.dispatchApiError(error.message);
       throw error; // throw 함으로써 사용부의 catch에 걸림
+    } finally {
+      this.#loadingStore.setLoading(false);
     }
   }
 
