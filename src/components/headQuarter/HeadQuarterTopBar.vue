@@ -1,5 +1,5 @@
 <template>
-  <Toolbar class="hq-topbar">
+  <AppNavbar class="hq-navbar">
     <template #start>
       <RouterLink :to="{ name: 'hq:home' }">
         <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
@@ -21,18 +21,18 @@
           />
         </div>
 
-        <div class="user">
-          <p>{{ userStore.username }}</p>
+        <div>
           <Button
             type="button"
             icon="pi pi-chevron-down"
             aria-haspopup="true"
             aria-controls="overlay_menu"
             aria-label="User Menu"
-            variant="text"
-            raised
+            :label="`${userStore.username} 님`"
             severity="secondary"
             size="small"
+            icon-pos="right"
+            rounded
             @click="toggleUserMenu"
           />
 
@@ -44,23 +44,30 @@
         </OverlayBadge>
       </nav>
     </template>
-  </Toolbar>
+  </AppNavbar>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import AppMenu from '@/router/AppMenu';
 import { useUserStore } from '@/stores/user';
+import AuthApi from '@/utils/api/AuthApi';
+
+import AppNavbar from '../common/AppNavbar.vue';
 
 const appMenu = new AppMenu();
+const authApi = new AuthApi();
 
 const userStore = useUserStore();
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
 
 const userMenu = ref();
 const userMenus = ref([
+  { label: '내 정보', icon: 'pi pi-user', command: clickMyPage },
   {
     label: '로그아웃',
     icon: 'pi pi-sign-out',
@@ -75,26 +82,34 @@ const toggleUserMenu = event => {
   userMenu.value.toggle(event);
 };
 
+const handleLogout = () => {
+  authApi.logout().then(() => {
+    userStore.clearUserData();
+    router.replace({ name: 'auth:login' });
+  });
+};
+
 function clickLogout() {
-  userStore.logout();
-  router.replace({ name: 'auth:login' });
+  showConfirm({
+    header: '로그아웃',
+    message: `로그아웃을 진행합니다.`,
+    acceptLabel: '로그아웃',
+    onAccept: handleLogout,
+  });
+}
+
+function clickMyPage() {
+  router.push({ name: 'hq:my' });
 }
 </script>
 
 <style scoped>
-.hq-topbar {
-  margin-bottom: 10px;
-  padding: 0 20px;
-
+.hq-navbar {
   .logo {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: contain;
-
-    &:hover {
-      opacity: 0.6;
-    }
   }
 
   nav {
@@ -105,12 +120,6 @@ function clickLogout() {
     a.topbar-link-active {
       color: var(--p-primary-600);
       border-bottom: 2px solid var(--p-primary-600);
-    }
-
-    .user {
-      display: flex;
-      align-items: center;
-      gap: 5px;
     }
   }
 }

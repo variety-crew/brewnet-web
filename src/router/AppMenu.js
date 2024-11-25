@@ -25,6 +25,7 @@ export default class AppMenu {
 
   // Side 메뉴 가져오기
   getSideMenus(currentRouteName = '') {
+    // 본사
     if (currentRouteName.includes('hq:purchase')) {
       return [
         {
@@ -38,6 +39,110 @@ export default class AppMenu {
       ];
     }
 
+    if (currentRouteName.includes('hq:order')) {
+      return [
+        {
+          label: '주문',
+          items: [this.#makeMenu('주문요청 관리', 'hq:order:list')],
+        },
+        {
+          label: '교환',
+          items: [this.#makeMenu('교환요청 관리', 'hq:order:exchange:list')],
+        },
+        {
+          label: '반품',
+          items: [this.#makeMenu('반품요청 관리', 'hq:order:return:list')],
+        },
+      ];
+    }
+
+    if (currentRouteName.includes('hq:settings')) {
+      return [
+        {
+          label: '임직원 관리',
+          items: [
+            this.#makeMenu('임직원 조회', 'hq:settings:employee:list'),
+            this.#makeMenu('임직원 등록', 'hq:settings:employee:create'),
+          ],
+        },
+        { label: '결재라인', items: [this.#makeMenu('결재라인 조회', 'hq:settings:approval-line')] },
+        {
+          label: '법인인감',
+          items: [
+            this.#makeMenu('법인인감 조회', 'hq:settings:company-seal'),
+            this.#makeMenu('법인인감 등록', 'hq:settings:company-seal:upload'),
+            this.#makeMenu('법인인감 사용내역', 'hq:settings:company-seal:history'),
+          ],
+        },
+        { label: '기타', items: [this.#makeMenu('회사 정보', 'hq:settings:company')] },
+      ];
+    }
+
+    if (currentRouteName.includes('hq:partner')) {
+      return [
+        {
+          label: '가맹점',
+          items: [
+            this.#makeMenu('가맹점 조회', 'hq:partner:franchise:list'),
+            this.#makeMenu('가맹점 등록', 'hq:partner:franchise:create'),
+            this.#makeMenu('가맹점 계정 조회', 'hq:partner:franchise-account:list'),
+            this.#makeMenu('가맹점 계정 등록', 'hq:partner:franchise-account:create'),
+          ],
+        },
+        { label: '거래처', items: [this.#makeMenu('거래처 조회', 'hq:partner:correspondent:list')] },
+      ];
+    }
+
+    if (currentRouteName.includes('hq:board')) {
+      return [
+        {
+          label: '공지사항',
+          items: [
+            this.#makeMenu('공지사항 조회', 'hq:board:notice:list'),
+            this.#makeMenu('공지사항 등록', 'hq:board:notice:create'),
+          ],
+        },
+      ];
+    }
+
+    if (currentRouteName.includes('hq:my')) {
+      return [
+        {
+          label: 'My',
+          items: [
+            this.#makeMenu('내 정보 조회', 'hq:my:info'),
+            this.#makeMenu('비밀번호 변경', 'hq:my:change-password'),
+            this.#makeMenu('서명 등록', 'hq:my:upload-signature'),
+          ],
+        },
+        {
+          label: 'My 문서',
+          items: [this.#makeMenu('내 기안함', 'hq:my:draft'), this.#makeMenu('내 결재함', 'hq:my:approval')],
+        },
+      ];
+    }
+
+    if (currentRouteName.includes('hq:stock')) {
+      return [
+        {
+          label: '창고',
+          items: [
+            this.#makeMenu('창고별 재고 조회', 'hq:stock:storage-stock'),
+            this.#makeMenu('창고 목록', 'hq:stock:storage:list'),
+            this.#makeMenu('창고 등록', 'hq:stock:storage:create'),
+          ],
+        },
+        {
+          label: '품목',
+          items: [
+            this.#makeMenu('품목 카테고리 관리', 'hq:stock:item-category'),
+            this.#makeMenu('품목 조회', 'hq:stock:item:list'),
+          ],
+        },
+      ];
+    }
+
+    // 가맹점
     if (currentRouteName.includes('fc:home')) {
       return [
         {

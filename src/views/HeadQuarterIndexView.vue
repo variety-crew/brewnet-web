@@ -1,21 +1,15 @@
 <template>
-  <div class="hq-container">
+  <MainContainer>
     <HeadQuarterTopBar />
     <RouterView />
-  </div>
+  </MainContainer>
 </template>
 
 <script setup>
 import { RouterView } from 'vue-router';
 
+import MainContainer from '@/components/common/MainContainer.vue';
 import HeadQuarterTopBar from '@/components/headQuarter/HeadQuarterTopBar.vue';
 </script>
 
-<style scoped>
-.hq-container {
-  padding: 10px 10px 10px 10px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-</style>
+<style scoped></style>

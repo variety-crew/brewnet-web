@@ -5,7 +5,7 @@
 
     <main>
       <Breadcrumb :home="home" :model="breadcrumbs" />
-      <h2>{{ currentPageTitle }}</h2>
+      <h3 class="page-title">{{ currentPageTitle }}</h3>
       <div class="content">
         <RouterView />
       </div>
@@ -43,16 +43,15 @@ const home = ref({
 .page-body {
   flex-grow: 1;
   display: flex;
-  gap: 16px;
+  overflow-y: auto;
 
   main {
     flex-grow: 1;
-    height: 100%;
     background-color: white;
     overflow-y: auto;
-    border: 1px solid var(--p-content-border-color);
+    padding: 5px 5px 20px 5px;
 
-    h2 {
+    .page-title {
       margin: 0 14px;
       padding-left: 10px;
       border-left: 5px solid var(--p-primary-600);
