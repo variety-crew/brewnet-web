@@ -51,6 +51,9 @@
       </tbody>
     </AppTableStyled>
   </div>
+  <div v-else class="empty-delivery-detail">
+    <EmptyContent :text="errMsg" />
+  </div>
 </template>
 
 <script setup>
@@ -58,6 +61,7 @@ import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import EmptyContent from '@/components/common/EmptyContent.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
 import {
@@ -74,6 +78,7 @@ const toast = useToast();
 const { showConfirm } = useAppConfirmModal();
 
 const currentDeliveryDetail = ref(null);
+const errMsg = ref('');
 
 const getStepTitle = stepValue => {
   if (currentDeliveryDetail.value?.deliveryKind === DRAFT_KIND.ORDER) {
@@ -149,9 +154,14 @@ const activeStepValueList = computed(() => {
 const deliveryApi = new DeliverApi();
 
 const getDeliveryDetail = () => {
-  deliveryApi.getCurrentDelivery().then(data => {
-    currentDeliveryDetail.value = data;
-  });
+  deliveryApi
+    .getCurrentDelivery()
+    .then(data => {
+      currentDeliveryDetail.value = data;
+    })
+    .catch(e => {
+      errMsg.value = e.message;
+    });
 };
 
 const changeDeliveryStatus = toStatus => {
@@ -273,5 +283,13 @@ onMounted(() => {
   .step-item:first-child .line {
     height: 0;
   }
+}
+
+.empty-delivery-detail {
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

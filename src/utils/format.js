@@ -11,6 +11,7 @@ import {
   APPROVAL,
   SEARCH_CRITERIA,
   APPROVER_APPROVED_STATUS,
+  DELIVERY_STATUS,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
@@ -299,16 +300,25 @@ export const formatKoReturnStatus = status => {
   }
 };
 
-export const formatKoDeliveryStatus = orderStatus => {
-  switch (orderStatus) {
-    case ORDER_STATUS.APPROVED:
-      return '배송전';
+export const formatKoDeliveryStatus = status => {
+  switch (status) {
+    case DELIVERY_STATUS.START_DELIVERY:
+      return '배송 시작';
 
-    case ORDER_STATUS.SHIPPING:
+    case DELIVERY_STATUS.SHIPPING:
       return '배송중';
 
-    case ORDER_STATUS.SHIPPED:
-      return '배송완료';
+    case DELIVERY_STATUS.SHIPPED:
+      return '배송 완료';
+
+    case DELIVERY_STATUS.START_PICK:
+      return '회수 시작';
+
+    case DELIVERY_STATUS.PICKING:
+      return '회수중';
+
+    case DELIVERY_STATUS.PICKED:
+      return '회수 완료';
 
     default:
       return '';
