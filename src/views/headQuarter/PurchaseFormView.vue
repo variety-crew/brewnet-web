@@ -109,8 +109,10 @@ import CorrespondentItemTable from '@/components/headQuarter/CorrespondentItemTa
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
 import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
+import HQDocumentApi from '@/utils/api/HQDocumentApi';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import HQStorageApi from '@/utils/api/HQStorageApi';
+import { DRAFT_KIND } from '@/utils/constant';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
 
 const userStore = useUserStore();
@@ -146,6 +148,7 @@ const comment = ref('');
 const hqPurchaseApi = new HQPurchaseApi();
 const hqStorageApi = new HQStorageApi();
 const hqCorrespondentApi = new HQCorrespondentApi();
+const hqDocumentApi = new HQDocumentApi();
 
 const onCompleteInputSupplier = event => {
   // 거래처명으로 검색
@@ -163,7 +166,7 @@ const onCompleteInputStorage = event => {
 
 const onCompleteInputApprovalUser = event => {
   // 발주 결재라인의 결재자 후보들 검색
-  hqPurchaseApi.getPurchaseApproverCandidates().then(data => {
+  hqDocumentApi.getApproverCandidates(DRAFT_KIND.PURCHASE).then(data => {
     approverCandidates.value = data;
   });
 };

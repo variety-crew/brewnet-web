@@ -19,9 +19,7 @@
 import { useToast } from 'primevue';
 import { computed, inject, onMounted, ref } from 'vue';
 
-import HQOrderApi from '@/utils/api/HQOrderApi';
-import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
-import { DRAFT_KIND } from '@/utils/constant';
+import HQDocumentApi from '@/utils/api/HQDocumentApi';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
 
 import AppModalBody from '../common/AppModalBody.vue';
@@ -40,22 +38,15 @@ const approvalUserSuggestions = computed(() => {
 });
 const comment = ref('');
 
-const hqPurchaseApi = new HQPurchaseApi();
+const hqDocumentApi = new HQDocumentApi();
 
 const onCompleteInputApprovalUser = event => {
   if (!currentDraftKind.value) return;
 
-  if (currentDraftKind.value === DRAFT_KIND.ORDER) {
-    // 주문 결재자들 조회
-
-    hqPurchaseApi.getOrderApproverCandidates().then(data => {
-      approverCandidates.value = data;
-    });
-  } else if (currentDraftKind.value === DRAFT_KIND.EXCHANGE) {
-    // 교환 결재자들 조회
-  } else if (currentDraftKind.value === DRAFT_KIND.RETURN) {
-    // 반품 결재자들 조회
-  }
+  // 결재자 후보 목록 조회
+  hqDocumentApi.getApproverCandidates(currentDraftKind.value).then(data => {
+    approverCandidates.value = data;
+  });
 };
 
 const checkForm = () => {
