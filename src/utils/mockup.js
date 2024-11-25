@@ -139,14 +139,6 @@ export const mockupCompanySealHistory = [
   makeMockCompanySealHistory(122, '홍길동', '발주서 출력을 위해 사용됨', '2024/01/11'),
 ];
 
-// 결재라인
-export const mockupApprovalLines = [
-  { code: 'purchase', title: '발주 결재라인', positions: ['MANAGER'] },
-  { code: 'order', title: '주문 결재라인', positions: ['MANAGER'] },
-  { code: 'exchange', title: '교환 결재라인', positions: ['MANAGER'] },
-  { code: 'return', title: '반품 결재라인', positions: [] },
-];
-
 // 공지사항
 function makeMockNotice(code, title, content, createdAt, author, images) {
   return { code, title, content, createdAt, author, images };

@@ -82,7 +82,7 @@
     <div class="approval-area">
       <h4 class="mb-4">결재라인 설정</h4>
       <div class="approval-line">
-        <AppInputText :model-value="approvalLine.title" label="결재자 선택" disabled />
+        <AppInputText model-value="발주 결재라인" label="결재자 선택" disabled />
         <AppAutoComplete
           v-model="selectedApprovalUser"
           :suggestions="approvalUserSuggestions"
@@ -112,7 +112,6 @@ import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import HQStorageApi from '@/utils/api/HQStorageApi';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupApprovalLines } from '@/utils/mockup';
 
 const userStore = useUserStore();
 const toast = useToast();
@@ -131,7 +130,6 @@ const storageSuggestions = computed(() => {
   return filteredStorages.value.map(e => makeAutocompleteSuggestion(e.storageCode, e.storageName));
 });
 
-const approvalLine = ref(mockupApprovalLines.find(e => e.code === 'purchase'));
 const selectedApprovalUser = ref(null);
 const approverCandidates = ref([]);
 const approvalUserSuggestions = computed(() => {
