@@ -17,10 +17,10 @@
             <AppInputText v-model="name" />
           </td>
           <th>사업자등록번호</th>
-          <td v-if="!editMode">{{ companyInfo.businessNum }}</td>
+          <td v-if="!editMode">{{ formatBusinessNumber(companyInfo.businessNum) }}</td>
           <td v-else><AppInputText v-model="businessNum" /></td>
           <th>법인등록번호</th>
-          <td v-if="!editMode">{{ companyInfo.corporateNum }}</td>
+          <td v-if="!editMode">{{ formatCorporateNumber(companyInfo.corporateNum) }}</td>
           <td v-else>
             <AppInputText v-model="corporateNum" />
           </td>
@@ -64,7 +64,10 @@ import { onMounted, ref, watch } from 'vue';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import CompanyApi from '@/utils/api/CompanyApi';
+import { formatBusinessNumber, formatCorporateNumber } from '@/utils/format';
 
+const companyCode = ref(null);
 const companyInfo = ref({
   name: '',
   businessNum: '',
@@ -86,6 +89,8 @@ const contact = ref('');
 const establishDate = ref('');
 const editMode = ref(false);
 
+const companyApi = new CompanyApi();
+
 const clickEdit = () => {
   editMode.value = true;
 };
@@ -98,17 +103,25 @@ const clickSave = () => {
   editMode.value = false;
 };
 
+const getCompanyInfo = () => {
+  companyApi.getCompanyInfo().then(data => {
+    companyInfo.value = {
+      name: data.name,
+      businessNum: data.businessNumber,
+      corporateNum: data.corporateNumber,
+      ceo: data.ceoName,
+      address: data.address,
+      businessType: data.typeOfBusiness,
+      contact: data.contact,
+      establishDate: data.dateOfEstablishment,
+    };
+
+    companyCode.value = data.companyCode;
+  });
+};
+
 onMounted(() => {
-  companyInfo.value = {
-    name: '주식회사 메가가가가커피',
-    businessNum: '111-11-11111',
-    corporateNum: '',
-    ceo: '김대표',
-    address: '서울 동작구 보라매로 87, 3층 플레이데이터',
-    businessType: '일반소매업',
-    contact: '1688-0000',
-    establishDate: '2021-11-11',
-  };
+  getCompanyInfo();
 });
 
 watch(editMode, newVal => {
