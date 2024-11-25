@@ -41,6 +41,7 @@ export default class BaseApiService {
         ...fetchOptions,
         headers: requestHeaders,
       });
+
       if (response.ok) {
         // Promise resolved and HTTP status is successful
 
@@ -58,7 +59,7 @@ export default class BaseApiService {
         // logging
         const parsedUrl = new URL(requestUrl);
         console.log(
-          `REQUEST: ${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}\nQUERY  : ${parsedUrl.search}\n\nRESPONSE`,
+          `REQUEST: ${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}\nMETHOD: ${fetchOptions.method}\nQUERY  : ${parsedUrl.search}\n\nRESPONSE`,
           responseData,
         );
 
@@ -83,7 +84,11 @@ export default class BaseApiService {
   }
 
   async get(endpoint) {
-    return this.#callApi(endpoint);
+    const fetchOptions = {
+      method: 'GET',
+    };
+
+    return this.#callApi(endpoint, fetchOptions);
   }
 
   async post(endpoint, data) {
