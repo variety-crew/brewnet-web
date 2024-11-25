@@ -42,18 +42,11 @@
       <div class="body-area">
         <h1>주문상세</h1>
 
-        <table class="approval-line-table">
-          <tr>
-            <th>기안자</th>
-            <th>결재자</th>
-          </tr>
-          <tr>
-            <td>{{ orderDetail.managerName }}</td>
-            <td v-for="approvalLine in orderApprovalLines" :key="approvalLine.approverName">
-              {{ approvalLine.approved === APPROVER_APPROVED_STATUS.APPROVED ? approvalLine.approverName : '' }}
-            </td>
-          </tr>
-        </table>
+        <DraftApprovalLine
+          class="approval-line-table"
+          :draft-manager-name="orderDetail.managerName"
+          :approval-lines="orderApprovalLines"
+        />
 
         <AppTableStyled full-width>
           <tbody>
@@ -95,7 +88,7 @@
         </AppTableStyled>
       </div>
 
-      <DraftApprovalLineList
+      <DraftApprovalHistoryTable
         :approval-lines="orderApprovalLines"
         :draft-kind="DRAFT_KIND.ORDER"
         :draft-code="orderCode"
@@ -113,12 +106,13 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
-import DraftApprovalLineList from '@/components/headQuarter/DraftApprovalLineList.vue';
+import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
+import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
-import { APPROVER_APPROVED_STATUS, DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
+import { DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
 import { formatKoOrderStatus } from '@/utils/format';
 import { getOrderStatusSeverity } from '@/utils/helper';
 
@@ -267,22 +261,6 @@ onMounted(() => {
 
     .approval-line-table {
       align-self: flex-end;
-
-      th {
-        border: 1px solid black;
-        padding: 3px 0;
-        font-size: 13px;
-        width: 70px;
-      }
-      td {
-        border: 1px solid black;
-        font-size: 13px;
-        text-align: center;
-      }
-
-      & > tr:nth-child(2) {
-        height: 50px;
-      }
     }
   }
 }

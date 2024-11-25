@@ -46,18 +46,11 @@
       <div class="body-area">
         <h1>구매품의서</h1>
 
-        <table class="approval-line-table">
-          <tr>
-            <th>기안자</th>
-            <th v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">결재자</th>
-          </tr>
-          <tr>
-            <td>{{ purchaseDetail.memberName }}</td>
-            <td v-for="approvalLine in purchaseApprovalLines" :key="approvalLine.approverCode">
-              {{ approvalLine.approved === APPROVER_APPROVED_STATUS.APPROVED ? approvalLine.approverName : '' }}
-            </td>
-          </tr>
-        </table>
+        <DraftApprovalLine
+          class="approval-line-table"
+          :draft-manager-name="purchaseDetail.memberName"
+          :approval-lines="purchaseApprovalLines"
+        />
 
         <AppTableStyled full-width>
           <tbody>
@@ -101,7 +94,7 @@
         </AppTableStyled>
       </div>
 
-      <DraftApprovalLineList
+      <DraftApprovalHistoryTable
         :approval-lines="purchaseApprovalLines"
         :draft-kind="DRAFT_KIND.PURCHASE"
         :draft-code="purchaseCode"
@@ -119,10 +112,11 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
-import DraftApprovalLineList from '@/components/headQuarter/DraftApprovalLineList.vue';
+import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
+import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
-import { APPROVAL_STATUS, APPROVER_APPROVED_STATUS, DRAFT_KIND } from '@/utils/constant';
+import { APPROVAL_STATUS, DRAFT_KIND } from '@/utils/constant';
 import { formatKoApprovalStatus } from '@/utils/format';
 import { getApprovalStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
@@ -250,22 +244,6 @@ onMounted(() => {
 
     .approval-line-table {
       align-self: flex-end;
-
-      th {
-        border: 1px solid black;
-        padding: 3px 0;
-        font-size: 13px;
-        width: 70px;
-      }
-      td {
-        border: 1px solid black;
-        font-size: 13px;
-        text-align: center;
-      }
-
-      & > tr:nth-child(2) {
-        height: 50px;
-      }
     }
   }
 }
