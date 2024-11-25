@@ -259,9 +259,6 @@ const clickDoApproval = () => {
   openModal({
     component: ApprovalModalBody,
     header: '결재 진행',
-    data: {
-      draftCode: purchaseCode,
-    },
     onClose: opt => {
       const callbackParams = opt.data;
       if (!callbackParams) return;
