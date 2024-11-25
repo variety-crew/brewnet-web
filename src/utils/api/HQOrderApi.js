@@ -57,4 +57,16 @@ export default class HQOrderApi extends BaseApiService {
   getOrderApprovalLines(orderCode) {
     return this.get(`/detail/${orderCode}/history/approval`);
   }
+
+  //
+  // POST
+  //
+
+  // 결재요청
+  requestApproval({ orderCode, superManagerMemberCode, comment }) {
+    return this.post(`/request/${orderCode}`, {
+      superManagerMemberCode,
+      comment,
+    });
+  }
 }

@@ -61,6 +61,10 @@ export default class HQPurchaseApi extends BaseApiService {
   getPurchaseApproverCandidates() {
     return this.get('/approvers?approvalLine=PURCHASE');
   }
+  // 주문 결재라인의 결재자 후보들 조회
+  getOrderApproverCandidates() {
+    return this.get('/approvers?approvalLine=ORDER');
+  }
 
   // 전체 입고품목 목록 조회(발주 품목)
   getInStockItems({

@@ -113,29 +113,37 @@
           </tbody>
         </AppTableStyled>
       </div>
+
+      <DynamicDialog />
     </template>
   </div>
 </template>
 
 <script setup>
 import { useToast } from 'primevue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
-import { ORDER_STATUS } from '@/utils/constant';
+import { DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
 import { formatKoApproval, formatKoApprovalStatus, formatKoEmployeePosition } from '@/utils/format';
 import { getApprovalStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
+
+const ApprovalRequestModalBody = defineAsyncComponent(
+  () => import('@/components/headQuarter/ApprovalRequestModalBody.vue'),
+);
 
 const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
+const { openModal } = useModal();
 
 const orderDetail = ref(null);
 const orderApprovalLines = ref([]);
@@ -144,7 +152,8 @@ const disabledCancelButton = computed(() => {
 });
 
 const isRequested = computed(() => {
-  return orderDetail.value.approvalStatus === ORDER_STATUS.REQUESTED;
+  // return orderDetail.value.approvalStatus === ORDER_STATUS.REQUESTED;
+  return true;
 });
 
 const isCompleted = computed(() => {
@@ -163,8 +172,46 @@ const totalPrice = computed(() => {
   return '0';
 });
 
+const getPageData = () => {
+  hqOrderApi.getOrderDetail(orderCode).then(data => {
+    orderDetail.value = data;
+  });
+
+  hqOrderApi.getOrderApprovalLines(orderCode).then(data => {
+    orderApprovalLines.value = data;
+  });
+};
+
+const handleRequestApproval = (approverCode, comment) => {
+  hqOrderApi.requestApproval({ orderCode, superManagerMemberCode: approverCode, comment }).then(() => {
+    toast.add({
+      severity: 'success',
+      summary: '처리 성공',
+      detail: '주문에 대한 결재요청이 등록되었습니다.',
+      life: 3000,
+    });
+
+    // page reload
+    getPageData();
+  });
+};
+
 const clickRequestApproval = () => {
-  // TODO:: 결재요청
+  openModal({
+    component: ApprovalRequestModalBody,
+    header: '결재요청',
+    data: {
+      draftKind: DRAFT_KIND.ORDER,
+    },
+    onClose: opt => {
+      const callbackParams = opt.data;
+      if (!callbackParams) return;
+
+      const { approverCode, comment } = callbackParams;
+
+      handleRequestApproval(approverCode, comment);
+    },
+  });
 };
 
 const clickPrintOrder = () => {
@@ -198,13 +245,7 @@ const clickCancel = () => {
 
 onMounted(() => {
   // 주문 상세 데이터 셋팅
-  hqOrderApi.getOrderDetail(orderCode).then(data => {
-    orderDetail.value = data;
-  });
-
-  hqOrderApi.getOrderApprovalLines(orderCode).then(data => {
-    orderApprovalLines.value = data;
-  });
+  getPageData();
 });
 </script>
 
