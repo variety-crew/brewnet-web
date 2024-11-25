@@ -154,6 +154,10 @@ const getDeliveryList = () => {
     .then(data => {
       paginatedOrderDeliveries.value = data.content;
       totalElements.value = data.totalElements;
+    })
+    .catch(e => {
+      paginatedOrderDeliveries.value = [];
+      totalElements.value = 0;
     });
 };
 

@@ -192,6 +192,10 @@ const getDeliveryList = () => {
     .then(data => {
       paginatedExchangeDeliveries.value = data.content;
       totalElements.value = data.totalElements;
+    })
+    .catch(e => {
+      paginatedExchangeDeliveries.value = [];
+      totalElements.value = 0;
     });
 };
 
