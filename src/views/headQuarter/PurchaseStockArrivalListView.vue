@@ -87,7 +87,7 @@ const localStorageUtil = new LocalStorageUtil();
 
 const onStockUncheckToCheck = data => {
   hqPurchaseApi.stockIn({ itemCode: data.itemCode, purchaseCode: data.purchaseCode }).then(() => {
-    localStorageUtil.saveCompleteInStock(data.purchaseCode);
+    localStorageUtil.saveCompleteInStock(data.purchaseCode, data.itemCode);
 
     toast.add({ severity: 'success', summary: '처리 성공', detail: '입고처리되었습니다.', life: 3000 });
     onReload();
@@ -126,15 +126,15 @@ const columns = [
       button: [
         {
           getLabel: data => {
-            if (localStorageUtil.isCompleteInStock(data.purchaseCode)) {
+            if (localStorageUtil.isCompleteInStock(data.purchaseCode, data.itemCode)) {
               return '입고완료';
             }
             return '입고확인';
           },
           clickHandler: handleStockIn,
-          getDisabled: data => localStorageUtil.isCompleteInStock(data.purchaseCode),
+          getDisabled: data => localStorageUtil.isCompleteInStock(data.purchaseCode, data.itemCode),
           getSeverity: data => {
-            if (localStorageUtil.isCompleteInStock(data.purchaseCode)) return 'secondary';
+            if (localStorageUtil.isCompleteInStock(data.purchaseCode, data.itemCode)) return 'secondary';
             return undefined;
           },
         },
