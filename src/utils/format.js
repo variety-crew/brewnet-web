@@ -314,3 +314,20 @@ export const formatKoDeliveryStatus = orderStatus => {
       return '';
   }
 };
+
+export const formatBusinessNumber = rawBusinessNumber => {
+  if (rawBusinessNumber.length !== 10) return rawBusinessNumber;
+
+  const front = rawBusinessNumber.slice(0, 4);
+  const middle = rawBusinessNumber.slice(4, 6);
+  const back = rawBusinessNumber.slice(6);
+  return `${front}-${middle}-${back}`;
+};
+
+export const formatCorporateNumber = rawCorporateNumber => {
+  if (rawCorporateNumber.length !== 13) return rawCorporateNumber;
+
+  const start = rawCorporateNumber.slice(0, 6);
+  const end = rawCorporateNumber.slice(6);
+  return `${start}-${end}`;
+};
