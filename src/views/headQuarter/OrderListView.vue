@@ -35,8 +35,8 @@ import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue'
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQOrderApi from '@/utils/api/HQOrderApi';
-import { formatKoApproval, formatKoDrafterApproved } from '@/utils/format';
-import { getDrafterApprovedStatusSeverity, getApprovalStatusSeverity } from '@/utils/helper';
+import { formatKoApproval, formatKoDrafterApproved, formatKoOrderStatus } from '@/utils/format';
+import { getOrderStatusSeverity, getDrafterApprovedStatusSeverity, getApprovalStatusSeverity } from '@/utils/helper';
 
 const router = useRouter();
 
@@ -67,7 +67,28 @@ function clickGoDetail(data) {
   router.push({ name: 'hq:order:detail', params: { orderCode: data.orderCode } });
 }
 
+const getMostRecentOrderStatus = orderStatusHistoryList => {
+  if (!orderStatusHistoryList?.length) return '';
+
+  const sortedList = [...orderStatusHistoryList].sort(
+    (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf(),
+  );
+
+  return sortedList[0].orderHistoryStatus;
+};
+
 const columns = [
+  {
+    field: 'orderStatusHistoryList',
+    header: '주문상태',
+    sortable: true,
+    render: data => formatKoOrderStatus(getMostRecentOrderStatus(data.orderStatusHistoryList)),
+    template: {
+      tag: {
+        getSeverity: data => getOrderStatusSeverity(getMostRecentOrderStatus(data.orderStatusHistoryList)),
+      },
+    },
+  },
   { field: 'orderCode', header: '주문번호', sortable: true },
   { field: 'orderFranchise.franchiseName', header: '주문지점' },
   { field: 'orderFranchise.itemName', header: '주문품목명' },
