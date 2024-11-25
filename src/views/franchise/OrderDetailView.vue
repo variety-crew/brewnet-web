@@ -86,11 +86,11 @@ const toast = useToast();
 const orderDetail = ref(null);
 
 const isRequested = computed(() => {
-  return orderDetail.value.orderItemList === ORDER_STATUS.REQUESTED;
+  return orderDetail.value.orderStatus === ORDER_STATUS.REQUESTED;
 });
 
 const isCompleted = computed(() => {
-  return orderDetail.value.orderItemList === ORDER_STATUS.SHIPPED;
+  return orderDetail.value.orderStatus === ORDER_STATUS.SHIPPED;
 });
 
 const fcOrderApi = new FCOrderApi();
