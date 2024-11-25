@@ -2,12 +2,12 @@
   <div class="order-detail-container">
     <template v-if="orderDetail">
       <div class="top-area">
-        <!-- <Tag
+        <Tag
           rounded
-          :value="formatKoApproval(orderDetail.approvalStatus)"
-          :severity="getApprovalStatusSeverity(orderDetail.approvalStatus)"
+          :value="formatKoOrderStatus(orderDetail.orderStatus)"
+          :severity="getOrderStatusSeverity(orderDetail.orderStatus)"
           class="mb-1"
-        /> -->
+        />
         <div class="top-buttons">
           <Button
             label="결재요청하기"
@@ -25,7 +25,10 @@
             @click="clickPrintInvoice"
           />
           <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
+
+          <!-- 기안 담당자인 경우에만 결재요청취소 버튼 표시 -->
           <Button
+            v-if="orderDetail.managerName === userStore.username"
             label="결재요청취소"
             severity="danger"
             size="small"
@@ -116,6 +119,8 @@ import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
 import { APPROVER_APPROVED_STATUS, DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
+import { formatKoOrderStatus } from '@/utils/format';
+import { getOrderStatusSeverity } from '@/utils/helper';
 
 const ApprovalRequestModalBody = defineAsyncComponent(
   () => import('@/components/headQuarter/ApprovalRequestModalBody.vue'),
@@ -131,15 +136,17 @@ const { openModal } = useModal();
 const orderDetail = ref(null);
 const orderApprovalLines = ref([]);
 const disabledCancelButton = computed(() => {
-  return orderDetail.value.managerName !== userStore.username;
+  // PENDING 상태일 때만 결재취소(기안자가) 가능하므로
+  // PENDING 상태가 아니면 결재취소 버튼 disabled
+  return orderDetail.value.orderStatus !== ORDER_STATUS.PENDING;
 });
 
 const isRequested = computed(() => {
-  return orderDetail.value.approvalStatus === ORDER_STATUS.REQUESTED;
+  return orderDetail.value.orderStatus === ORDER_STATUS.REQUESTED;
 });
 
 const isCompleted = computed(() => {
-  return orderDetail.value.approvalStatus === ORDER_STATUS.SHIPPED;
+  return orderDetail.value.orderStatus === ORDER_STATUS.SHIPPED;
 });
 
 const hqOrderApi = new HQOrderApi();
