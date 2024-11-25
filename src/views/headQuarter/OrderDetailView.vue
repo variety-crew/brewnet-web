@@ -160,7 +160,7 @@ const getOrderDetailPageData = () => {
   });
 
   hqOrderApi.getOrderApprovalLines(orderCode).then(data => {
-    orderApprovalLines.value = data.map(e => ({ ...e, positionName: e.position }));
+    orderApprovalLines.value = data.map(e => ({ ...e, positionName: e.position, approverCode: e.approverMemberCode }));
   });
 };
 
