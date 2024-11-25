@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import ItemApi from '@/utils/api/ItemApi';
 
@@ -98,12 +98,16 @@ const onSearch = () => {
   getItems();
 };
 
-watch(
-  newVal => {
-    getItems();
-  },
-  { immediate: true },
-);
+onMounted(() => {
+  getItems();
+});
+
+// watch(
+//   newVal => {
+//     getItems();
+//   },
+//   { immediate: true },
+// );
 </script>
 
 <style scoped></style>
