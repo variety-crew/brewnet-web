@@ -14,7 +14,7 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { computed, inject, onMounted, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 
 import { APPROVER_APPROVED_STATUS } from '@/utils/constant';
 import { formatKoApproverApprovedStatus } from '@/utils/format';
@@ -27,7 +27,6 @@ import AppRadioList from '../common/form/AppRadioList.vue';
 const toast = useToast();
 
 const dialogRef = inject('dialogRef');
-const currentDraftCode = ref(null);
 const approvedOptions = computed(() => {
   return [APPROVER_APPROVED_STATUS.APPROVED, APPROVER_APPROVED_STATUS.REJECTED].map(e =>
     makeRadioOption(formatKoApproverApprovedStatus(e), e, e),
@@ -56,11 +55,6 @@ const clickSave = () => {
     comment: comment.value,
   });
 };
-
-onMounted(() => {
-  const { draftCode } = dialogRef.value.data;
-  currentDraftCode.value = draftCode;
-});
 </script>
 
 <style scoped></style>
