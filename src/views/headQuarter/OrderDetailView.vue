@@ -106,7 +106,7 @@
             <tr v-for="approvalLine in orderApprovalLines" :key="approvalLine.approverCode">
               <td class="align-center">{{ formatKoEmployeePosition(approvalLine.position) }}</td>
               <td class="align-center">{{ approvalLine.approverName }}</td>
-              <td class="align-center">{{ formatKoApprovalStatus(approvalLine.approved) }}</td>
+              <td class="align-center">{{ formatKoApproverApprovedStatus(approvalLine.approved) }}</td>
               <td class="align-center">{{ approvalLine.comment }}</td>
               <td class="align-center">{{ approvalLine.createdAt }}</td>
             </tr>
@@ -130,7 +130,12 @@ import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
 import { DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
-import { formatKoApproval, formatKoApprovalStatus, formatKoEmployeePosition } from '@/utils/format';
+import {
+  formatKoApproval,
+  formatKoApprovalStatus,
+  formatKoApproverApprovedStatus,
+  formatKoEmployeePosition,
+} from '@/utils/format';
 import { getApprovalStatusSeverity } from '@/utils/helper';
 import LocalStorageUtil from '@/utils/localStorage';
 
@@ -152,8 +157,7 @@ const disabledCancelButton = computed(() => {
 });
 
 const isRequested = computed(() => {
-  // return orderDetail.value.approvalStatus === ORDER_STATUS.REQUESTED;
-  return true;
+  return orderDetail.value.approvalStatus === ORDER_STATUS.REQUESTED;
 });
 
 const isCompleted = computed(() => {
