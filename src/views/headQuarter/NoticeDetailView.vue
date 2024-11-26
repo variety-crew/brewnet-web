@@ -44,6 +44,7 @@ import AppImageList from '@/components/common/AppImageList.vue';
 import EmptyContent from '@/components/common/EmptyContent.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQNoticeApi from '@/utils/api/HQNoticeApi';
+import MasterNoticeApi from '@/utils/api/MasterNoticeApi';
 
 const route = useRoute();
 const { noticeCode } = route.params;
@@ -54,6 +55,7 @@ const toast = useToast();
 const noticeDetail = ref(null);
 
 const hqNoticeApi = new HQNoticeApi();
+const masterNoticeApi = new MasterNoticeApi();
 
 const getNotice = () => {
   hqNoticeApi.getNotice(noticeCode).then(data => {
@@ -62,8 +64,10 @@ const getNotice = () => {
 };
 
 const onDelete = () => {
-  router.replace({ name: 'hq:board:notice:list' });
-  toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항 글이 삭제되었습니다.', life: 3000 });
+  masterNoticeApi.deleteNotice(noticeCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항 글이 삭제되었습니다.', life: 3000 });
+    router.replace({ name: 'hq:board:notice:list' });
+  });
 };
 const clickDelete = () => {
   showConfirm({

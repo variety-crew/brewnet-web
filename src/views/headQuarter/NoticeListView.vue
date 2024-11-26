@@ -27,6 +27,7 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQNoticeApi from '@/utils/api/HQNoticeApi';
+import MasterNoticeApi from '@/utils/api/MasterNoticeApi';
 import { SORTING_OPTION } from '@/utils/constant';
 
 const router = useRouter();
@@ -45,6 +46,7 @@ const criteria = ref(getInitialCriteria());
 const sorting = ref(SORTING_OPTION.DATE_DESC);
 
 const hqNoticeApi = new HQNoticeApi();
+const masterNoticeApi = new MasterNoticeApi();
 
 const getNoticeList = () => {
   hqNoticeApi
@@ -74,17 +76,21 @@ const clickEdit = data => {
   router.push({ name: 'hq:board:notice:edit', params: { noticeCode: data.noticeCode } });
 };
 
-const onDelete = () => {
-  router.replace({ name: 'hq:board:notice:list' });
-  toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항 글이 삭제되었습니다.', life: 3000 });
+const onDelete = targetNoticeCode => {
+  masterNoticeApi.deleteNotice(targetNoticeCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항 글이 삭제되었습니다.', life: 3000 });
+
+    // 데이터 새로고침
+    getNoticeList();
+  });
 };
-const clickDelete = () => {
+const clickDelete = data => {
   showConfirm({
     header: '글 삭제',
     message: '공지사항 글을 삭제하시겠습니까?',
     acceptLabel: '글 삭제',
     danger: true,
-    onAccept: onDelete,
+    onAccept: () => onDelete(data.noticeCode),
   });
 };
 
