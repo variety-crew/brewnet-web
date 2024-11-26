@@ -1,15 +1,15 @@
 import BaseApiService from './BaseApiService';
 
-export default class ItemApi extends BaseApiService {
+export default class HQItemApi extends BaseApiService {
   constructor() {
-    super('/v1/item');
+    super('/v1/hq/item');
   }
 
   //
   // GET
   //
 
-  // 상품 목록 조회 (프랜차이즈용)
+  // 상품 목록 조회 (본사용)
   getItems({ page = 0, pageSize = 15, itemUniqueCode, itemName }) {
     const searchParams = new URLSearchParams();
     searchParams.append('pageNumber', page);
