@@ -17,7 +17,7 @@
     <AppInputText v-model="email" label="이메일" />
 
     <!-- 휴대폰번호 -->
-    <AppInputText v-model="phone" label="휴대폰번호" />
+    <AppInputText v-model="phone" label="휴대폰번호" placeholder="-제외 숫자만 입력" />
 
     <!-- 직급 -->
     <AppSelect v-model="position" label="직급" :options="positionOptions" :initial-value="initialPosition" />
@@ -29,20 +29,22 @@
 <script setup>
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import AppLabelText from '@/components/common/AppLabelText.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
+import AuthApi from '@/utils/api/AuthApi';
 import { POSITIONS } from '@/utils/constant';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
 import { mockupEmployees } from '@/utils/mockup';
-import { emailRegex, loginIdRegex, passwordRegex } from '@/utils/regex';
+import { emailRegex, loginIdRegex, notNumber, passwordRegex } from '@/utils/regex';
 
 const route = useRoute();
 const toast = useToast();
+const router = useRouter();
 
 const loginId = ref('');
 const password = ref('');
@@ -57,6 +59,8 @@ const editMode = ref(false);
 const positionOptions = computed(() => {
   return POSITIONS.map(e => makeSelectOption(formatKoEmployeePosition(e), e));
 });
+
+const authApi = new AuthApi();
 
 const checkForm = () => {
   emailRegex.lastIndex = 0;
@@ -90,11 +94,32 @@ const checkForm = () => {
   }
 };
 
-const onFormSubmit = () => {
+const onFormSubmit = async () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('통과');
+  if (!isPass) return;
+
+  let successMsg = '';
+
+  if (editMode.value) {
+    // 수정
+  } else {
+    // 생성
+
+    await authApi.createMember({
+      id: loginId.value,
+      password: password.value,
+      name: username.value,
+      email: email.value,
+      contact: phone.value.replace(notNumber, ''),
+      positionName: formatKoEmployeePosition(position.value),
+    });
+    successMsg = '임직원이 등록되었습니다.';
   }
+
+  if (!successMsg) return;
+
+  toast.add({ severity: 'success', summary: '처리 성공', detail: successMsg, life: 3000 });
+  router.push({ name: 'hq:settings:employee:list' });
 };
 
 watch(
