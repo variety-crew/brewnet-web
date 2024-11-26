@@ -27,6 +27,7 @@
       scrollable
       scroll-height="400px"
       class="app-table"
+      @sort="onSort"
     >
       <template #header>
         <div class="table-header">
@@ -224,6 +225,10 @@ const exportCSV = () => {
 
 const onClickExportToExcel = () => {
   emit('exportExcel');
+};
+
+const onSort = event => {
+  // console.log(event);
 };
 </script>
 
