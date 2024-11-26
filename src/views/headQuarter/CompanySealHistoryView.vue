@@ -60,7 +60,7 @@ const getCompanySealHistory = () => {
 
 const columns = [
   { field: 'orderPrintCode', header: '출력코드' },
-  { field: 'memberName', header: '임직원명' },
+  { field: 'memberName', header: '임직원명', sortable: true },
   { field: 'reason', header: '사유' },
   { field: 'printedAt', header: '사용일자' },
   {
