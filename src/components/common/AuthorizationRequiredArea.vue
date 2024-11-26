@@ -16,8 +16,9 @@
 </template>
 
 <script setup>
-import { useToast } from 'primevue';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
+
+import MemberApi from '@/utils/api/MemberApi';
 
 import AppInputPassword from './form/AppInputPassword.vue';
 
@@ -31,12 +32,20 @@ const { modelValue } = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const toast = useToast();
-
 const password = ref('');
 
+const memberApi = new MemberApi();
+
 const onSubmit = () => {
-  emit('update:modelValue', true);
+  memberApi
+    .checkAuthByPassword(password.value)
+    .then(() => {
+      // 통과
+      emit('update:modelValue', true);
+    })
+    .catch(e => {
+      // 실패
+    });
 };
 </script>
 

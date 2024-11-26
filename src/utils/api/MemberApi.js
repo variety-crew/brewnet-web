@@ -79,4 +79,22 @@ export default class MemberApi extends BaseApiService {
 
     return this.get(`/my-draft?${searchParams.toString()}`);
   }
+
+  //
+  // POST
+  //
+
+  // 비밀번호로 본인확인
+  checkAuthByPassword(password) {
+    return this.post('/my-pw', { password });
+  }
+
+  //
+  // PUT
+  //
+
+  // 내 비밀번호 변경 (로그인 한 유저)
+  changePassword(password) {
+    return this.put('/my-pw', { password });
+  }
 }

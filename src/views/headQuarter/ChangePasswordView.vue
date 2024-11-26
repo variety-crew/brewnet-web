@@ -29,6 +29,7 @@ import { useRouter } from 'vue-router';
 
 import AuthorizationRequiredArea from '@/components/common/AuthorizationRequiredArea.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
+import MemberApi from '@/utils/api/MemberApi';
 
 const toast = useToast();
 const router = useRouter();
@@ -36,6 +37,8 @@ const router = useRouter();
 const isAuthorized = ref(false);
 const password = ref('');
 const confirmPassword = ref('');
+
+const memberApi = new MemberApi();
 
 const checkForm = () => {
   try {
@@ -52,8 +55,9 @@ const checkForm = () => {
 
 const onSubmit = () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('비밀번호 변경 API 호출');
+  if (!isPass) return;
+
+  memberApi.changePassword(password.value).then(() => {
     toast.add({
       severity: 'success',
       summary: '성공',
@@ -61,7 +65,7 @@ const onSubmit = () => {
       life: 3000,
     });
     router.replace({ name: 'hq:my:info' });
-  }
+  });
 };
 </script>
 
