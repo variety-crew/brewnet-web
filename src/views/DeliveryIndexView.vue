@@ -3,7 +3,10 @@
     <header>
       <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
       <h3>{{ $route.meta?.pageTitle || '' }}</h3>
-      <Button label="로그아웃" variant="text" size="small" @click="clickLogout" />
+      <div>
+        <Button label="로그아웃" variant="text" size="small" @click="clickLogout" />
+        <Button label="강제 로그아웃(임시)" variant="text" size="small" @click="clickForceLogout" />
+      </div>
     </header>
     <main>
       <RouterView />
@@ -49,6 +52,11 @@ const clickLogout = () => {
     userStore.clearUserData();
     router.replace({ name: 'auth:login' });
   });
+};
+
+const clickForceLogout = () => {
+  userStore.clearUserData();
+  router.replace({ name: 'auth:login' });
 };
 </script>
 

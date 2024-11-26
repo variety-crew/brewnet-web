@@ -73,6 +73,11 @@ const userMenus = ref([
     icon: 'pi pi-sign-out',
     command: clickLogout,
   },
+  {
+    label: '강제로그아웃(임시)',
+    icon: 'pi pi-sign-out',
+    command: clickForceLogout,
+  },
 ]);
 const topBarMenus = computed(() => {
   return appMenu.getHqTopBarMenus();
@@ -96,6 +101,11 @@ function clickLogout() {
     acceptLabel: '로그아웃',
     onAccept: handleLogout,
   });
+}
+
+function clickForceLogout() {
+  userStore.clearUserData();
+  router.replace({ name: 'auth:login' });
 }
 
 function clickMyPage() {
