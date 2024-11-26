@@ -124,9 +124,10 @@ export default class BaseApiService {
   }
 
   async delete(endpoint, data) {
+    let requestBody = JSON.stringify(data);
     const fetchOptions = {
       method: 'DELETE',
-      body: data,
+      body: requestBody,
     };
 
     return this.#callApi(endpoint, fetchOptions);
