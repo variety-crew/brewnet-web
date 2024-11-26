@@ -119,9 +119,10 @@ export default class BaseApiService {
     return this.#callApi(endpoint, fetchOptions);
   }
 
-  async delete(endpoint) {
+  async delete(endpoint, data) {
     const fetchOptions = {
       method: 'DELETE',
+      body: data,
     };
 
     return this.#callApi(endpoint, fetchOptions);

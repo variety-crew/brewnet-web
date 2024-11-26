@@ -37,7 +37,7 @@ export default class ResponsibleFranchiseApi extends BaseApiService {
   //
   // DELETE
   //
-  deleteFranchise({ franchiseCode }) {
+  deleteFranchise(franchiseCode) {
     return this.delete('', {
       franchiseCode,
     });

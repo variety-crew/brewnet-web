@@ -23,6 +23,7 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -32,10 +33,12 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
+import ResponsibleFranchiseApi from '@/utils/api/ResponsibleFranchiseApi';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
 
 const { showConfirm } = useAppConfirmModal();
 const router = useRouter();
+const toast = useToast();
 
 const page = ref(0);
 const paginatedFranchises = ref([]);
@@ -68,13 +71,38 @@ const allAddress = [
 const addressSuggestions = ref([]);
 
 const hqFranchiseApi = new HQFranchiseApi();
+const responsibleFranchiseApi = new ResponsibleFranchiseApi();
 
 const clickEdit = data => {
   router.push({ name: 'hq:partner:franchise:edit', params: { franchiseCode: data.franchiseCode } });
 };
 
-const onRemove = targetCode => {
-  console.log(targetCode, '가맹점 삭제 API');
+const getFranchiseList = () => {
+  hqFranchiseApi
+    .getFranchiseList({
+      page: page.value,
+      pageSize: pageSize.value,
+      franchiseName: criteria.value.franchiseNameKeyword,
+      citys: criteria.value.addressKeyword ? [criteria.value.addressKeyword.label] : undefined,
+    })
+    .then(data => {
+      paginatedFranchises.value = data.content.map(e => ({ ...e, address: `${e.address} ${e.detailAddress || ''}` })); // 주소+상세주소
+      totalElements.value = data.totalElements;
+    })
+    .catch(e => {
+      // 조건에 맞는 가맹점이 없는 경우
+      paginatedFranchises.value = [];
+      totalElements.value = 0;
+    });
+};
+
+const onRemove = targetFranchiseCode => {
+  responsibleFranchiseApi.deleteFranchise(targetFranchiseCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '가맹점이 삭제되었습니다.', life: 3000 });
+
+    // data reload
+    getFranchiseList();
+  });
 };
 
 const clickRemove = data => {
@@ -83,7 +111,7 @@ const clickRemove = data => {
     message: `[${data.franchiseName}] 가맹점을 삭제하시겠습니까?`,
     acceptLabel: '네, 삭제합니다.',
     danger: true,
-    onAccept: () => onRemove(data.code),
+    onAccept: () => onRemove(data.franchiseCode),
   });
 };
 
@@ -105,25 +133,6 @@ const columns = [
     },
   },
 ];
-
-const getFranchiseList = () => {
-  hqFranchiseApi
-    .getFranchiseList({
-      page: page.value,
-      pageSize: pageSize.value,
-      franchiseName: criteria.value.franchiseNameKeyword,
-      citys: criteria.value.addressKeyword ? [criteria.value.addressKeyword.label] : undefined,
-    })
-    .then(data => {
-      paginatedFranchises.value = data.content;
-      totalElements.value = data.totalElements;
-    })
-    .catch(e => {
-      // 조건에 맞는 가맹점이 없는 경우
-      paginatedFranchises.value = [];
-      totalElements.value = 0;
-    });
-};
 
 const onChangePage = event => {
   page.value = event.page;
