@@ -58,4 +58,12 @@ export default class MasterCompanyApi extends BaseApiService {
       dateOfEstablishment,
     });
   }
+
+  // 법인인감 수정
+  editCompanySeal(file) {
+    const formData = new FormData();
+    formData.append('sealImage', file);
+
+    return this.put('/seal', formData);
+  }
 }
