@@ -170,4 +170,6 @@ export const DELIVERY_STATUS = {
 export const SORTING_OPTION = {
   DATE_ASC: 'dateASC',
   DATE_DESC: 'dateDESC',
+  NAME_ASC: 'nameASC',
+  NAME_DESC: 'nameDESC',
 };
