@@ -16,9 +16,7 @@ export default class MasterNoticeApi extends BaseApiService {
       title,
       content,
     };
-    console.log(createNoticeRequestDTO);
-    const blob = new Blob([JSON.stringify(createNoticeRequestDTO)], { type: 'application/json' });
-    formData.append('createNoticeRequestDTO', blob);
+    formData.append('createNoticeRequestDTO', this.makeBlobJson(createNoticeRequestDTO));
     imageFiles.forEach(file => {
       formData.append('image', file);
     });
@@ -31,15 +29,17 @@ export default class MasterNoticeApi extends BaseApiService {
   //
 
   // 공지사항 수정
-  editNotice({ noticeCode, title, content, imageFiles }) {
+  editNotice({ noticeCode, title, content, imageFiles = [] }) {
     const formData = new FormData();
     const updateNoticeRequestDTO = {
       noticeCode,
       title,
       content,
     };
-    formData.append('updateNoticeRequestDTO', updateNoticeRequestDTO);
-    formData.append('image', imageFiles);
+    formData.append('updateNoticeRequestDTO', this.makeBlobJson(updateNoticeRequestDTO));
+    imageFiles.forEach(file => {
+      formData.append('image', file);
+    });
 
     return this.put('', formData);
   }
