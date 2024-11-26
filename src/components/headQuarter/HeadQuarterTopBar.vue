@@ -68,6 +68,7 @@ const { showConfirm } = useAppConfirmModal();
 const userMenu = ref();
 const userMenus = ref([
   { label: '내 정보', icon: 'pi pi-user', command: clickMyPage },
+  { label: '내 문서함', icon: 'pi pi-inbox', command: clickMyInbox },
   {
     label: '로그아웃',
     icon: 'pi pi-sign-out',
@@ -110,6 +111,10 @@ function clickForceLogout() {
 
 function clickMyPage() {
   router.push({ name: 'hq:my' });
+}
+
+function clickMyInbox() {
+  router.push({ name: 'hq:my:draft' });
 }
 </script>
 
