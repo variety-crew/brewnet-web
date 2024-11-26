@@ -10,17 +10,28 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import EmptyContent from '@/components/common/EmptyContent.vue';
+import CompanyApi from '@/utils/api/CompanyApi';
 
 const router = useRouter();
 
 const sealImageUrl = ref('');
+
+const companyApi = new CompanyApi();
+
+const getCompanySeal = () => {
+  companyApi.getCompanySeal().then(data => {
+    if (!data) return;
+
+    sealImageUrl.value = data.imageUrl;
+  });
+};
 
 const goUpload = () => {
   router.push({ name: 'hq:settings:company-seal:upload' });
 };
 
 onMounted(() => {
-  // 인감 이미지 가져오기
+  getCompanySeal();
 });
 </script>
 

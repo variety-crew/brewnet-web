@@ -328,8 +328,8 @@ export const formatKoDeliveryStatus = status => {
 export const formatBusinessNumber = rawBusinessNumber => {
   if (rawBusinessNumber.length !== 10) return rawBusinessNumber;
 
-  const front = rawBusinessNumber.slice(0, 4);
-  const middle = rawBusinessNumber.slice(4, 6);
+  const front = rawBusinessNumber.slice(0, 3);
+  const middle = rawBusinessNumber.slice(3, 5);
   const back = rawBusinessNumber.slice(6);
   return `${front}-${middle}-${back}`;
 };
