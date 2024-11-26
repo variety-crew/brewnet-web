@@ -76,7 +76,11 @@ export default class BaseApiService {
     } catch (error) {
       // Promise rejected
 
-      DOMEvent.dispatchApiError(error.message);
+      // GET method에서는 에러메시지 표시 X
+      if (fetchOptions?.method !== 'GET') {
+        DOMEvent.dispatchApiError(error.message);
+      }
+
       throw error; // throw 함으로써 사용부의 catch에 걸림
     } finally {
       this.#loadingStore.setLoading(false);
