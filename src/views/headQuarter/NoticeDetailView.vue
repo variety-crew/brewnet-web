@@ -132,6 +132,7 @@ onMounted(() => {
 
     .content {
       flex-grow: 1;
+      white-space: pre-wrap;
     }
   }
 }
