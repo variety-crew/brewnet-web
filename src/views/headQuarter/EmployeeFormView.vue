@@ -111,7 +111,7 @@ const onFormSubmit = async () => {
       name: username.value,
       email: email.value,
       contact: phone.value.replace(notNumber, ''),
-      positionName: formatKoEmployeePosition(position.value),
+      positionName: position.value,
     });
     successMsg = '임직원이 등록되었습니다.';
   }
