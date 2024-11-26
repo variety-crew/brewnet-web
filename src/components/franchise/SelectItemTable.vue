@@ -10,6 +10,8 @@
       :rows-per-page="pageSize"
       :paginated-data="paginatedItems"
       :total-elements="totalElements"
+      @change-page="onChangePage"
+      @reload="onReload"
     />
   </div>
 </template>
@@ -32,11 +34,12 @@ const { selectedItems } = defineProps({
 
 const emit = defineEmits(['choose', 'remove']);
 
+const page = ref(0);
 const paginatedItems = ref([]);
 const totalElements = ref(0);
 const pageSize = 15;
 
-const getInitialCriteria = () => ({ itemUniqueCode: '', name: '', page: 0 });
+const getInitialCriteria = () => ({ itemUniqueCode: '', name: '' });
 const criteria = ref(getInitialCriteria());
 
 const itemApi = new ItemApi();
@@ -79,7 +82,7 @@ const columns = [
 const getItems = () => {
   itemApi
     .getItems({
-      page: criteria.value.page,
+      page: page.value,
       pageSize,
       itemUniqueCode: criteria.value.itemUniqueCode,
       itemName: criteria.value.name,
@@ -90,11 +93,21 @@ const getItems = () => {
     });
 };
 const onReset = () => {
-  criteria.value = getItems();
+  criteria.value = getInitialCriteria();
+  page.value = 0;
   getItems();
 };
 
 const onSearch = () => {
+  getItems();
+};
+
+const onChangePage = event => {
+  page.value = event.page;
+  getItems();
+};
+
+const onReload = () => {
   getItems();
 };
 
