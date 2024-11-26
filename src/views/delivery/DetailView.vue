@@ -161,6 +161,7 @@ const getDeliveryDetail = () => {
     })
     .catch(e => {
       errMsg.value = e.message;
+      currentDeliveryDetail.value = null;
     });
 };
 

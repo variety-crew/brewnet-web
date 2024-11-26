@@ -36,6 +36,11 @@
             style: {
               'text-align': textAlign || 'initial',
             },
+            inputtext: {
+              placeholder: {
+                color: 'white',
+              },
+            },
           },
         }"
         @input="onChangeInput"
@@ -141,4 +146,10 @@ function onClickInput() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.p-inputtext {
+  &::placeholder {
+    color: var(--p-surface-400);
+  }
+}
+</style>

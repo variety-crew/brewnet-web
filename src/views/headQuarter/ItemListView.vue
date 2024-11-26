@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchArea grid @reset="onReset" @search="onSearch">
+    <SearchArea grid @form-reset="onReset" @search="onSearch">
       <AppSelect
         v-model="criteria.criteria"
         :options="criteriaOptions"

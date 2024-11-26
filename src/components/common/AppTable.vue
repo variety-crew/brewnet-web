@@ -27,6 +27,7 @@
       scrollable
       scroll-height="400px"
       class="app-table"
+      @sort="onSort"
     >
       <template #header>
         <div class="table-header">
@@ -54,7 +55,7 @@
               size="small"
               variant="outlined"
               severity="secondary"
-              @click="exportCSV($event)"
+              @click="onClickExportToExcel"
             />
             <Button
               v-if="addButton"
@@ -214,12 +215,20 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
   },
 });
 
-const emit = defineEmits(['changePage', 'reload']);
+const emit = defineEmits(['changePage', 'reload', 'exportExcel']);
 const sorting = defineModel('sorting', { type: String, required: false });
 
 const dt = ref();
 const exportCSV = () => {
   dt.value.exportCSV();
+};
+
+const onClickExportToExcel = () => {
+  emit('exportExcel');
+};
+
+const onSort = event => {
+  // console.log(event);
 };
 </script>
 
