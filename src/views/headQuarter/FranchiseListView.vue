@@ -1,9 +1,9 @@
 <template>
   <div>
-    <SearchArea grid>
-      <AppInputText v-model="franchiseNameKeyword" label="지점명" />
+    <SearchArea grid @search="onSearch" @form-reset="onReset">
+      <AppInputText v-model="criteria.franchiseNameKeyword" label="지점명" />
       <AppAutoComplete
-        v-model="addressKeyword"
+        v-model="criteria.addressKeyword"
         label="시/도"
         :suggestions="addressSuggestions"
         full-width
@@ -14,9 +14,8 @@
     <AppTable
       :paginated-data="paginatedFranchises"
       :columns="columns"
-      :total-elements="franchises.length"
+      :total-elements="totalElements"
       :rows-per-page="pageSize"
-      show-excel-export
       @change-page="onChangePage"
       @reload="reload"
     />
@@ -24,7 +23,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -32,19 +31,21 @@ import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupFranchises } from '@/utils/mockup';
 
 const { showConfirm } = useAppConfirmModal();
 const router = useRouter();
 
-const franchises = ref([]);
-const paginatedFranchises = computed(() => {
-  return franchises.value.slice(0, 15);
-});
+const page = ref(0);
+const paginatedFranchises = ref([]);
 const pageSize = ref(15);
-const franchiseNameKeyword = ref('');
-const addressKeyword = ref(null);
+const totalElements = ref(0);
+const getInitialCriteria = () => ({
+  franchiseNameKeyword: '',
+  addressKeyword: null,
+});
+const criteria = ref(getInitialCriteria());
 const allAddress = [
   '서울',
   '부산',
@@ -66,6 +67,8 @@ const allAddress = [
 ].map(e => makeAutocompleteSuggestion(e, e));
 const addressSuggestions = ref([]);
 
+const hqFranchiseApi = new HQFranchiseApi();
+
 const clickEdit = data => {
   router.push({ name: 'hq:partner:franchise:edit', params: { franchiseCode: data.code } });
 };
@@ -85,13 +88,12 @@ const clickRemove = data => {
 };
 
 const columns = [
-  { field: 'code', header: '가맹점코드' },
+  { field: 'franchiseCode', header: '가맹점코드' },
   { field: 'franchiseName', header: '지점명', sortable: true },
   { field: 'address', header: '주소' },
-  { field: 'detailAddress', header: '상세주소' },
   { field: 'contact', header: '연락처' },
   { field: 'businessNumber', header: '사업자등록번호' },
-  { field: 'ceo', header: '대표자명' },
+  { field: 'name', header: '대표자명' },
   {
     field: '',
     header: '',
@@ -104,13 +106,32 @@ const columns = [
   },
 ];
 
+const getFranchiseList = () => {
+  hqFranchiseApi
+    .getFranchiseList({
+      page: page.value,
+      pageSize: pageSize.value,
+      franchiseName: criteria.value.franchiseNameKeyword,
+      citys: criteria.value.addressKeyword ? [criteria.value.addressKeyword.label] : undefined,
+    })
+    .then(data => {
+      paginatedFranchises.value = data.content;
+      totalElements.value = data.totalElements;
+    })
+    .catch(e => {
+      // 조건에 맞는 가맹점이 없는 경우
+      paginatedFranchises.value = [];
+      totalElements.value = 0;
+    });
+};
+
 const onChangePage = event => {
-  const { page } = event;
-  console.log(page, '페이지로 변경되었다!');
+  page.value = event.page;
+  getFranchiseList();
 };
 
 const reload = () => {
-  console.log('reload 테이블');
+  getFranchiseList();
 };
 
 const onChangeAddressKeyword = event => {
@@ -122,8 +143,18 @@ const onChangeAddressKeyword = event => {
   addressSuggestions.value = allAddress.filter(e => e.includes(event.query));
 };
 
+const onSearch = () => {
+  getFranchiseList();
+};
+
+const onReset = () => {
+  criteria.value = getInitialCriteria();
+  page.value = 0;
+  getFranchiseList();
+};
+
 onMounted(() => {
-  franchises.value = [...mockupFranchises];
+  getFranchiseList();
 });
 </script>
 
