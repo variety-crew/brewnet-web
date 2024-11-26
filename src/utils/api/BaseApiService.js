@@ -132,4 +132,8 @@ export default class BaseApiService {
 
     return this.#callApi(endpoint, fetchOptions);
   }
+
+  makeBlobJson(dto) {
+    return new Blob([JSON.stringify(dto)], { type: 'application/json' });
+  }
 }

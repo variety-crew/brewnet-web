@@ -10,11 +10,11 @@
       </button>
       <input ref="inputRef" type="file" accept="image/*" multiple style="display: none" @change="changeFile" />
 
-      <ul v-if="noticeImages.length > 0" class="upload-image-list">
+      <ul v-if="noticeImagesFiles.length > 0" class="upload-image-list">
         <li
-          v-for="(uploadImage, i) in noticeImages"
-          :key="uploadImage"
-          :style="{ backgroundImage: `url(${uploadImage})` }"
+          v-for="(uploadImage, i) in noticeImagesFiles"
+          :key="uploadImage.preview"
+          :style="{ backgroundImage: `url(${uploadImage.preview})` }"
           class="upload-image-item"
         >
           <Button
@@ -39,16 +39,22 @@ import { onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
-import { mockupNotices } from '@/utils/mockup';
+import HQNoticeApi from '@/utils/api/HQNoticeApi';
+import MasterNoticeApi from '@/utils/api/MasterNoticeApi';
 
 const toast = useToast();
 const router = useRouter();
 const route = useRoute();
+const { noticeCode } = route.params;
 
 const title = ref('');
 const content = ref('');
 const inputRef = ref();
-const noticeImages = ref([]);
+const noticeImagesFiles = ref([]);
+const editMode = ref(false);
+
+const masterNoticeApi = new MasterNoticeApi();
+const hqNoticeApi = new HQNoticeApi();
 
 const checkForm = () => {
   try {
@@ -62,12 +68,37 @@ const checkForm = () => {
   }
 };
 
-const onSubmit = () => {
+const onSubmit = async () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('공지사항 등록/수정 API 호출');
-    toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항이 등록되었습니다.', life: 3000 });
+  if (!isPass) return;
+
+  let uploadFiles = noticeImagesFiles.value.map(e => e.file);
+
+  try {
+    let successMsg = '';
+
+    if (editMode.value) {
+      // 수정
+
+      await masterNoticeApi.editNotice({
+        noticeCode,
+        title: title.value,
+        content: content.value,
+        imageFiles: uploadFiles,
+      });
+      successMsg = '공지사항이 수정되었습니다.';
+    } else {
+      // 등록
+
+      await masterNoticeApi.createNotice({ title: title.value, content: content.value, imageFiles: uploadFiles });
+      successMsg = '공지사항이 등록되었습니다.';
+    }
+
+    toast.add({ severity: 'success', summary: '처리 성공', detail: successMsg, life: 3000 });
     router.replace({ name: 'hq:board:notice:list' });
+  } catch (e) {
+    // 오류 발생
+    console.log(e);
   }
 };
 
@@ -78,13 +109,13 @@ const clickChoose = () => {
 const changeFile = event => {
   const { files } = event.target;
   if (files.length > 0) {
-    const newImages = Array.from(files).map(e => URL.createObjectURL(e));
-    noticeImages.value = noticeImages.value.concat(newImages);
+    const newImageFiles = Array.from(files).map(e => ({ file: e, preview: URL.createObjectURL(e) }));
+    noticeImagesFiles.value = noticeImagesFiles.value.concat(newImageFiles);
   }
 };
 
 const clickRemoveImage = targetIndex => {
-  noticeImages.value = noticeImages.value.filter((e, i) => i !== targetIndex);
+  noticeImagesFiles.value = noticeImagesFiles.value.filter((e, i) => i !== targetIndex);
 };
 
 watch(
@@ -92,21 +123,20 @@ watch(
   newVal => {
     if (newVal) {
       // 수정모드
-      const foundNotice = mockupNotices.find(e => e.code == newVal);
-      if (!foundNotice) {
-        toast.add({ severity: 'error', summary: '처리 실패', detail: '공지사항 글을 찾을 수 없습니다.', life: 3000 });
-        router.back();
-        return;
-      }
+      editMode.value = true;
 
-      title.value = foundNotice.title;
-      content.value = foundNotice.content;
-      noticeImages.value = [...foundNotice.images];
+      hqNoticeApi.getNotice(noticeCode).then(data => {
+        title.value = data.title;
+        content.value = data.content;
+        noticeImagesFiles.value = []; // 이미지는 다시 선택해야함(기존에 이미지 있었더라도.)
+      });
     } else {
       // 등록모드
+      editMode.value = false;
+
       title.value = '';
       content.value = '';
-      noticeImages.value = [];
+      noticeImagesFiles.value = [];
     }
   },
   { immediate: true },
@@ -114,7 +144,7 @@ watch(
 
 onUnmounted(() => {
   // 남아있는 리소스 정리
-  noticeImages.value.forEach(e => {
+  noticeImagesFiles.value.forEach(e => {
     URL.revokeObjectURL(e);
   });
 });

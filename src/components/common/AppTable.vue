@@ -215,7 +215,7 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
   },
 });
 
-const emit = defineEmits(['changePage', 'reload', 'exportExcel']);
+const emit = defineEmits(['changePage', 'reload', 'exportExcel', 'changeSort']);
 const sorting = defineModel('sorting', { type: String, required: false });
 
 const dt = ref();
@@ -228,7 +228,7 @@ const onClickExportToExcel = () => {
 };
 
 const onSort = event => {
-  // console.log(event);
+  emit('changeSort', event.sortField, event.sortOrder);
 };
 </script>
 

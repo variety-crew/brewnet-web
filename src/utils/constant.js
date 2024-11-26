@@ -165,3 +165,9 @@ export const DELIVERY_STATUS = {
   SHIPPED: 'SHIPPED',
   APPROVED: 'APPROVED',
 };
+
+// 정렬 옵션
+export const SORTING_OPTION = {
+  DATE_ASC: 'dateASC',
+  DATE_DESC: 'dateDESC',
+};
