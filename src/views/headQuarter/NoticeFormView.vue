@@ -10,11 +10,11 @@
       </button>
       <input ref="inputRef" type="file" accept="image/*" multiple style="display: none" @change="changeFile" />
 
-      <ul v-if="noticeImages.length > 0" class="upload-image-list">
+      <ul v-if="noticeImagesFiles.length > 0" class="upload-image-list">
         <li
-          v-for="(uploadImage, i) in noticeImages"
-          :key="uploadImage"
-          :style="{ backgroundImage: `url(${uploadImage})` }"
+          v-for="(uploadImage, i) in noticeImagesFiles"
+          :key="uploadImage.preview"
+          :style="{ backgroundImage: `url(${uploadImage.preview})` }"
           class="upload-image-item"
         >
           <Button
@@ -50,7 +50,7 @@ const { noticeCode } = route.params;
 const title = ref('');
 const content = ref('');
 const inputRef = ref();
-const noticeImages = ref([]);
+const noticeImagesFiles = ref([]);
 const editMode = ref(false);
 
 const masterNoticeApi = new MasterNoticeApi();
@@ -72,17 +72,25 @@ const onSubmit = async () => {
   const isPass = checkForm();
   if (!isPass) return;
 
+  let uploadFiles = noticeImagesFiles.value.map(e => e.file);
+
   try {
     let successMsg = '';
 
     if (editMode.value) {
       // 수정
-      await masterNoticeApi.editNotice({ noticeCode, title: title.value, content: content.value });
+
+      await masterNoticeApi.editNotice({
+        noticeCode,
+        title: title.value,
+        content: content.value,
+        imageFiles: uploadFiles,
+      });
       successMsg = '공지사항이 수정되었습니다.';
     } else {
       // 등록
 
-      await masterNoticeApi.createNotice({ title: title.value, content: content.value });
+      await masterNoticeApi.createNotice({ title: title.value, content: content.value, imageFiles: uploadFiles });
       successMsg = '공지사항이 등록되었습니다.';
     }
 
@@ -101,13 +109,13 @@ const clickChoose = () => {
 const changeFile = event => {
   const { files } = event.target;
   if (files.length > 0) {
-    const newImages = Array.from(files).map(e => URL.createObjectURL(e));
-    noticeImages.value = noticeImages.value.concat(newImages);
+    const newImageFiles = Array.from(files).map(e => ({ file: e, preview: URL.createObjectURL(e) }));
+    noticeImagesFiles.value = noticeImagesFiles.value.concat(newImageFiles);
   }
 };
 
 const clickRemoveImage = targetIndex => {
-  noticeImages.value = noticeImages.value.filter((e, i) => i !== targetIndex);
+  noticeImagesFiles.value = noticeImagesFiles.value.filter((e, i) => i !== targetIndex);
 };
 
 watch(
@@ -120,7 +128,7 @@ watch(
       hqNoticeApi.getNotice(noticeCode).then(data => {
         title.value = data.title;
         content.value = data.content;
-        noticeImages.value = [];
+        noticeImagesFiles.value = []; // 이미지는 다시 선택해야함(기존에 이미지 있었더라도.)
       });
     } else {
       // 등록모드
@@ -128,7 +136,7 @@ watch(
 
       title.value = '';
       content.value = '';
-      noticeImages.value = [];
+      noticeImagesFiles.value = [];
     }
   },
   { immediate: true },
@@ -136,7 +144,7 @@ watch(
 
 onUnmounted(() => {
   // 남아있는 리소스 정리
-  noticeImages.value.forEach(e => {
+  noticeImagesFiles.value.forEach(e => {
     URL.revokeObjectURL(e);
   });
 });
