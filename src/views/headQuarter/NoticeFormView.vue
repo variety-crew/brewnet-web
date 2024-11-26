@@ -39,6 +39,7 @@ import { onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import MasterNoticeApi from '@/utils/api/MasterNoticeApi';
 import { mockupNotices } from '@/utils/mockup';
 
 const toast = useToast();
@@ -49,6 +50,9 @@ const title = ref('');
 const content = ref('');
 const inputRef = ref();
 const noticeImages = ref([]);
+const editMode = ref(false);
+
+const masterNoticeApi = new MasterNoticeApi();
 
 const checkForm = () => {
   try {
@@ -62,12 +66,29 @@ const checkForm = () => {
   }
 };
 
-const onSubmit = () => {
+const onSubmit = async () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('공지사항 등록/수정 API 호출');
-    toast.add({ severity: 'success', summary: '처리 성공', detail: '공지사항이 등록되었습니다.', life: 3000 });
+  if (!isPass) return;
+
+  try {
+    let successMsg = '';
+
+    if (editMode.value) {
+      // 수정
+
+      successMsg = '공지사항이 수정되었습니다.';
+    } else {
+      // 등록
+
+      await masterNoticeApi.createNotice({ title: title.value, content: content.value });
+      successMsg = '공지사항이 등록되었습니다.';
+    }
+
+    toast.add({ severity: 'success', summary: '처리 성공', detail: successMsg, life: 3000 });
     router.replace({ name: 'hq:board:notice:list' });
+  } catch (e) {
+    // 오류 발생
+    console.log(e);
   }
 };
 
@@ -92,6 +113,8 @@ watch(
   newVal => {
     if (newVal) {
       // 수정모드
+      editMode.value = true;
+
       const foundNotice = mockupNotices.find(e => e.code == newVal);
       if (!foundNotice) {
         toast.add({ severity: 'error', summary: '처리 실패', detail: '공지사항 글을 찾을 수 없습니다.', life: 3000 });
@@ -104,6 +127,8 @@ watch(
       noticeImages.value = [...foundNotice.images];
     } else {
       // 등록모드
+      editMode.value = false;
+
       title.value = '';
       content.value = '';
       noticeImages.value = [];

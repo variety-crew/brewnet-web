@@ -16,8 +16,12 @@ export default class MasterNoticeApi extends BaseApiService {
       title,
       content,
     };
-    formData.append('createNoticeRequestDTO', createNoticeRequestDTO);
-    formData.append('image', imageFiles);
+    console.log(createNoticeRequestDTO);
+    const blob = new Blob([JSON.stringify(createNoticeRequestDTO)], { type: 'application/json' });
+    formData.append('createNoticeRequestDTO', blob);
+    imageFiles.forEach(file => {
+      formData.append('image', file);
+    });
 
     return this.post('', formData);
   }
