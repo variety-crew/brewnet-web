@@ -30,7 +30,7 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
-import ItemApi from '@/utils/api/ItemApi';
+import HQItemApi from '@/utils/api/HQItemApi';
 import { CRITERIA_ITEM_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
@@ -49,7 +49,7 @@ const criteriaOptions = computed(() => {
   return CRITERIA_ITEM_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 
-const itemApi = new ItemApi();
+const hpItemApi = new HQItemApi();
 
 const columns = [
   { field: 'categoryName', header: '카테고리' },
@@ -89,11 +89,12 @@ const columns = [
 ];
 
 const getItems = () => {
-  itemApi
+  hpItemApi
     .getItems({
       page: page.value,
       pageSize: pageSize.value,
       itemName: criteria.value.criteria === SEARCH_CRITERIA.ITEM_NAME ? criteria.value.keyword : undefined,
+      itemUniqueCode: criteria.value.criteria === SEARCH_CRITERIA.ITEM_UNIQUE_CODE ? criteria.value.keyword : undefined,
     })
     .then(data => {
       paginatedItems.value = data.content;
