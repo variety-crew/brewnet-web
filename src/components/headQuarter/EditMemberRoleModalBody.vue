@@ -8,15 +8,20 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { computed, inject, onMounted, ref } from 'vue';
 
 import AppModalBody from '@/components/common/AppModalBody.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
+import MasterAuhApi from '@/utils/api/MasterAuthApi';
 import { HEAD_QUARTER_ROLES } from '@/utils/constant';
 import { formatKoMemberRole } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
 
 const dialogRef = inject('dialogRef');
+
+const toast = useToast();
+
 const currentMember = ref(null);
 const selectedRole = ref('');
 const initialRole = computed(() => {
@@ -33,10 +38,15 @@ const roleOptions = computed(() => {
   return headQuarterRoleOptions;
 });
 
-const clickSave = () => {
-  console.log(currentMember.value?.code, '권한 저장');
+const masterAuthApi = new MasterAuhApi();
 
-  dialogRef.value.close();
+const clickSave = () => {
+  masterAuthApi.setMemberRole(currentMember.value.id, selectedRole.value).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '권한이 변경되었습니다.', life: 3000 });
+    dialogRef.value.close({
+      reload: true,
+    });
+  });
 };
 
 onMounted(() => {
