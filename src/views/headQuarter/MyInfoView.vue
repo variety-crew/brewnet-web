@@ -6,6 +6,7 @@
       <AppLabelText label="이메일" :text="memberDetail.email" />
       <AppLabelText label="휴대폰번호" :text="memberDetail.contact" />
       <AppLabelText label="직급" :text="formatKoEmployeePosition(memberDetail.positionName)" />
+      <AppLabelText label="시스템 권한" :text="formatKoMemberRole(memberDetail.role)" />
 
       <template v-if="memberDetail.signatureUrl">
         <div class="signature">
@@ -33,7 +34,7 @@ import { onMounted, ref } from 'vue';
 import AppLabel from '@/components/common/AppLabel.vue';
 import AppLabelText from '@/components/common/AppLabelText.vue';
 import MemberApi from '@/utils/api/MemberApi';
-import { formatKoEmployeePosition } from '@/utils/format';
+import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 
 const memberDetail = ref(null);
 const memberApi = new MemberApi();
