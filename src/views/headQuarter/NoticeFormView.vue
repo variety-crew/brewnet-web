@@ -39,12 +39,13 @@ import { onUnmounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import HQNoticeApi from '@/utils/api/HQNoticeApi';
 import MasterNoticeApi from '@/utils/api/MasterNoticeApi';
-import { mockupNotices } from '@/utils/mockup';
 
 const toast = useToast();
 const router = useRouter();
 const route = useRoute();
+const { noticeCode } = route.params;
 
 const title = ref('');
 const content = ref('');
@@ -53,6 +54,7 @@ const noticeImages = ref([]);
 const editMode = ref(false);
 
 const masterNoticeApi = new MasterNoticeApi();
+const hqNoticeApi = new HQNoticeApi();
 
 const checkForm = () => {
   try {
@@ -75,7 +77,7 @@ const onSubmit = async () => {
 
     if (editMode.value) {
       // 수정
-
+      await masterNoticeApi.editNotice({ noticeCode, title: title.value, content: content.value });
       successMsg = '공지사항이 수정되었습니다.';
     } else {
       // 등록
@@ -115,16 +117,11 @@ watch(
       // 수정모드
       editMode.value = true;
 
-      const foundNotice = mockupNotices.find(e => e.code == newVal);
-      if (!foundNotice) {
-        toast.add({ severity: 'error', summary: '처리 실패', detail: '공지사항 글을 찾을 수 없습니다.', life: 3000 });
-        router.back();
-        return;
-      }
-
-      title.value = foundNotice.title;
-      content.value = foundNotice.content;
-      noticeImages.value = [...foundNotice.images];
+      hqNoticeApi.getNotice(noticeCode).then(data => {
+        title.value = data.title;
+        content.value = data.content;
+        noticeImages.value = [];
+      });
     } else {
       // 등록모드
       editMode.value = false;
