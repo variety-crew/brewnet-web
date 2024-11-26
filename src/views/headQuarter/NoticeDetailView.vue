@@ -1,5 +1,5 @@
 <template>
-  <div v-if="notice" class="notice-detail-container">
+  <div v-if="noticeDetail" class="notice-detail-container">
     <Button
       size="small"
       label="목록으로"
@@ -11,8 +11,8 @@
 
     <div class="top">
       <div class="left">
-        <h2 class="title mb-4">{{ notice.title }}</h2>
-        <small class="small">{{ notice.author }} / {{ notice.createdAt }}</small>
+        <h2 class="title mb-4">{{ noticeDetail.title }}</h2>
+        <small class="small">{{ noticeDetail.memberName }} / {{ noticeDetail.createdAt }}</small>
       </div>
 
       <SpeedDial
@@ -28,8 +28,8 @@
     </div>
 
     <div class="bottom">
-      <p class="content">{{ notice.content }}</p>
-      <AppImageList :images="notice.images" vertical />
+      <p class="content">{{ noticeDetail.content }}</p>
+      <AppImageList :images="noticeDetail.imageList" vertical />
     </div>
   </div>
   <EmptyContent v-else text="공지사항 글을 찾을 수 없습니다." fallback-label="돌아가기" @fallback="goBack" />
@@ -43,14 +43,23 @@ import { useRoute, useRouter } from 'vue-router';
 import AppImageList from '@/components/common/AppImageList.vue';
 import EmptyContent from '@/components/common/EmptyContent.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { mockupNotices } from '@/utils/mockup';
+import HQNoticeApi from '@/utils/api/HQNoticeApi';
 
 const route = useRoute();
+const { noticeCode } = route.params;
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 
-const notice = ref(null);
+const noticeDetail = ref(null);
+
+const hqNoticeApi = new HQNoticeApi();
+
+const getNotice = () => {
+  hqNoticeApi.getNotice(noticeCode).then(data => {
+    noticeDetail.value = data;
+  });
+};
 
 const onDelete = () => {
   router.replace({ name: 'hq:board:notice:list' });
@@ -88,7 +97,7 @@ const goBack = () => {
 };
 
 onMounted(() => {
-  notice.value = mockupNotices.find(e => e.code == route.params.noticeCode);
+  getNotice();
 });
 </script>
 

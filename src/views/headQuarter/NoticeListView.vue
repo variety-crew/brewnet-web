@@ -67,11 +67,11 @@ const getNoticeList = () => {
 
 const clickDetail = data => {
   // 공지사항 상세보기
-  router.push({ name: 'hq:board:notice:detail', params: { noticeCode: data.code } });
+  router.push({ name: 'hq:board:notice:detail', params: { noticeCode: data.noticeCode } });
 };
 
 const clickEdit = data => {
-  router.push({ name: 'hq:board:notice:edit', params: { noticeCode: data.code } });
+  router.push({ name: 'hq:board:notice:edit', params: { noticeCode: data.noticeCode } });
 };
 
 const onDelete = () => {
