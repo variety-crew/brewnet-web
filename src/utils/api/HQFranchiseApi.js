@@ -34,4 +34,9 @@ export default class HQFranchiseApi extends BaseApiService {
 
     return this.get(`?${searchParams.toString()}`);
   }
+
+  // 가맹점 상세조회
+  getFranchise(franchiseCode) {
+    return this.get(`/detail/${franchiseCode}`);
+  }
 }

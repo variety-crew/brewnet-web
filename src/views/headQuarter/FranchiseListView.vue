@@ -70,7 +70,7 @@ const addressSuggestions = ref([]);
 const hqFranchiseApi = new HQFranchiseApi();
 
 const clickEdit = data => {
-  router.push({ name: 'hq:partner:franchise:edit', params: { franchiseCode: data.code } });
+  router.push({ name: 'hq:partner:franchise:edit', params: { franchiseCode: data.franchiseCode } });
 };
 
 const onRemove = targetCode => {

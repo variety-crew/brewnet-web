@@ -35,6 +35,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import { useModal } from '@/hooks/useModal';
+import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
 import ResponsibleFranchiseApi from '@/utils/api/ResponsibleFranchiseApi';
 import { mockupFranchises } from '@/utils/mockup';
 import { notNumber } from '@/utils/regex';
@@ -58,6 +59,7 @@ const ceo = ref('');
 const editMode = ref(false);
 
 const responsibleFranchiseApi = new ResponsibleFranchiseApi();
+const hqFranchiseApi = new HQFranchiseApi();
 
 const onClickSearchAddress = () => {
   openModal({
@@ -119,19 +121,18 @@ const onSubmit = async () => {
 watch(
   () => route.params.franchiseCode,
   newVal => {
-    // 수정모드인 경우 기본 값 설정
     if (newVal) {
       editMode.value = true;
 
-      const foundFranchise = mockupFranchises.find(e => e.code == newVal);
-      if (!foundFranchise) return;
-
-      franchiseName.value = foundFranchise.franchiseName;
-      address.value = foundFranchise.address;
-      addressDetail.value = foundFranchise.detailAddress;
-      contact.value = foundFranchise.contact;
-      businessNumber.value = foundFranchise.businessNumber;
-      ceo.value = foundFranchise.ceo;
+      // 수정모드인 경우 기본 값 설정
+      hqFranchiseApi.getFranchise(franchiseCode).then(data => {
+        franchiseName.value = data.franchiseName;
+        address.value = data.address;
+        addressDetail.value = data.detailAddress;
+        contact.value = data.contact;
+        businessNumber.value = data.businessNumber;
+        ceo.value = data.name;
+      });
     } else {
       // 생성모드는 값 초기화
       editMode.value = false;
