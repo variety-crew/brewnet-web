@@ -118,6 +118,7 @@ const onFormSubmit = async () => {
   } else {
     // 생성
     requestBody.id = loginId.value;
+    requestBody.password = password.value;
     await authApi.createMember(requestBody);
     successMsg = '임직원이 등록되었습니다.';
   }
