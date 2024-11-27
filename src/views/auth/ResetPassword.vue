@@ -20,12 +20,17 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
+import { useTempUserStore } from '@/stores/tempUser';
+import AuthApi from '@/utils/api/AuthApi';
 
 const router = useRouter();
 const toast = useToast();
+const tempUserStore = useTempUserStore();
 
 const password = ref('');
 const confirmPassword = ref('');
+
+const authApi = new AuthApi();
 
 const goBack = () => {
   router.back();
@@ -36,6 +41,7 @@ const checkForm = () => {
     if (!password.value) throw new Error('새 비밀번호를 입력해주세요.');
     if (!confirmPassword.value) throw new Error('비밀번호를 다시 입력해주세요.');
     if (password.value !== confirmPassword.value) throw new Error('두 비밀번호가 일치하지 않습니다.');
+    if (!tempUserStore.resetPasswordLoginId) throw new Error('인증되지 않은 회원입니다.');
 
     return true;
   } catch (e) {
@@ -46,16 +52,17 @@ const checkForm = () => {
 
 const onSubmit = () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('비밀번호 재설정 API 호출');
+  if (!isPass) return;
+
+  authApi.resetPassword(tempUserStore.resetPasswordLoginId, password.value).then(() => {
     toast.add({
       severity: 'success',
       summary: '성공',
       detail: '비밀번호가 재설정되었습니다. 새로운 비밀번호로 로그인해주세요.',
-      life: 4000,
+      life: 4000, // 메시지가 길어서 조금 길게
     });
     router.replace({ name: 'auth:login' });
-  }
+  });
 };
 </script>
 
