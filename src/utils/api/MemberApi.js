@@ -94,7 +94,7 @@ export default class MemberApi extends BaseApiService {
   //
 
   // 내 비밀번호 변경 (로그인 한 유저)
-  changePassword(password) {
-    return this.put('/my-pw', { password });
+  changePassword(password, checkNum) {
+    return this.put('/my-pw', { password, checkNum });
   }
 }

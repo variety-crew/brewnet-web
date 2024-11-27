@@ -30,7 +30,7 @@ const { modelValue } = defineProps({
   },
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'authenticated']);
 
 const password = ref('');
 
@@ -39,9 +39,10 @@ const memberApi = new MemberApi();
 const onSubmit = () => {
   memberApi
     .checkAuthByPassword(password.value)
-    .then(() => {
+    .then(uuid => {
       // 통과
       emit('update:modelValue', true);
+      emit('authenticated', uuid);
     })
     .catch(e => {
       // 실패
