@@ -50,6 +50,7 @@ function onClickRemove(data) {
 const columns = [
   { field: 'memberCode', header: '계정코드' },
   { field: 'loginId', header: '아이디' },
+  { field: 'memberName', header: '점주명' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
   { field: 'franchiseName', header: '지점명' },
