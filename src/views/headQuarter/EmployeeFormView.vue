@@ -5,7 +5,7 @@
     <AppLabelText v-else label="아이디" :text="loginId" />
 
     <!-- 비밀번호 -->
-    <div>
+    <div v-if="!editMode">
       <AppInputPassword v-model="password" label="비밀번호" class="mb-2" />
       <AppInputPassword v-model="confirmPassword" />
     </div>
@@ -36,6 +36,7 @@ import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import AuthApi from '@/utils/api/AuthApi';
+import MemberApi from '@/utils/api/MemberApi';
 import { POSITIONS } from '@/utils/constant';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
@@ -43,6 +44,7 @@ import { mockupEmployees } from '@/utils/mockup';
 import { emailRegex, loginIdRegex, notNumber, passwordRegex } from '@/utils/regex';
 
 const route = useRoute();
+const { memberCode } = route.params;
 const toast = useToast();
 const router = useRouter();
 
@@ -61,6 +63,7 @@ const positionOptions = computed(() => {
 });
 
 const authApi = new AuthApi();
+const memberApi = new MemberApi();
 
 const checkForm = () => {
   emailRegex.lastIndex = 0;
@@ -99,20 +102,22 @@ const onFormSubmit = async () => {
   if (!isPass) return;
 
   let successMsg = '';
+  const requestBody = {
+    name: username.value,
+    email: email.value,
+    contact: phone.value.replace(notNumber, ''),
+    positionName: position.value,
+  };
 
   if (editMode.value) {
     // 수정
+    requestBody.memberCode = memberCode;
+    await memberApi.changeMemberInfo(requestBody);
+    successMsg = '임직원 정보가 수정되었습니다.';
   } else {
     // 생성
-
-    await authApi.createMember({
-      id: loginId.value,
-      password: password.value,
-      name: username.value,
-      email: email.value,
-      contact: phone.value.replace(notNumber, ''),
-      positionName: position.value,
-    });
+    requestBody.id = loginId.value;
+    await authApi.createMember(requestBody);
     successMsg = '임직원이 등록되었습니다.';
   }
 

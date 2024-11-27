@@ -107,6 +107,11 @@ export default class MemberApi extends BaseApiService {
     return this.put('/my-signature', formData);
   }
 
+  // 멤버 정보 수정 (마스터가 수정)
+  changeMemberInfo({ memberCode, password, name, email, contact, positionName, franchiseCode }) {
+    return this.put(`/${memberCode}`, { password, name, email, contact, positionName, franchiseCode });
+  }
+
   //
   // DELETE
   //

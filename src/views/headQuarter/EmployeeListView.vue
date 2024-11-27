@@ -55,7 +55,7 @@ const getEmployees = () => {
 };
 
 function onClickEdit(data) {
-  router.push({ name: 'hq:settings:employee:edit', params: { memberCode: data.code } });
+  router.push({ name: 'hq:settings:employee:edit', params: { memberCode: data.memberCode } });
 }
 
 function onClickEditRole(data) {
