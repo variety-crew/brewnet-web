@@ -5,7 +5,7 @@
     <AppLabelText v-else label="아이디" :text="loginId" />
 
     <!-- 비밀번호 -->
-    <div>
+    <div v-if="!editMode">
       <AppInputPassword v-model="password" label="비밀번호" class="mb-2" />
       <AppInputPassword v-model="confirmPassword" />
     </div>
@@ -17,7 +17,7 @@
     <AppInputText v-model="email" label="이메일" />
 
     <!-- 휴대폰번호 -->
-    <AppInputText v-model="phone" label="휴대폰번호" />
+    <AppInputText v-model="phone" label="휴대폰번호" placeholder="-제외 숫자만 입력" />
 
     <!-- 직급 -->
     <AppSelect v-model="position" label="직급" :options="positionOptions" :initial-value="initialPosition" />
@@ -29,20 +29,24 @@
 <script setup>
 import { useToast } from 'primevue/usetoast';
 import { computed, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import AppLabelText from '@/components/common/AppLabelText.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
+import AuthApi from '@/utils/api/AuthApi';
+import HQMemberApi from '@/utils/api/HQMemberApi';
+import MemberApi from '@/utils/api/MemberApi';
 import { POSITIONS } from '@/utils/constant';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
-import { mockupEmployees } from '@/utils/mockup';
-import { emailRegex, loginIdRegex, passwordRegex } from '@/utils/regex';
+import { emailRegex, loginIdRegex, notNumber, passwordRegex } from '@/utils/regex';
 
 const route = useRoute();
+const { memberCode } = route.params;
 const toast = useToast();
+const router = useRouter();
 
 const loginId = ref('');
 const password = ref('');
@@ -57,6 +61,10 @@ const editMode = ref(false);
 const positionOptions = computed(() => {
   return POSITIONS.map(e => makeSelectOption(formatKoEmployeePosition(e), e));
 });
+
+const authApi = new AuthApi();
+const memberApi = new MemberApi();
+const hqMemberApi = new HQMemberApi();
 
 const checkForm = () => {
   emailRegex.lastIndex = 0;
@@ -90,11 +98,35 @@ const checkForm = () => {
   }
 };
 
-const onFormSubmit = () => {
+const onFormSubmit = async () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('통과');
+  if (!isPass) return;
+
+  let successMsg = '';
+  const requestBody = {
+    name: username.value,
+    email: email.value,
+    contact: phone.value.replace(notNumber, ''),
+    positionName: position.value,
+  };
+
+  if (editMode.value) {
+    // 수정
+    requestBody.memberCode = memberCode;
+    await memberApi.changeMemberInfo(requestBody);
+    successMsg = '임직원 정보가 수정되었습니다.';
+  } else {
+    // 생성
+    requestBody.id = loginId.value;
+    requestBody.password = password.value;
+    await authApi.createMember(requestBody);
+    successMsg = '임직원이 등록되었습니다.';
   }
+
+  if (!successMsg) return;
+
+  toast.add({ severity: 'success', summary: '처리 성공', detail: successMsg, life: 3000 });
+  router.push({ name: 'hq:settings:employee:list' });
 };
 
 watch(
@@ -104,15 +136,16 @@ watch(
     if (newVal) {
       editMode.value = true;
 
-      const foundEmployee = mockupEmployees.find(e => e.code == route.params.memberCode);
-      if (!foundEmployee) return;
+      hqMemberApi.getMemberInfo(memberCode).then(member => {
+        if (!member) return;
 
-      loginId.value = foundEmployee.id;
-      username.value = foundEmployee.name;
-      email.value = foundEmployee.email;
-      phone.value = foundEmployee.contact;
-      position.value = foundEmployee.position;
-      initialPosition.value = foundEmployee.position; // Select의 default 값은 따로 설정
+        loginId.value = member.id;
+        username.value = member.name;
+        email.value = member.email;
+        phone.value = member.contact;
+        position.value = member.positionName;
+        initialPosition.value = member.positionName; // Select의 default 값은 따로 설정 필요
+      });
     } else {
       // 생성모드는 값 초기화
       editMode.value = false;
@@ -134,6 +167,6 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: fit-content;
+  width: 350px;
 }
 </style>

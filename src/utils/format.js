@@ -26,7 +26,7 @@ export const formatKoEmployeePosition = position => {
       return '과장';
 
     case POSITION.CEO:
-      return '대표이사';
+      return '대표';
 
     default:
       return '';

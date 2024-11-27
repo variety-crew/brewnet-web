@@ -30,14 +30,19 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import { useTempUserStore } from '@/stores/tempUser';
+import EmailApi from '@/utils/api/EmailApi';
 
 const router = useRouter();
 const toast = useToast();
+const tempUserStore = useTempUserStore();
 
 const id = ref('');
 const email = ref('');
 const verifyCode = ref('');
 const isSend = ref(false);
+
+const emailApi = new EmailApi();
 
 const goBack = () => {
   router.back();
@@ -57,10 +62,17 @@ const checkFormSendCode = () => {
 
 const clickSendVerifyCode = () => {
   const isPass = checkFormSendCode();
-  if (isPass) {
-    console.log('인증번호 전송 API 호출 필요');
+  if (!isPass) return;
+
+  emailApi.sendVerifyCodeByEmail(id.value, email.value).then(() => {
+    toast.add({
+      severity: 'success',
+      summary: '처리 성공',
+      detail: '입력하신 이메일로 인증코드가 전송되었습니다.',
+      life: 3000,
+    });
     isSend.value = true;
-  }
+  });
 };
 
 const checkForm = () => {
@@ -77,10 +89,13 @@ const checkForm = () => {
 
 const onSubmit = () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('비밀번호 찾기 API 연동 필요');
+  if (!isPass) return;
+
+  emailApi.checkVerifyCodeByEmail(email.value, verifyCode.value).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '인증되었습니다.', life: 3000 });
+    tempUserStore.setResetPasswordLoginId(id.value); // 저장하여 다음 페이지에 사용
     router.replace({ name: 'auth:reset-password' });
-  }
+  });
 };
 </script>
 
