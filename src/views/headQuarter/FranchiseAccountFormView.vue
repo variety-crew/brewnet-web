@@ -10,6 +10,9 @@
       <AppInputPassword v-model="confirmPassword" name="confirmPassword" />
     </div>
 
+    <!-- 점주명 -->
+    <AppInputText v-model="username" label="점주명" />
+
     <!-- 이메일 -->
     <AppInputText v-model="email" label="이메일" name="email" />
 
@@ -50,8 +53,10 @@ import AppLabelText from '@/components/common/AppLabelText.vue';
 import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import AuthApi from '@/utils/api/AuthApi';
+import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupFranchiseAccounts, mockupFranchises } from '@/utils/mockup';
+import { mockupFranchiseAccounts } from '@/utils/mockup';
 import { emailRegex, loginIdRegex } from '@/utils/regex';
 
 const router = useRouter();
@@ -61,6 +66,7 @@ const toast = useToast();
 const loginId = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const username = ref('');
 const email = ref('');
 const phone = ref('');
 const selectedFranchise = ref(null);
@@ -70,6 +76,9 @@ const editMode = ref(false);
 const franchiseSuggestions = computed(() => {
   return filteredFranchises.value.map(e => makeAutocompleteSuggestion(e.code, e.franchiseName));
 });
+
+const authApi = new AuthApi();
+const hqFranchiseApi = new HQFranchiseApi();
 
 const checkForm = () => {
   emailRegex.lastIndex = 0;
@@ -101,17 +110,39 @@ const checkForm = () => {
   }
 };
 
-const onFormSubmit = () => {
+const onFormSubmit = async () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('통과');
+  if (!isPass) return;
+
+  let success = '';
+
+  if (editMode.value) {
+    // 수정
+  } else {
+    // 등록
+    await authApi.createMember({
+      id: loginId.value,
+      password: password.value,
+      name: username.value,
+      email: email.value,
+      contact: phone.value,
+      franchiseCode: selectedFranchise.value.code,
+    });
+
+    success = '가맹점 계정이 생성되었습니다.';
   }
+
+  if (!success) return;
+
+  toast.add({ severity: 'success', summary: '처리 성공', detail: success, life: 3000 });
+  router.push({ name: 'hq:partner:franchise-account:list' });
 };
 
 const search = event => {
-  console.log('auto complete 검색할 keyword:', event.query);
   // 가맹점 검색
-  filteredFranchises.value = [...mockupFranchises];
+  hqFranchiseApi.getFranchiseList({ franchiseName: event.query || undefined }).then(data => {
+    filteredFranchises.value = data.content;
+  });
 };
 
 const clickAddFranchise = () => {
