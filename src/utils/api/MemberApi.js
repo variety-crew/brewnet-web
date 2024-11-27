@@ -106,4 +106,13 @@ export default class MemberApi extends BaseApiService {
 
     return this.put('/my-signature', formData);
   }
+
+  //
+  // DELETE
+  //
+
+  // 내 서명 삭제
+  deleteMySignature(checkNum) {
+    return this.delete('/my-signature', { checkNum });
+  }
 }
