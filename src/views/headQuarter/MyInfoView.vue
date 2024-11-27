@@ -11,14 +11,7 @@
       <template v-if="memberDetail.signatureUrl">
         <div class="signature">
           <AppLabel label="서명" />
-          <img :src="memberDetail.signatureUrl" alt="내 서명 이미지" />
-          <Button
-            label="서명 삭제"
-            size="small"
-            severity="secondary"
-            variant="outlined"
-            @click="clickRemoveSignature"
-          />
+          <Image :src="memberDetail.signatureUrl" alt="내 서명 이미지" width="200" preview />
         </div>
       </template>
       <template v-else>
@@ -63,7 +56,7 @@ onMounted(() => {
     flex-direction: column;
     gap: 5px;
 
-    img {
+    .image {
       width: 70px;
       height: 70px;
       object-fit: contain;

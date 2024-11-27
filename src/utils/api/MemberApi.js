@@ -97,4 +97,13 @@ export default class MemberApi extends BaseApiService {
   changePassword(password, checkNum) {
     return this.put('/my-pw', { password, checkNum });
   }
+
+  // 내 서명 변경
+  changeMySignature(imageFile, checkNum) {
+    const formData = new FormData();
+    formData.append('signatureImage', imageFile);
+    formData.append('checkNumDTO', this.makeBlobJson({ checkNum }));
+
+    return this.put('/my-signature', formData);
+  }
 }

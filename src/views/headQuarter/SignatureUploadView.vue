@@ -1,5 +1,5 @@
 <template>
-  <AuthorizationRequiredArea v-model="isAuthorized">
+  <AuthorizationRequiredArea v-model="isAuthorized" @authenticated="onAuthenticated">
     <div class="signature-upload-container">
       <Button size="small" label="파일 선택" variant="outlined" severity="secondary" @click="clickChoose" />
       <input ref="inputRef" type="file" accept="image/*" style="display: none" @change="changeFile" />
@@ -14,10 +14,11 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AuthorizationRequiredArea from '@/components/common/AuthorizationRequiredArea.vue';
+import MemberApi from '@/utils/api/MemberApi';
 
 const router = useRouter();
 const toast = useToast();
@@ -25,6 +26,10 @@ const toast = useToast();
 const isAuthorized = ref(false);
 const previewUrl = ref(null);
 const inputRef = ref(null);
+let signatureFile = null;
+
+let checkNum = null;
+const memberApi = new MemberApi();
 
 const clickChoose = () => {
   inputRef.value?.click();
@@ -34,15 +39,25 @@ const changeFile = event => {
   const { files } = event.target;
   if (files.length > 0) {
     const file = files[0];
-    URL.revokeObjectURL(previewUrl); // 기존 파일 지우고
-    previewUrl.value = URL.createObjectURL(file); // 새로운 파일로 교체
+
+    // 기존 파일 지우고
+    URL.revokeObjectURL(previewUrl);
+
+    // 새로운 파일로 교체
+    previewUrl.value = URL.createObjectURL(file);
+    signatureFile = file;
   }
 };
 
 const saveImage = () => {
-  console.log('서명 저장 API');
-  toast.add({ severity: 'success', summary: '성공', detail: '서명이 등록되었습니다.', life: 3000 });
-  router.replace({ name: 'hq:my:info' });
+  memberApi.changeMySignature(signatureFile, checkNum).then(() => {
+    toast.add({ severity: 'success', summary: '성공', detail: '서명이 등록되었습니다.', life: 3000 });
+    router.replace({ name: 'hq:my:info' });
+  });
+};
+
+const onAuthenticated = uuid => {
+  checkNum = uuid;
 };
 
 onUnmounted(() => {
