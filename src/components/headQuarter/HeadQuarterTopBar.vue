@@ -4,6 +4,8 @@
       <RouterLink :to="{ name: 'hq:home' }">
         <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
       </RouterLink>
+
+      <div class="hq-mark">본사</div>
     </template>
 
     <template #end>
@@ -136,6 +138,12 @@ function clickMyInbox() {
       color: var(--p-primary-600);
       border-bottom: 2px solid var(--p-primary-600);
     }
+  }
+
+  .hq-mark {
+    font-size: 35px;
+    color: blue;
+    font-weight: bold;
   }
 }
 </style>

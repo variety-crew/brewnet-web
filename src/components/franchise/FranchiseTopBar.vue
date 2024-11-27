@@ -4,6 +4,8 @@
       <RouterLink :to="{ name: 'fc:home' }">
         <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
       </RouterLink>
+
+      <div class="fc-mark">가맹점</div>
     </template>
 
     <template #end>
@@ -126,6 +128,12 @@ function clickForceLogout() {
       color: var(--p-primary-600);
       border-bottom: 2px solid var(--p-primary-600);
     }
+  }
+
+  .fc-mark {
+    font-size: 35px;
+    color: darkorange;
+    font-weight: bold;
   }
 }
 </style>
