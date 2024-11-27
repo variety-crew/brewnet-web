@@ -12,15 +12,18 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
+import MemberApi from '@/utils/api/MemberApi';
 
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
+const toast = useToast();
 
 const page = ref(0);
 const paginatedFranchiseMembers = ref([]);
@@ -28,13 +31,30 @@ const totalElements = ref(0);
 const pageSize = ref(15);
 
 const hqFranchiseApi = new HQFranchiseApi();
+const memberApi = new MemberApi();
 
 function onClickEdit(data) {
   router.push({ name: 'hq:partner:franchise-account:edit', params: { memberCode: data.memberCode } });
 }
 
-function onAcceptRemove() {
-  console.log('삭제 완료');
+const getFranchiseMembers = () => {
+  hqFranchiseApi.getFranchiseMembers({ page: page.value, pageSize: pageSize.value }).then(data => {
+    totalElements.value = data.totalElements;
+    paginatedFranchiseMembers.value = data.content;
+  });
+};
+
+const reload = () => {
+  getFranchiseMembers();
+};
+
+function onAcceptRemove(targetMemberLoginId) {
+  memberApi.deactivateMember(targetMemberLoginId).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '계정이 비활성화되었습니다.', life: 3000 });
+
+    // 데이터 refresh
+    reload();
+  });
 }
 
 function onClickRemove(data) {
@@ -43,7 +63,7 @@ function onClickRemove(data) {
     message: `[${data.franchiseName}] 계정을 삭제하시겠습니까?`,
     acceptLabel: '네, 삭제합니다.',
     danger: true,
-    onAccept: onAcceptRemove,
+    onAccept: () => onAcceptRemove(data.loginId),
   });
 }
 
@@ -72,19 +92,8 @@ const columns = [
   },
 ];
 
-const getFranchiseMembers = () => {
-  hqFranchiseApi.getFranchiseMembers({ page: page.value, pageSize: pageSize.value }).then(data => {
-    totalElements.value = data.totalElements;
-    paginatedFranchiseMembers.value = data.content;
-  });
-};
-
 const onChangePage = event => {
   page.value = event.page;
-};
-
-const reload = () => {
-  getFranchiseMembers();
 };
 
 onMounted(() => {

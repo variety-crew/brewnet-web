@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { ref, onMounted, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -35,6 +36,7 @@ const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuart
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
+const toast = useToast();
 
 const getInitialCriteria = () => ({ username: '' });
 const criteria = ref(getInitialCriteria());
@@ -74,8 +76,17 @@ function onClickEditRole(data) {
   });
 }
 
-function onAcceptRemove() {
-  console.log('삭제 완료');
+const reload = () => {
+  getEmployees();
+};
+
+function onAcceptRemove(targetMemberLoginId) {
+  memberApi.deactivateMember(targetMemberLoginId).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '계정이 비활성화되었습니다.', life: 3000 });
+
+    // 데이터 refresh
+    reload();
+  });
 }
 
 function onClickRemove(data) {
@@ -84,7 +95,7 @@ function onClickRemove(data) {
     message: `[${data.name}] 임직원을 삭제하시겠습니까?`,
     acceptLabel: '네, 삭제합니다.',
     danger: true,
-    onAccept: onAcceptRemove,
+    onAccept: () => onAcceptRemove(data.id),
   });
 }
 
@@ -124,10 +135,6 @@ const columns = [
 
 const onChangePage = event => {
   page.value = event.page;
-};
-
-const reload = () => {
-  getEmployees();
 };
 
 const onSearch = () => {

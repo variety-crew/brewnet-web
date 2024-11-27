@@ -120,4 +120,9 @@ export default class MemberApi extends BaseApiService {
   deleteMySignature(checkNum) {
     return this.delete('/my-signature', { checkNum });
   }
+
+  // 계정 비활성화
+  deactivateMember(targetMemberLoginId) {
+    return this.delete('', { loginId: targetMemberLoginId });
+  }
 }
