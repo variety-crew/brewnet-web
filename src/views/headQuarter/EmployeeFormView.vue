@@ -36,11 +36,11 @@ import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import AuthApi from '@/utils/api/AuthApi';
+import HQMemberApi from '@/utils/api/HQMemberApi';
 import MemberApi from '@/utils/api/MemberApi';
 import { POSITIONS } from '@/utils/constant';
 import { formatKoEmployeePosition } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
-import { mockupEmployees } from '@/utils/mockup';
 import { emailRegex, loginIdRegex, notNumber, passwordRegex } from '@/utils/regex';
 
 const route = useRoute();
@@ -64,6 +64,7 @@ const positionOptions = computed(() => {
 
 const authApi = new AuthApi();
 const memberApi = new MemberApi();
+const hqMemberApi = new HQMemberApi();
 
 const checkForm = () => {
   emailRegex.lastIndex = 0;
@@ -134,15 +135,16 @@ watch(
     if (newVal) {
       editMode.value = true;
 
-      const foundEmployee = mockupEmployees.find(e => e.code == route.params.memberCode);
-      if (!foundEmployee) return;
+      hqMemberApi.getMemberInfo(memberCode).then(member => {
+        if (!member) return;
 
-      loginId.value = foundEmployee.id;
-      username.value = foundEmployee.name;
-      email.value = foundEmployee.email;
-      phone.value = foundEmployee.contact;
-      position.value = foundEmployee.position;
-      initialPosition.value = foundEmployee.position; // Select의 default 값은 따로 설정
+        loginId.value = member.id;
+        username.value = member.name;
+        email.value = member.email;
+        phone.value = member.contact;
+        position.value = member.positionName;
+        initialPosition.value = member.positionName; // Select의 default 값은 따로 설정 필요
+      });
     } else {
       // 생성모드는 값 초기화
       editMode.value = false;
@@ -164,6 +166,6 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: fit-content;
+  width: 350px;
 }
 </style>
