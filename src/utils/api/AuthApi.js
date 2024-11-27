@@ -32,7 +32,7 @@ export default class AuthApi extends BaseApiService {
   }
 
   // 계정 생성
-  createMember({ id, password, name, email, contact, positionName, franchiseName }) {
+  createMember({ id, password, name, email, contact, positionName, franchiseCode }) {
     return this.post('/sign-up', {
       id,
       password,
@@ -40,7 +40,7 @@ export default class AuthApi extends BaseApiService {
       email,
       contact,
       positionName,
-      franchiseName,
+      franchiseCode,
     });
   }
 }

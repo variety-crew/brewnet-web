@@ -41,7 +41,9 @@ const roleOptions = computed(() => {
 const masterAuthApi = new MasterAuhApi();
 
 const clickSave = () => {
-  masterAuthApi.setMemberRole(currentMember.value.id, selectedRole.value).then(() => {
+  const changeToRole = selectedRole.value === 'null' ? null : selectedRole.value;
+
+  masterAuthApi.setMemberRole(currentMember.value.id, changeToRole).then(() => {
     toast.add({ severity: 'success', summary: '처리 성공', detail: '권한이 변경되었습니다.', life: 3000 });
     dialogRef.value.close({
       reload: true,
