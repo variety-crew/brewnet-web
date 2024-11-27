@@ -43,4 +43,13 @@ export default class AuthApi extends BaseApiService {
       franchiseCode,
     });
   }
+
+  //
+  // PUT
+  //
+
+  // 비밀번호 재설정(로그인 전)
+  resetPassword(loginId, password) {
+    return this.put('/pw', { loginId, password });
+  }
 }
