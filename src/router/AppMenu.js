@@ -137,6 +137,7 @@ export default class AppMenu {
           items: [
             this.#makeMenu('품목 카테고리 관리', 'hq:stock:item-category'),
             this.#makeMenu('품목 조회', 'hq:stock:item:list'),
+            this.#makeMenu('품목 등록', 'hq:stock:item:create'),
           ],
         },
       ];
