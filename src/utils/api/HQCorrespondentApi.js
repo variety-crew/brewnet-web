@@ -10,7 +10,7 @@ export default class HQCorrespondentApi extends BaseApiService {
   //
 
   // 거래처 목록 조회
-  getCorrespondent({ page = 1, pageSize = 15, correspondentCode, correspondentName }) {
+  getCorrespondents({ page = 1, pageSize = 15, correspondentCode, correspondentName }) {
     const searchParams = new URLSearchParams();
     searchParams.append('pageNumber', page);
     searchParams.append('pageSize', pageSize);

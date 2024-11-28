@@ -37,7 +37,7 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useModal } from '@/hooks/useModal';
-import CorrespondentApi from '@/utils/api/CorrespondentApi';
+import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
 import { CRITERIA_CORRESPONDENT_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { formatKoSearchCriteria } from '@/utils/format';
@@ -63,7 +63,7 @@ const criteriaOptions = computed(() => {
   return CRITERIA_CORRESPONDENT_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 
-const correspondentApi = new CorrespondentApi();
+const hqCorrespondentApi = new HQCorrespondentApi();
 
 const viewItems = data => {
   openModal({
@@ -121,12 +121,14 @@ const columns = [
 ];
 
 const getCorrespondents = () => {
-  correspondentApi
+  hqCorrespondentApi
     .getCorrespondents({
       page: page.value,
       pageSize: pageSize.value,
-      searchType: criteria.value.criteria,
-      keyword: criteria.value.keyword,
+      correspondentCode:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_CODE ? criteria.value.keyword : undefined,
+      correspondentName:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_NAME ? criteria.value.keyword : undefined,
     })
     .then(data => {
       paginatedCorrespondents.value = data.data.map(e => ({

@@ -26,7 +26,7 @@
 <script setup>
 import { computed, inject, onMounted, ref } from 'vue';
 
-import CorrespondentApi from '@/utils/api/CorrespondentApi';
+import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
 import { CRITERIA_CORRESPONDENT_ITEM_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
@@ -50,7 +50,7 @@ const criteriaOptions = computed(() => {
   return CRITERIA_CORRESPONDENT_ITEM_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 
-const correspondentApi = new CorrespondentApi();
+const hqCorrespondentApi = new HQCorrespondentApi();
 
 const columns = [
   {
@@ -99,13 +99,13 @@ const columns = [
 ];
 
 const getCorrespondentItems = () => {
-  correspondentApi
+  hqCorrespondentApi
     .getCorrespondentItems({
       page: page.value,
       pageSize: pageSize.value,
       correspondentCode: currentCorrespondentCode.value,
-      searchType: criteria.value.criteria,
-      keyword: criteria.value.keyword,
+      itemUniqueCode: criteria.value.criteria === SEARCH_CRITERIA.ITEM_UNIQUE_CODE ? criteria.value.keyword : undefined,
+      itemName: criteria.value.criteria === SEARCH_CRITERIA.ITEM_NAME ? criteria.value.keyword : undefined,
     })
     .then(data => {
       paginatedItems.value = data.data;

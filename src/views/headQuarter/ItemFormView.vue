@@ -79,7 +79,7 @@ const hqCorrespondentApi = new HQCorrespondentApi();
 
 const searchCorrespondent = event => {
   // 가맹점 검색
-  hqCorrespondentApi.getCorrespondent({ correspondentName: event.query || undefined }).then(data => {
+  hqCorrespondentApi.getCorrespondents({ correspondentName: event.query || undefined }).then(data => {
     filteredCorrespondents.value = data.data;
   });
 };
