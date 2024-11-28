@@ -281,6 +281,22 @@ const routes = [
               breadcrumb: '품목 조회',
             },
           },
+          {
+            path: 'item/create',
+            name: 'hq:stock:item:create',
+            component: () => import('@/views/headQuarter/ItemFormView.vue'),
+            meta: {
+              breadcrumb: '품목 등록',
+            },
+          },
+          {
+            path: 'item/:itemCode/edit',
+            name: 'hq:stock:item:edit',
+            component: () => import('@/views/headQuarter/ItemFormView.vue'),
+            meta: {
+              breadcrumb: '품목 수정',
+            },
+          },
         ],
       },
       {

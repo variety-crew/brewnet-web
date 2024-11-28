@@ -24,16 +24,23 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQItemApi from '@/utils/api/HQItemApi';
 import { CRITERIA_ITEM_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
+
+const toast = useToast();
+const { showConfirm } = useAppConfirmModal();
+const router = useRouter();
 
 const page = ref(0);
 const pageSize = ref(15);
@@ -50,6 +57,36 @@ const criteriaOptions = computed(() => {
 });
 
 const hpItemApi = new HQItemApi();
+
+const clickEdit = targetItem => {
+  router.push({ name: 'hq:stock:item:edit', params: { itemCode: targetItem.itemCode } });
+};
+
+const onChangeActiveStatus = targetItem => {
+  if (targetItem.active) {
+    // 활성 -> 비활성
+
+    // TODO 품목 비활성화 API
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '품목이 비활성화 되었습니다.', life: 3000 });
+  } else {
+    // 비활성 -> 활성
+
+    // TODO 품목 활성 API
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '품목이 활성화 되었습니다.', life: 3000 });
+  }
+
+  // TODO reload
+};
+
+const clickChangeStatus = targetItem => {
+  showConfirm({
+    header: '활성 상태 변경',
+    message: `품목코드 ${targetItem.itemUniqueCode} [${targetItem.name}]의 상태를 ${targetItem.active ? '비활성화' : '활성화'}합니다.`,
+    acceptLabel: targetItem.active ? '비활성 상태로 변경' : '활성 상태로 변경',
+    onAccept: () => onChangeActiveStatus(targetItem),
+    danger: targetItem.active,
+  });
+};
 
 const columns = [
   { field: 'categoryName', header: '카테고리' },
@@ -84,6 +121,23 @@ const columns = [
       tag: {
         getSeverity: data => (data.active ? undefined : 'secondary'),
       },
+    },
+  },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
+        {
+          getLabel: () => '수정',
+          clickHandler: data => clickEdit(data),
+        },
+        {
+          getLabel: data => (data.active ? '비활성' : '활성'),
+          clickHandler: data => clickChangeStatus(data),
+          getSeverity: data => (data.active ? 'danger' : undefined),
+        },
+      ],
     },
   },
 ];
