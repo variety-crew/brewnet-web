@@ -43,4 +43,19 @@ export default class HQCorrespondentApi extends BaseApiService {
 
     return this.get(`/items?${searchParams.toString()}`);
   }
+
+  // 엑셀 다운로드용
+  exportExcel({ correspondentCode, correspondentName }) {
+    const searchParams = new URLSearchParams();
+
+    if (correspondentCode) {
+      searchParams.append('correspondentCode', correspondentCode);
+    }
+
+    if (correspondentName) {
+      searchParams.append('correspondentName', correspondentName);
+    }
+
+    return this.get(`/print?${searchParams.toString()}`);
+  }
 }

@@ -53,8 +53,7 @@
               icon="pi pi-download"
               label="엑셀 다운로드"
               size="small"
-              variant="outlined"
-              severity="secondary"
+              severity="success"
               @click="onClickExportToExcel"
             />
             <Button

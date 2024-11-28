@@ -17,8 +17,10 @@
       :paginated-data="paginatedCorrespondents"
       :rows-per-page="pageSize"
       :total-elements="totalElements"
+      show-excel-export
       @reload="onReload"
       @change-page="onChangePage"
+      @export-excel="onExportToExcel"
     />
 
     <DynamicDialog />
@@ -144,8 +146,12 @@ const onReload = () => {
 };
 
 const onChangePage = event => {
-  page.value = event.page;
+  page.value = event.page + 1;
   getCorrespondents();
+};
+
+const onExportToExcel = () => {
+  // TODO 엑셀용 데이터 API
 };
 
 onMounted(() => {
