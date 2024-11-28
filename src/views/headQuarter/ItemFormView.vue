@@ -28,10 +28,13 @@
       @change-file="onChangeFile"
     />
     <RemovableImage v-if="previewUrl" :image-url="previewUrl" @remove-image="onRemove" />
+
+    <Button label="저장" size="small" @click="clickSave" />
   </div>
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -47,7 +50,8 @@ import { makeAutocompleteSuggestion, makeSelectOption } from '@/utils/helper';
 
 const route = useRoute();
 const { itemCode } = route.params;
-const { previewUrl, file, onChangeFile, onRemove } = useFile();
+const { previewUrl, file: itemImageFile, onChangeFile, onRemove } = useFile();
+const toast = useToast();
 
 const editMode = ref(false);
 const superCategories = ref(['NON_FOOD', 'FOOD']);
@@ -80,6 +84,30 @@ const searchCorrespondent = event => {
   });
 };
 
+const checkForm = () => {
+  try {
+    if (!selectedSubCategory.value) throw new Error('상위 카테고리를 선택해주세요.');
+    if (!selectedSubCategory.value) throw new Error('하위 카테고리를 선택해주세요.');
+    if (!itemName.value) throw new Error('품목명을 입력해주세요.');
+    if (!sellingPrice.value) throw new Error('판매단가를 입력해주세요.');
+    if (!purchasePrice.value) throw new Error('구매단가를 입력해주세요.');
+    if (!selectedCorrespondent.value) throw new Error('취급거래처를 입력해주세요.');
+    if (!safetyStock.value) throw new Error('안전재고값을 입력해주세요.');
+
+    return true;
+  } catch (e) {
+    toast.add({ severity: 'error', summary: '입력 확인', detail: e.message, life: 3000 });
+    return false;
+  }
+};
+
+const clickSave = () => {
+  const isPass = checkForm();
+  if (!isPass) return;
+
+  // TODO 품목 등록/수정 API
+};
+
 watch(
   () => route.params.itemCode,
   newItemCode => {
@@ -101,6 +129,7 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 400px;
 
   .category-area {
     display: flex;
