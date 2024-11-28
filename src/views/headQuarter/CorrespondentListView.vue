@@ -17,8 +17,10 @@
       :paginated-data="paginatedCorrespondents"
       :rows-per-page="pageSize"
       :total-elements="totalElements"
+      show-excel-export
       @reload="onReload"
       @change-page="onChangePage"
+      @export-excel="onExportToExcel"
     />
 
     <DynamicDialog />
@@ -26,15 +28,18 @@
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import XLSX from 'xlsx';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useModal } from '@/hooks/useModal';
-import CorrespondentApi from '@/utils/api/CorrespondentApi';
+import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
 import { CRITERIA_CORRESPONDENT_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
 
@@ -58,7 +63,7 @@ const criteriaOptions = computed(() => {
   return CRITERIA_CORRESPONDENT_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 
-const correspondentApi = new CorrespondentApi();
+const hqCorrespondentApi = new HQCorrespondentApi();
 
 const viewItems = data => {
   openModal({
@@ -116,15 +121,24 @@ const columns = [
 ];
 
 const getCorrespondents = () => {
-  correspondentApi
+  hqCorrespondentApi
     .getCorrespondents({
       page: page.value,
       pageSize: pageSize.value,
-      searchType: criteria.value.criteria,
-      keyword: criteria.value.keyword,
+      correspondentCode:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_CODE ? criteria.value.keyword : undefined,
+      correspondentName:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_NAME ? criteria.value.keyword : undefined,
     })
     .then(data => {
-      paginatedCorrespondents.value = data.data.map(e => ({ ...e, address: `${e.address} ${e.detailAddress}` })); // address는 하나로 표시하기 위해
+      paginatedCorrespondents.value = data.data.map(e => ({
+        correspondentCode: e.correspondentCode,
+        correspondentName: e.correspondentName,
+        managerName: e.managerName,
+        address: `${e.address} ${e.detailAddress}`, // address는 하나로 표시하기 위해
+        contact: e.contact,
+        email: e.email,
+      }));
       totalElements.value = data.totalCount;
     });
 };
@@ -144,8 +158,39 @@ const onReload = () => {
 };
 
 const onChangePage = event => {
-  page.value = event.page;
+  page.value = event.page + 1;
   getCorrespondents();
+};
+
+const onExportToExcel = () => {
+  hqCorrespondentApi
+    .getAllCorrespondentList({
+      correspondentCode:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_CODE ? criteria.value.keyword : undefined,
+      correspondentName:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_NAME ? criteria.value.keyword : undefined,
+    })
+    .then(rows => {
+      const excelRows = rows.map(e => ({
+        correspondentCode: e.correspondentCode,
+        correspondentName: e.correspondentName,
+        managerName: e.managerName,
+        address: `${e.address} ${e.detailAddress}`, // address는 하나로 표시하기 위해
+        contact: e.contact,
+        email: e.email,
+      }));
+
+      const orderedFields = columns.filter(e => e.field).map(e => e.field);
+      const headerNames = columns.filter(e => e.field).map(e => e.header);
+
+      const excelManager = new ExcelManager(excelRows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.setSheetName('거래처목록');
+      const maxAddressWidth = excelRows.reduce((acc, r) => Math.max(acc, r.address.length), 10); // 가장 긴 주소의 길이를 cell width로 설정
+      excelManager.setCellWidths([{ field: 'address', width: maxAddressWidth }]);
+
+      excelManager.export(`거래처목록${dayjs().format('YYMMDD')}`);
+    });
 };
 
 onMounted(() => {

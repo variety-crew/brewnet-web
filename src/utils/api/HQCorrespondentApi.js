@@ -10,7 +10,7 @@ export default class HQCorrespondentApi extends BaseApiService {
   //
 
   // 거래처 목록 조회
-  getCorrespondent({ page = 1, pageSize = 15, correspondentCode, correspondentName }) {
+  getCorrespondents({ page = 1, pageSize = 15, correspondentCode, correspondentName }) {
     const searchParams = new URLSearchParams();
     searchParams.append('pageNumber', page);
     searchParams.append('pageSize', pageSize);
@@ -42,5 +42,34 @@ export default class HQCorrespondentApi extends BaseApiService {
     }
 
     return this.get(`/items?${searchParams.toString()}`);
+  }
+
+  // 엑셀 다운로드용 전체 데이터
+  getAllCorrespondentList({ correspondentCode, correspondentName }) {
+    const searchParams = new URLSearchParams();
+
+    if (correspondentCode) {
+      searchParams.append('correspondentCode', correspondentCode);
+    }
+    if (correspondentName) {
+      searchParams.append('correspondentName', correspondentName);
+    }
+
+    return this.get(`/print?${searchParams.toString()}`);
+  }
+
+  // 엑셀 다운로드용 전체 데이터
+  getAllCorrespondentItemList({ correspondentCode, itemUniqueCode, itemName }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('correspondentCode', correspondentCode);
+
+    if (itemUniqueCode) {
+      searchParams.append('itemUniqueCode', itemUniqueCode);
+    }
+    if (itemName) {
+      searchParams.append('itemName', itemName);
+    }
+
+    return this.get(`/print-items?${searchParams.toString()}`);
   }
 }

@@ -152,7 +152,7 @@ const hqDocumentApi = new HQDocumentApi();
 
 const onCompleteInputSupplier = event => {
   // 거래처명으로 검색
-  hqCorrespondentApi.getCorrespondent({ correspondentName: event.query }).then(data => {
+  hqCorrespondentApi.getCorrespondents({ correspondentName: event.query }).then(data => {
     filteredSuppliers.value = data.data;
   });
 };
