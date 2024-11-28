@@ -44,14 +44,13 @@ export default class HQCorrespondentApi extends BaseApiService {
     return this.get(`/items?${searchParams.toString()}`);
   }
 
-  // 엑셀 다운로드용
-  exportExcel({ correspondentCode, correspondentName }) {
+  // no paging data (전체 데이터) - 엑셀 다운로드 시 사용
+  getAllCorrespondentList({ correspondentCode, correspondentName }) {
     const searchParams = new URLSearchParams();
 
     if (correspondentCode) {
       searchParams.append('correspondentCode', correspondentCode);
     }
-
     if (correspondentName) {
       searchParams.append('correspondentName', correspondentName);
     }

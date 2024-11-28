@@ -163,29 +163,34 @@ const onChangePage = event => {
 };
 
 const onExportToExcel = () => {
-  // TODO 엑셀용 데이터 API
-  const rows = [...paginatedCorrespondents.value];
+  hqCorrespondentApi
+    .getAllCorrespondentList({
+      correspondentCode:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_CODE ? criteria.value.keyword : undefined,
+      correspondentName:
+        criteria.value.criteria === SEARCH_CRITERIA.CORRESPONDENT_NAME ? criteria.value.keyword : undefined,
+    })
+    .then(rows => {
+      const excelRows = rows.map(e => ({
+        correspondentCode: e.correspondentCode,
+        correspondentName: e.correspondentName,
+        managerName: e.managerName,
+        address: `${e.address} ${e.detailAddress}`, // address는 하나로 표시하기 위해
+        contact: e.contact,
+        email: e.email,
+      }));
 
-  const tableColumnFields = columns.filter(e => e.field).map(e => e.field);
-  const tableColumnHeaders = columns.filter(e => e.field).map(e => e.header);
-  const worksheet = XLSX.utils.json_to_sheet(rows, { header: tableColumnFields }); // 현재 테이블 컬럼 순서로 설정
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, '거래처 목록');
-  XLSX.utils.sheet_add_aoa(worksheet, [tableColumnHeaders], { origin: 'A1' }); // 헤더명 변경
+      const orderedFields = columns.filter(e => e.field).map(e => e.field);
+      const headerNames = columns.filter(e => e.field).map(e => e.header);
 
-  // cell width 설정
-  const cellWidths = [];
-  tableColumnFields.forEach(field => {
-    if (field === 'address') {
-      const maxAddressWidth = rows.reduce((acc, r) => Math.max(acc, r.address.length), 10);
-      cellWidths.push(maxAddressWidth);
-    } else {
-      cellWidths.push(10);
-    }
-  });
-  worksheet['!cols'] = cellWidths.map(cellWidth => ({ wch: cellWidth }));
+      const excelManager = new ExcelManager(excelRows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.setSheetName('거래처목록');
+      const maxAddressWidth = excelRows.reduce((acc, r) => Math.max(acc, r.address.length), 10); // 가장 긴 주소의 길이를 cell width로 설정
+      excelManager.setCellWidths([{ field: 'address', width: maxAddressWidth }]);
 
-  XLSX.writeFile(workbook, `거래처목록${dayjs().format('YYMMDD')}.xlsx`, { compression: true }); // export
+      excelManager.export(`거래처목록${dayjs().format('YYMMDD')}`);
+    });
 };
 
 onMounted(() => {

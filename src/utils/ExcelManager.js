@@ -8,8 +8,8 @@ export default class ExcelManager {
   #cellWidths = null;
 
   constructor(rows, orderedFields) {
-    if (!rows) throw new Error('rows is not provided');
-    if (!orderedFields) throw new Error('orderedFields is not provided');
+    if (!rows) throw new Error('엑셀 데이터가 필요합니다.');
+    if (!orderedFields) throw new Error('엑셀 헤더명이 필요합니다.');
 
     this.#rows = rows;
     this.#orderedFields = orderedFields;
@@ -19,13 +19,17 @@ export default class ExcelManager {
     this.#sheetName = sheetName;
   }
 
+  /**
+   *
+   * @param {*} headerNames // ['Header1', 'Header2', 'Name', 'Birthday', ...]
+   */
   setHeaderNames(headerNames) {
     this.#headerNames = headerNames;
   }
 
   /**
    *
-   * @param {*} widths // { field: (fieldName), width: number }
+   * @param {*} widths // [{ field: (rows의 field명), width: number }, ...]
    */
   setCellWidths(widths) {
     this.#cellWidths = widths;
@@ -43,8 +47,8 @@ export default class ExcelManager {
 
     // cell width 설정
     if (this.#cellWidths) {
-      worksheet['!cols'] = this.#orderedFields.map(e => {
-        const foundCellWidthInfo = this.#cellWidths.find(e => e.field === e);
+      worksheet['!cols'] = this.#orderedFields.map(orderedField => {
+        const foundCellWidthInfo = this.#cellWidths.find(cellWidth => cellWidth.field === orderedField);
         if (foundCellWidthInfo) {
           return { wch: foundCellWidthInfo.width };
         }
