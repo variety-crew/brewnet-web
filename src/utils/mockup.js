@@ -538,3 +538,19 @@ export const mockupPurchases = [
     '발주에 대한 비고사항입니다~ 참고해주세요',
   ),
 ];
+
+function makeMockItemCategory(categoryCode, categoryName) {
+  return { categoryCode, categoryName };
+}
+
+export const mockupNonFoodItemCategories = [
+  makeMockItemCategory(100, '머신'),
+  makeMockItemCategory(101, '세제'),
+  makeMockItemCategory(102, '일회용기'),
+];
+
+export const mockupFoodItemCategories = [
+  makeMockItemCategory(200, '원두'),
+  makeMockItemCategory(201, '냉동식품'),
+  makeMockItemCategory(202, '시럽'),
+];
