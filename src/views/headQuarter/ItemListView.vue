@@ -26,6 +26,7 @@
 <script setup>
 import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
@@ -39,6 +40,7 @@ import { makeSelectOption } from '@/utils/helper';
 
 const toast = useToast();
 const { showConfirm } = useAppConfirmModal();
+const router = useRouter();
 
 const page = ref(0);
 const pageSize = ref(15);
@@ -56,7 +58,9 @@ const criteriaOptions = computed(() => {
 
 const hpItemApi = new HQItemApi();
 
-const clickEdit = targetItem => {};
+const clickEdit = targetItem => {
+  router.push({ name: 'hq:stock:item:edit', params: { itemCode: targetItem.itemCode } });
+};
 
 const onChangeActiveStatus = targetItem => {
   if (targetItem.active) {

@@ -1,5 +1,5 @@
 <template>
-  <AppFormField :label="label">
+  <AppFormField :label="label" :label-position="labelPosition">
     <AutoComplete
       :model-value="modelValue"
       option-label="label"
@@ -24,7 +24,7 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { label, modelValue, fullWidth, suggestions, placeholder } = defineProps({
+const { label, modelValue, fullWidth, suggestions, placeholder, labelPosition } = defineProps({
   modelValue: {
     type: [Object, null],
     required: true,
@@ -60,6 +60,12 @@ const { label, modelValue, fullWidth, suggestions, placeholder } = defineProps({
     type: String,
     required: false,
     default: undefined,
+  },
+
+  labelPosition: {
+    type: String,
+    required: false,
+    default: 'top',
   },
 });
 const emit = defineEmits(['completeInput', 'update:modelValue']);

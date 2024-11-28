@@ -77,7 +77,7 @@ onMounted(() => {
     align-items: center;
 
     .app-label {
-      width: 55px;
+      width: 70px;
     }
   }
 
