@@ -28,7 +28,9 @@
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import XLSX from 'xlsx';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
@@ -37,6 +39,7 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import { useModal } from '@/hooks/useModal';
 import CorrespondentApi from '@/utils/api/CorrespondentApi';
 import { CRITERIA_CORRESPONDENT_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
 
@@ -126,7 +129,14 @@ const getCorrespondents = () => {
       keyword: criteria.value.keyword,
     })
     .then(data => {
-      paginatedCorrespondents.value = data.data.map(e => ({ ...e, address: `${e.address} ${e.detailAddress}` })); // address는 하나로 표시하기 위해
+      paginatedCorrespondents.value = data.data.map(e => ({
+        correspondentCode: e.correspondentCode,
+        correspondentName: e.correspondentName,
+        managerName: e.managerName,
+        address: `${e.address} ${e.detailAddress}`, // address는 하나로 표시하기 위해
+        contact: e.contact,
+        email: e.email,
+      }));
       totalElements.value = data.totalCount;
     });
 };
@@ -152,6 +162,28 @@ const onChangePage = event => {
 
 const onExportToExcel = () => {
   // TODO 엑셀용 데이터 API
+  const rows = [...paginatedCorrespondents.value];
+
+  const tableColumnFields = columns.filter(e => e.field).map(e => e.field);
+  const tableColumnHeaders = columns.filter(e => e.field).map(e => e.header);
+  const worksheet = XLSX.utils.json_to_sheet(rows, { header: tableColumnFields }); // 현재 테이블 컬럼 순서로 설정
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, '거래처 목록');
+  XLSX.utils.sheet_add_aoa(worksheet, [tableColumnHeaders], { origin: 'A1' }); // 헤더명 변경
+
+  // cell width 설정
+  const cellWidths = [];
+  tableColumnFields.forEach(field => {
+    if (field === 'address') {
+      const maxAddressWidth = rows.reduce((acc, r) => Math.max(acc, r.address.length), 10);
+      cellWidths.push(maxAddressWidth);
+    } else {
+      cellWidths.push(10);
+    }
+  });
+  worksheet['!cols'] = cellWidths.map(cellWidth => ({ wch: cellWidth }));
+
+  XLSX.writeFile(workbook, `거래처목록${dayjs().format('YYMMDD')}.xlsx`, { compression: true }); // export
 };
 
 onMounted(() => {
