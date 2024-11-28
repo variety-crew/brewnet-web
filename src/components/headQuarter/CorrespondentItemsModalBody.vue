@@ -17,21 +17,29 @@
       :paginated-data="paginatedItems"
       :rows-per-page="pageSize"
       :total-elements="totalElements"
+      show-excel-export
       @reload="onReload"
       @change-page="onChangePage"
+      @export-excel="onExportExcel"
     />
   </AppModalBody>
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { computed, inject, onMounted, ref } from 'vue';
 
 import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
 import { CRITERIA_CORRESPONDENT_ITEM_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption } from '@/utils/helper';
 
 import AppModalBody from '../common/AppModalBody.vue';
+import AppTable from '../common/AppTable.vue';
+import AppInputText from '../common/form/AppInputText.vue';
+import AppSelect from '../common/form/AppSelect.vue';
+import SearchArea from '../common/SearchArea.vue';
 
 const dialogRef = inject('dialogRef');
 const currentCorrespondentCode = ref(null);
@@ -128,8 +136,26 @@ const onReload = () => {
 };
 
 const onChangePage = event => {
-  page.value = event.page;
+  page.value = event.page + 1;
   getCorrespondentItems();
+};
+
+const onExportExcel = () => {
+  hqCorrespondentApi
+    .getAllCorrespondentItemList({
+      correspondentCode: currentCorrespondentCode.value,
+      itemUniqueCode: criteria.value.criteria === SEARCH_CRITERIA.ITEM_UNIQUE_CODE ? criteria.value.keyword : undefined,
+      itemName: criteria.value.criteria === SEARCH_CRITERIA.ITEM_NAME ? criteria.value.keyword : undefined,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field);
+      const headerNames = columns.filter(e => e.field).map(e => e.header);
+      const tableRows = rows.map(row => ({ ...row, active: row.active ? '활성' : '비활성' }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`거래처품목리스트${dayjs().format('YYMMDD')}`);
+    });
 };
 
 onMounted(() => {

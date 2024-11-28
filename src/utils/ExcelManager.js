@@ -11,7 +11,15 @@ export default class ExcelManager {
     if (!rows) throw new Error('엑셀 데이터가 필요합니다.');
     if (!orderedFields) throw new Error('엑셀 헤더명이 필요합니다.');
 
-    this.#rows = rows;
+    // orderedField에 있는 property만 가져오도록 (화면에 안 보이는 값은 엑셀 출력에 포함되지 않도록)
+    this.#rows = rows.map(obj =>
+      orderedFields.reduce((filteredObj, prop) => {
+        if (obj.hasOwnProperty(prop)) {
+          filteredObj[prop] = obj[prop];
+        }
+        return filteredObj;
+      }, {}),
+    );
     this.#orderedFields = orderedFields;
   }
 

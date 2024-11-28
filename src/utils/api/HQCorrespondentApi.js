@@ -44,7 +44,7 @@ export default class HQCorrespondentApi extends BaseApiService {
     return this.get(`/items?${searchParams.toString()}`);
   }
 
-  // no paging data (전체 데이터) - 엑셀 다운로드 시 사용
+  // 엑셀 다운로드용 전체 데이터
   getAllCorrespondentList({ correspondentCode, correspondentName }) {
     const searchParams = new URLSearchParams();
 
@@ -56,5 +56,20 @@ export default class HQCorrespondentApi extends BaseApiService {
     }
 
     return this.get(`/print?${searchParams.toString()}`);
+  }
+
+  // 엑셀 다운로드용 전체 데이터
+  getAllCorrespondentItemList({ correspondentCode, itemUniqueCode, itemName }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('correspondentCode', correspondentCode);
+
+    if (itemUniqueCode) {
+      searchParams.append('itemUniqueCode', itemUniqueCode);
+    }
+    if (itemName) {
+      searchParams.append('itemName', itemName);
+    }
+
+    return this.get(`/print-items?${searchParams.toString()}`);
   }
 }
