@@ -72,4 +72,41 @@ export default class HQCorrespondentApi extends BaseApiService {
 
     return this.get(`/print-items?${searchParams.toString()}`);
   }
+
+  // 거래처 상세 정보 조회
+  getCorrespondent(correspondentCode) {
+    return this.get(`/${correspondentCode}`);
+  }
+
+  //
+  // POST
+  //
+
+  // 거래처 등록
+  createCorrespondent({ name, address, detailAddress, email, contact, managerName }) {
+    return this.post('/create', {
+      name,
+      address,
+      detailAddress,
+      email,
+      contact,
+      managerName,
+    });
+  }
+
+  //
+  // PUT
+  //
+
+  // 거래처 수정
+  editCorrespondent(correspondentCode, { name, address, detailAddress, email, contact, managerName }) {
+    return this.put(`/edit/${correspondentCode}`, {
+      name,
+      address,
+      detailAddress,
+      email,
+      contact,
+      managerName,
+    });
+  }
 }
