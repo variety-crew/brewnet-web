@@ -46,14 +46,16 @@
               <th colspan="3">품목명</th>
               <th>수량</th>
               <th>단가</th>
-              <th colspan="2">주문금액</th>
+              <th>주문금액</th>
+              <th>부가세</th>
             </tr>
             <tr v-for="item in orderDetail.orderItemList" :key="item.itemCode">
               <td class="align-center">{{ item.itemCode }}</td>
               <td colspan="3">{{ item.name }}</td>
               <td class="align-right">{{ item.quantity.toLocaleString() }}</td>
               <td class="align-right">{{ (item.partSum / item.quantity).toLocaleString() }}</td>
-              <td class="align-right" colspan="2">{{ item.partSum.toLocaleString() }}</td>
+              <td class="align-right">{{ item.partSum.toLocaleString() }}</td>
+              <td class="align-right">{{ (item.partSum * 0.1).toLocaleString() }}</td>
             </tr>
             <tr>
               <th>총 주문금액</th>
@@ -99,7 +101,7 @@ const { orderCode } = route.params;
 const totalPrice = computed(() => {
   if (orderDetail.value && orderDetail.value.orderItemList) {
     const totalPartSum = orderDetail.value.orderItemList.reduce((sum, item) => {
-      return sum + item.partSum;
+      return sum + item.partSum + item.partSum * 0.1; // 부가세도 총합에 추가
     }, 0);
     return totalPartSum.toLocaleString();
   }

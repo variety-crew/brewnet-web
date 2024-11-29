@@ -84,7 +84,14 @@ const columns = [
     header: '주문품목명',
     render: data => data.orderItemList.map(item => item.name).join(', '),
   },
-  { field: 'sumPrice', header: '주문금액', render: data => data.sumPrice.toLocaleString() },
+  {
+    field: 'sumPrice',
+    header: '주문금액',
+    render: data => {
+      // 공급가액 + 부가세
+      return (data.sumPrice * 1.1).toLocaleString();
+    },
+  },
   { field: 'createdAt', header: '주문일자' },
   {
     field: 'recentOrderStatusCreatedAt',
