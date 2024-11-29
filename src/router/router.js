@@ -223,6 +223,22 @@ const routes = [
               breadcrumb: '거래처 조회',
             },
           },
+          {
+            path: 'correspondent/create',
+            name: 'hq:partner:correspondent:create',
+            component: () => import('@/views/headQuarter/CorrespondentFormView.vue'),
+            meta: {
+              breadcrumb: '거래처 등록',
+            },
+          },
+          {
+            path: 'correspondent/edit/:correspondentCode',
+            name: 'hq:partner:correspondent:edit',
+            component: () => import('@/views/headQuarter/CorrespondentFormView.vue'),
+            meta: {
+              breadcrumb: '거래처 수정',
+            },
+          },
         ],
       },
       {

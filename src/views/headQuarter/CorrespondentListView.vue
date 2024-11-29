@@ -30,6 +30,7 @@
 <script setup>
 import dayjs from 'dayjs';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import XLSX from 'xlsx';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -47,6 +48,7 @@ const CorrespondentItemsModalBody = defineAsyncComponent(
   () => import('@/components/headQuarter/CorrespondentItemsModalBody.vue'),
 );
 
+const router = useRouter();
 const { openModal } = useModal();
 
 const page = ref(1);
@@ -64,6 +66,10 @@ const criteriaOptions = computed(() => {
 });
 
 const hqCorrespondentApi = new HQCorrespondentApi();
+
+const clickEdit = data => {
+  router.push({ name: 'hq:partner:correspondent:edit', params: { correspondentCode: data.correspondentCode } });
+};
 
 const viewItems = data => {
   openModal({
@@ -107,6 +113,7 @@ const columns = [
       button: [
         {
           getLabel: () => '정보수정',
+          clickHandler: clickEdit,
         },
         {
           getLabel: () => '품목조회',
