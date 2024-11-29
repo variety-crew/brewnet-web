@@ -264,6 +264,15 @@ export const formatKoSearchCriteria = criteria => {
     case SEARCH_CRITERIA.STORAGE_CODE:
       return '창고코드';
 
+    case SEARCH_CRITERIA.ORDER_CODE:
+      return '주문번호';
+
+    case SEARCH_CRITERIA.ORDER_MANAGER:
+      return '주문담당자';
+
+    case SEARCH_CRITERIA.ORDERED_FRANCHISE_NAME:
+      return '주문지점';
+
     default:
       return '';
   }
