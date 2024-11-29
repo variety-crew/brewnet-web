@@ -48,44 +48,7 @@
           :approval-lines="orderApprovalLines"
         />
 
-        <AppTableStyled full-width>
-          <tbody>
-            <tr>
-              <th>주문일자</th>
-              <td>{{ orderDetail.createdAt }}</td>
-              <th>주문지점</th>
-              <td>{{ orderDetail.franchiseName }}</td>
-              <th>주문금액</th>
-              <td>{{ orderDetail.sumPrice.toLocaleString() }}</td>
-              <th>주문담당자</th>
-              <td>{{ orderDetail.managerName }}</td>
-            </tr>
-            <tr>
-              <th>비고사항</th>
-              <td colspan="7">{{ orderDetail.comment }}</td>
-            </tr>
-            <tr>
-              <th>품목코드</th>
-              <th colspan="3">품목명</th>
-              <th>수량</th>
-              <th>단가</th>
-              <th>공급가액</th>
-              <th>부가세</th>
-            </tr>
-            <tr v-for="item in orderDetail.orderItemList" :key="item.itemCode">
-              <td class="align-center">{{ item.itemCode }}</td>
-              <td colspan="3">{{ item.name }}</td>
-              <td class="align-right">{{ item.quantity.toLocaleString() }}</td>
-              <td class="align-right">{{ (item.partSum / item.quantity).toLocaleString() }}</td>
-              <td class="align-right">{{ item.partSum.toLocaleString() }}</td>
-              <td class="align-right">{{ (item.partSum * 0.1).toLocaleString() }}</td>
-            </tr>
-            <tr>
-              <th>총 주문금액</th>
-              <td class="align-right" colspan="7">{{ totalPrice.toLocaleString() }}</td>
-            </tr>
-          </tbody>
-        </AppTableStyled>
+        <OrderDetailTable v-if="orderDetail" :order-detail="orderDetail" />
       </div>
 
       <DraftApprovalHistoryTable
@@ -96,6 +59,8 @@
       />
 
       <DynamicDialog />
+
+      <PrintOrderPdfPreviewModal v-model:show="showPrintPdf" :order-detail="orderDetail" />
     </template>
   </div>
 </template>
@@ -105,9 +70,10 @@ import { useToast } from 'primevue';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
 import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
+import OrderDetailTable from '@/components/headQuarter/OrderDetailTable.vue';
+import PrintOrderPdfPreviewModal from '@/components/headQuarter/PrintOrderPdfPreviewModal.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
@@ -145,15 +111,8 @@ const isCompleted = computed(() => {
 
 const hqOrderApi = new HQOrderApi();
 const { orderCode } = route.params;
-const totalPrice = computed(() => {
-  if (orderDetail.value && orderDetail.value.orderItemList) {
-    const totalPartSum = orderDetail.value.orderItemList.reduce((sum, item) => {
-      return sum + item.partSum;
-    }, 0);
-    return (totalPartSum * 1.1).toLocaleString();
-  }
-  return '0';
-});
+
+const showPrintPdf = ref(false);
 
 const getOrderDetailPageData = () => {
   hqOrderApi.getOrderDetail(orderCode).then(data => {
@@ -199,10 +158,12 @@ const clickRequestApproval = () => {
 
 const clickPrintOrder = () => {
   // TODO:: 주문요청서 출력
+  showPrintPdf.value = true;
 };
 
 const clickPrintInvoice = () => {
   // TODO:: 거래명세서 출력
+  showPrintPdf.value = true;
 };
 
 const clickGoToList = () => {
