@@ -8,8 +8,13 @@
         label="작성일자"
         class="criteria created-at"
       />
-      <AppSelect v-model="searchFilter" label="검색조건" :options="searchOptions" :initial-value="searchFilter" />
-      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="검색어" />
+      <AppSelect
+        v-model="criteria.criteria"
+        label="검색조건"
+        :options="searchOptions"
+        :initial-value="criteria.criteria"
+      />
+      <AppInputText id="input_name_keyword" v-model="criteria.keyword" label="검색어" />
     </SearchArea>
 
     <AppTable
@@ -27,21 +32,22 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useUserStore } from '@/stores/user';
 import FCOrderApi from '@/utils/api/FCOrderApi';
-import { formatKoOrderStatus } from '@/utils/format';
-import { getOrderStatusSeverity } from '@/utils/helper';
+import { CRITERIA_FC_ORDER_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import { formatKoOrderStatus, formatKoSearchCriteria } from '@/utils/format';
+import { getOrderStatusSeverity, makeSelectOption } from '@/utils/helper';
 
 const router = useRouter();
 
-const nameKeyword = ref('');
 const totalElements = ref(0);
 const page = ref(0);
 const size = ref(15);
@@ -49,19 +55,17 @@ const size = ref(15);
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
   endDate: new Date(),
-  orderCode: null,
-  managerName: null,
-  franchiseName: null,
+  criteria: SEARCH_CRITERIA.ORDER_CODE,
+  keyword: '',
 });
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
 const FcOrderApi = new FCOrderApi();
 const searchFilter = ref('orderCode');
-const searchOptions = [
-  { label: '주문번호', value: 'orderCode' },
-  { label: '주문품목명', value: 'itemName' },
-];
+const searchOptions = computed(() => {
+  return CRITERIA_FC_ORDER_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
+});
 
 function clickGoDetail(data) {
   router.push({ name: 'fc:home:order:detail', params: { orderCode: data.orderCode } });
@@ -113,14 +117,13 @@ const columns = [
 ];
 
 const getOrders = () => {
-  FcOrderApi.getOrders({
+  FcOrderApi.searchOrders({
     page: page.value,
     size: size.value,
     startDate: criteria.value.startDate,
     endDate: criteria.value.endDate,
-    orderCode: criteria.value.orderCode,
-    managerName: criteria.value.managerName,
-    franchiseName: useUserStore.franchiseName,
+    criteria: criteria.value.criteria,
+    keyword: criteria.value.keyword,
   }).then(data => {
     totalElements.value = data.totalElements;
     paginatedOrders.value = data.content;
@@ -128,13 +131,12 @@ const getOrders = () => {
 };
 
 const onSearch = () => {
-  // TODO
   getOrders();
 };
 
 const onReset = () => {
-  // TODO
   criteria.value = getInitialCriteria();
+  page.value = 0;
   getOrders();
 };
 
@@ -143,14 +145,13 @@ const reloadData = () => {
 };
 
 const onChangePage = event => {
-  page.value = event.page + 1;
+  page.value = event.page;
   getOrders();
 };
 
 onMounted(() => {
   getOrders();
 });
-``;
 </script>
 
 <style scoped>
