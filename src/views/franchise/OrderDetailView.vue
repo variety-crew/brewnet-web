@@ -73,7 +73,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import FCOrderApi from '@/utils/api/FCOOrderQueryApi';
+import FCOrderApi from '@/utils/api/FCOrderApi';
 import { ORDER_STATUS } from '@/utils/constant';
 import { formatKoOrderStatus } from '@/utils/format';
 import { getOrderStatusSeverity } from '@/utils/helper';
@@ -119,10 +119,10 @@ const clickGoToList = () => {
 };
 
 const cancelOrder = () => {
-  // TODO:: 주문 취소 API
-
-  toast.add({ severity: 'error', summary: '처리 성공', detail: '주문이 취소되었습니다.', life: 3000 });
-  router.replace({ name: 'fc:home:order:list' });
+  fcOrderApi.deleteOrder(orderCode).then(() => {
+    toast.add({ severity: 'error', summary: '처리 성공', detail: '주문이 취소되었습니다.', life: 3000 });
+    router.replace({ name: 'fc:home:order:list' });
+  });
 };
 
 const clickCancel = () => {
