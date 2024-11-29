@@ -210,10 +210,12 @@ const clickGoToList = () => {
 };
 
 const cancelOrder = () => {
-  // TODO:: 결재 요청 취소 API
+  hqOrderApi.cancelApproval(orderCode).then(() => {
+    toast.add({ severity: 'error', summary: '처리 성공', detail: '결재 요청이 취소되었습니다.', life: 3000 });
 
-  toast.add({ severity: 'error', summary: '처리 성공', detail: '결재 요청이 취소되었습니다.', life: 3000 });
-  router.replace({ name: 'hq:order:list' });
+    // page reload
+    getOrderDetailPageData();
+  });
 };
 
 const clickCancel = () => {

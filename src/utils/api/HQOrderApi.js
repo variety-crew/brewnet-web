@@ -69,4 +69,13 @@ export default class HQOrderApi extends BaseApiService {
       comment,
     });
   }
+
+  //
+  // DELETE
+  //
+
+  // 기안자의 결재요청 취소
+  cancelApproval(orderCode) {
+    return this.delete(`/request/cancel/${orderCode}`);
+  }
 }
