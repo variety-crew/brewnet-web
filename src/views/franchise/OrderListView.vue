@@ -35,7 +35,7 @@ import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue'
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useUserStore } from '@/stores/user';
-import FCOrderQueryApi from '@/utils/api/FCOOrderQueryApi';
+import FCOrderApi from '@/utils/api/FCOrderApi';
 import { formatKoOrderStatus } from '@/utils/format';
 import { getOrderStatusSeverity } from '@/utils/helper';
 
@@ -56,7 +56,7 @@ const getInitialCriteria = () => ({
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
-const FcOrderApi = new FCOrderQueryApi();
+const FcOrderApi = new FCOrderApi();
 const searchFilter = ref('orderCode');
 const searchOptions = [
   { label: '주문번호', value: 'orderCode' },
@@ -84,7 +84,14 @@ const columns = [
     header: '주문품목명',
     render: data => data.orderItemList.map(item => item.name).join(', '),
   },
-  { field: 'sumPrice', header: '주문금액', render: data => data.sumPrice.toLocaleString() },
+  {
+    field: 'sumPrice',
+    header: '주문금액',
+    render: data => {
+      // 공급가액 + 부가세
+      return (data.sumPrice * 1.1).toLocaleString();
+    },
+  },
   { field: 'createdAt', header: '주문일자' },
   {
     field: 'recentOrderStatusCreatedAt',
