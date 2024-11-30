@@ -29,6 +29,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import XLSX from 'xlsx';
@@ -37,6 +38,7 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import HQCorrespondentApi from '@/utils/api/HQCorrespondentApi';
 import { CRITERIA_CORRESPONDENT_LIST, SEARCH_CRITERIA } from '@/utils/constant';
@@ -49,7 +51,9 @@ const CorrespondentItemsModalBody = defineAsyncComponent(
 );
 
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
+const toast = useToast();
 
 const page = ref(1);
 const pageSize = ref(15);
@@ -78,6 +82,25 @@ const viewItems = data => {
     data: {
       correspondentCode: data.correspondentCode,
     },
+  });
+};
+
+const onRemove = targetCorrespondentCode => {
+  hqCorrespondentApi.deleteCorrespondent(targetCorrespondentCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '거래처가 삭제되었습니다.', life: 3000 });
+
+    // data reload
+    getCorrespondents();
+  });
+};
+
+const clickRemove = data => {
+  showConfirm({
+    header: '거래처 삭제',
+    message: `[${data.correspondentName}] 거래처를 삭제하시겠습니까?`,
+    acceptLabel: '네, 삭제합니다.',
+    danger: true,
+    onAccept: () => onRemove(data.correspondentCode),
   });
 };
 
@@ -121,6 +144,7 @@ const columns = [
         },
         {
           getLabel: () => '삭제',
+          clickHandler: clickRemove,
         },
       ],
     },

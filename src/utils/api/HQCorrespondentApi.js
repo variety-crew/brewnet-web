@@ -109,4 +109,15 @@ export default class HQCorrespondentApi extends BaseApiService {
       managerName,
     });
   }
+
+  //
+  // DELETE
+  //
+
+  // 거래처 삭제
+  deleteCorrespondent(correspondentCode) {
+    return this.delete('/delete', {
+      correspondentCode,
+    });
+  }
 }
