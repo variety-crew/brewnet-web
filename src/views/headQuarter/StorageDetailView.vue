@@ -11,7 +11,7 @@
           @click="clickBack"
         />
 
-        <Button label="재고 확인" icon="pi pi-external-link" size="small" />
+        <Button label="재고 확인" icon="pi pi-external-link" size="small" @click="goToStockList" />
       </div>
 
       <AppTableStyled full-width>
@@ -36,31 +36,33 @@
       </AppTableStyled>
 
       <div class="bottom-buttons">
-        <Button size="small" variant="outlined" severity="secondary" label="수정" />
-        <Button size="small" variant="outlined" severity="danger" label="삭제" />
+        <Button size="small" variant="outlined" severity="secondary" label="수정" @click="clickEdit" />
+        <Button size="small" variant="outlined" severity="danger" label="삭제" @click="clickRemove" />
       </div>
     </template>
   </div>
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQStorageApi from '@/utils/api/HQStorageApi';
 
+const toast = useToast();
 const route = useRoute();
 const router = useRouter();
+const { showConfirm } = useAppConfirmModal();
 
+const { storageCode } = route.params;
 const storageDetail = ref(null);
 
 const hqStorageApi = new HQStorageApi();
 
 const getStorage = () => {
-  const { storageCode } = route.params;
-  if (!storageCode) return;
-
   hqStorageApi.getStorage(storageCode).then(data => {
     storageDetail.value = data;
   });
@@ -68,6 +70,36 @@ const getStorage = () => {
 
 const clickBack = () => {
   router.back();
+};
+
+const goToStockList = () => {
+  router.push({
+    name: 'hq:stock:storage-stock',
+    params: { storageCode: storageCode },
+  });
+};
+
+const clickEdit = () => {
+  router.push({ name: 'hq:stock:storage:edit', params: { storageCode: route.params.storageCode } });
+};
+
+const onRemove = () => {
+  hqStorageApi.deleteStorage(storageCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '창고가 삭제되었습니다.', life: 3000 });
+
+    // data reload
+    router.replace({ name: 'hq:stock:storage:list' });
+  });
+};
+
+const clickRemove = () => {
+  showConfirm({
+    header: '창고 삭제',
+    message: '창고를 삭제하시겠습니까?',
+    acceptLabel: '네, 삭제합니다.',
+    danger: true,
+    onAccept: onRemove,
+  });
 };
 
 onMounted(() => {
