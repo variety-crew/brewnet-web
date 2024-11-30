@@ -282,6 +282,14 @@ const routes = [
             },
           },
           {
+            path: 'storage/edit/:storageCode',
+            name: 'hq:stock:storage:edit',
+            component: () => import('@/views/headQuarter/StorageFormView.vue'),
+            meta: {
+              breadcrumb: '창고 수정',
+            },
+          },
+          {
             path: 'item-category',
             name: 'hq:stock:item-category',
             component: () => import('@/views/headQuarter/ItemCategoryView.vue'),

@@ -62,4 +62,41 @@ export default class HQStorageApi extends BaseApiService {
 
     return this.get(`/print-stock?${searchParams.toString()}`);
   }
+
+  //
+  // POST
+  //
+
+  // 창고 등록
+  createStorage({ name, address, contact }) {
+    return this.post('/create', {
+      name,
+      address,
+      contact,
+    });
+  }
+
+  //
+  // PUT
+  //
+
+  // 창고 수정
+  editStorage(storageCode, { name, address, contact }) {
+    return this.put(`/edit/${storageCode}`, {
+      name,
+      address,
+      contact,
+    });
+  }
+
+  //
+  // DELETE
+  //
+
+  // 창고 삭제
+  deleteStorage(storageCode) {
+    return this.delete('/delete', {
+      storageCode,
+    });
+  }
 }
