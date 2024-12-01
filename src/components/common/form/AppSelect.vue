@@ -19,7 +19,7 @@
       @change="onSelectChange"
     >
       <template v-if="grouped" #optiongroup="slotProps">
-        <div>{{ slotProps.option.label }}</div>
+        <div class="group-label">{{ slotProps.option.label }}</div>
       </template>
     </Select>
     <div v-if="helperText" class="app-select-helper-text">{{ helperText }}</div>
@@ -116,5 +116,9 @@ function onSelectChange(event) {
 .app-select-helper-text {
   color: var(--p-surface-500);
   font-size: 12px;
+}
+
+.group-label {
+  font-size: 14px;
 }
 </style>
