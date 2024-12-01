@@ -33,6 +33,7 @@
           />
           <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
           <Button
+            v-if="canDelete"
             label="삭제"
             severity="danger"
             size="small"
@@ -115,6 +116,7 @@ import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
 import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { useUserStore } from '@/stores/user';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import { APPROVAL_STATUS, DRAFT_KIND } from '@/utils/constant';
 import { formatKoApprovalStatus } from '@/utils/format';
@@ -125,6 +127,7 @@ const route = useRoute();
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
+const userStore = useUserStore();
 
 const purchaseDetail = ref(null);
 const purchaseApprovalLines = ref([]);
@@ -166,17 +169,21 @@ const clickGoToList = () => {
   router.replace({ name: 'hq:purchase:list' });
 };
 
-const deletePurchase = () => {
-  // TODO:: 발주 삭제 API
+const canDelete = computed(() => {
+  return userStore.username === purchaseDetail.value.memberName;
+});
 
-  toast.add({ severity: 'error', summary: '처리 성공', detail: '발주(구매품의서)가 삭제되었습니다.', life: 3000 });
-  router.replace({ name: 'hq:purchase:list' });
+const deletePurchase = () => {
+  hqPurchaseApi.deletePurchase(purchaseCode).then(() => {
+    toast.add({ severity: 'error', summary: '처리 성공', detail: '구매품의서가 삭제되었습니다.', life: 3000 });
+    router.replace({ name: 'hq:purchase:list' });
+  });
 };
 
 const clickDelete = () => {
   showConfirm({
     header: '발주 삭제',
-    message: '발주(구매품의서)를 삭제하시겠습니까?',
+    message: '구매품의서를 삭제하시겠습니까?',
     acceptLabel: '발주 삭제',
     onAccept: deletePurchase,
     danger: true,

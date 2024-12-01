@@ -134,4 +134,15 @@ export default class HQPurchaseApi extends BaseApiService {
       comment,
     });
   }
+
+  //
+  // DELETE
+  //
+
+  // 발주(구매품의서) 결재 요청 취소
+  deletePurchase(purchaseCode) {
+    return this.delete('/cancel', {
+      letterOfPurchaseCode: purchaseCode,
+    });
+  }
 }
