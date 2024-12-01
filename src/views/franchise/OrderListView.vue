@@ -45,7 +45,7 @@ import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useUserStore } from '@/stores/user';
 import FCOrderApi from '@/utils/api/FCOrderApi';
-import { CRITERIA_FC_ORDER_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import { CRITERIA_FC_ORDER_LIST, ORDER_STATUS, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { formatKoOrderStatus, formatKoSearchCriteria } from '@/utils/format';
 import { getOrderStatusSeverity, makeSelectOption } from '@/utils/helper';
@@ -89,7 +89,7 @@ const columns = [
   },
   { field: 'orderCode', header: '주문번호' },
   {
-    field: 'itemName',
+    field: 'orderItemList',
     header: '주문품목명',
     render: data => data.orderItemList.map(item => item.name).join(', '),
   },
@@ -168,7 +168,16 @@ const onExportExcel = () => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
 
-      const excelManager = new ExcelManager(rows, orderedFields);
+      // 데이터 표시 수정
+      const tableRows = rows.map(row => ({
+        ...row,
+        recentOrderStatus: formatKoOrderStatus(row.recentOrderStatus),
+        orderItemList: row.orderItemList.map(item => item.name).join(', '),
+        recentOrderStatusCreatedAt:
+          row.recentOrderStatus === ORDER_STATUS.SHIPPED ? row.recentOrderStatusCreatedAt : '', // Display only if status is SHIPPED
+      }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
       excelManager.setHeaderNames(headerNames);
       excelManager.export(`나의주문목록${dayjs().format('YYMMDD')}`);
     });

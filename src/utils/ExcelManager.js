@@ -21,6 +21,8 @@ export default class ExcelManager {
         return filteredObj;
       }, {}),
     );
+
+    console.log(this.#rows);
     this.#orderedFields = orderedFields;
   }
 
