@@ -4,16 +4,16 @@
     <div class="content">
       <div class="left"></div>
       <div class="right">
-        <MyApprovalWaitCard />
-        <NewOrderCard />
+        <DashboardMyApprovalWaitCard />
+        <DashboardNewOrderCard />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import MyApprovalWaitCard from '@/components/headQuarter/MyApprovalWaitCard.vue';
-import NewOrderCard from '@/components/headQuarter/NewOrderCard.vue';
+import DashboardMyApprovalWaitCard from '@/components/headQuarter/DashboardMyApprovalWaitCard.vue';
+import DashboardNewOrderCard from '@/components/headQuarter/DashboardNewOrderCard.vue';
 import PageTitle from '@/components/headQuarter/PageTitle.vue';
 </script>
 
