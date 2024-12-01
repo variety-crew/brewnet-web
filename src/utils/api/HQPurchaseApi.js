@@ -112,6 +112,13 @@ export default class HQPurchaseApi extends BaseApiService {
     });
   }
 
+  // 외부용 발주서 출력내역 등록
+  createPrintRecord(purchaseCode, { reason }) {
+    return this.post(`/print-record/${purchaseCode}`, {
+      reason,
+    });
+  }
+
   //
   // PUT
   //
