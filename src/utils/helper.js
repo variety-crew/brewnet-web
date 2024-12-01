@@ -11,6 +11,9 @@ import {
 export const makeSelectOption = (label = '', value = '') => {
   return { label, value };
 };
+export const makeGroupSelectOption = (label = '', value = '', items = []) => {
+  return { label, value, items };
+};
 export const makeRadioOption = (label = '', value = '', inputId = '') => ({ label, value, inputId });
 export const makeAutocompleteSuggestion = (code, label) => ({ code, label });
 export const makeTabs = (label = '', value = '') => ({ label, value });
