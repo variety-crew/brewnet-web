@@ -11,6 +11,8 @@
       class="mb-8"
       @save-category="onSave"
       @remove-category="onRemove"
+      @save-super-category="onSaveSuper"
+      @remove-super-category="onRemoveSuper"
     />
 
     <DynamicDialog />
@@ -70,22 +72,45 @@ const getPageData = async () => {
   getCategories();
 };
 
-const onSave = targetCategory => {
+const onSave = (targetCategoryCode, newName) => {
   // TODO 카테고리 수정 API
   toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리명이 수정되었습니다.', life: 3000 });
 };
 
-const removeCategory = targetCategory => {
-  // TODO 카테고리 삭제 API
+const onSaveSuper = (targetCategoryCode, newName) => {
+  // TODO 카테고리 수정 API
+  toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리명이 수정되었습니다.', life: 3000 });
 };
 
-const onRemove = targetCategory => {
+const removeCategory = targetCategoryCode => {
+  categoryApi.removeSubCategory(targetCategoryCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리가 삭제되었습니다.', life: 3000 });
+    getPageData();
+  });
+};
+const onRemove = (targetCategoryCode, targetCategoryName) => {
   showConfirm({
     header: '품목 카테고리 삭제',
-    message: `[${targetCategory.categoryName}] 카테고리를 삭제하시겠습니까?`,
+    message: `[${targetCategoryName}] 카테고리를 삭제하시겠습니까?`,
     danger: true,
     acceptLabel: '네, 삭제합니다.',
-    onAccept: () => removeCategory(targetCategory),
+    onAccept: () => removeCategory(targetCategoryCode),
+  });
+};
+
+const removeSuperCategory = targetCategoryCode => {
+  categoryApi.removeSuperCategory(targetCategoryCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리가 삭제되었습니다.', life: 3000 });
+    getPageData();
+  });
+};
+const onRemoveSuper = (targetCategoryCode, targetCategoryName) => {
+  showConfirm({
+    header: '품목 카테고리 삭제',
+    message: `[${targetCategoryName}] 카테고리를 삭제하시겠습니까?`,
+    danger: true,
+    acceptLabel: '네, 삭제합니다.',
+    onAccept: () => removeSuperCategory(targetCategoryCode),
   });
 };
 

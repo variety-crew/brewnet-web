@@ -1,6 +1,23 @@
 <template>
   <div>
-    <h2 class="mb-3">{{ categoryGroup.superCategoryName }}</h2>
+    <div class="super-category-title mb-3">
+      <template v-if="superEditMode">
+        <AppInputText v-model="superEditingText" />
+        <div class="action-button">
+          <Button label="저장" size="small" @click="clickSaveSuper" />
+          <Button rounded icon="pi pi-times" size="small" variant="text" @click="offEditModeSuper" />
+        </div>
+      </template>
+      <template v-else>
+        <h2>{{ categoryGroup.superCategoryName }}</h2>
+
+        <div class="action-button">
+          <Button size="small" variant="text" rounded icon="pi pi-pen-to-square" @click="clickEditSuper" />
+          <Button size="small" variant="text" rounded icon="pi pi-trash" @click="clickRemoveSuper" />
+        </div>
+      </template>
+    </div>
+
     <ul v-if="categoryGroup.subCategories.length > 0" class="category-list">
       <li
         v-for="subCategory in categoryGroup.subCategories"
@@ -36,12 +53,14 @@ const { categoryGroup } = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(['saveCategory', 'removeCategory']);
+const emit = defineEmits(['saveCategory', 'removeCategory', 'saveSuperCategory', 'removeSuperCategory']);
 
 const mouseEnterCategoryCode = ref(null);
 const editMode = ref(false);
 const editCategoryCode = ref(null);
 const editingText = ref('');
+const superEditMode = ref(false);
+const superEditingText = ref('');
 
 const onMouseEnter = targetCode => {
   if (editCategoryCode.value === targetCode) return; // 이미 수정모드인 category item에 mouse enter 들어오면 무시
@@ -61,18 +80,36 @@ const clickEdit = targetCategory => {
   editingText.value = targetCategory.subCategoryName;
 };
 
+const clickEditSuper = () => {
+  superEditMode.value = true;
+  superEditingText.value = categoryGroup.superCategoryName;
+};
+
 const clickRemove = targetCategory => {
-  emit('removeCategory', targetCategory);
+  emit('removeCategory', targetCategory.subCategoryCode, targetCategory.subCategoryName);
+};
+
+const clickRemoveSuper = () => {
+  emit('removeSuperCategory', categoryGroup.superCategoryCode, categoryGroup.superCategoryName);
 };
 
 const clickSave = () => {
   emit('saveCategory', editCategoryCode.value, editingText);
 };
 
+const clickSaveSuper = () => {
+  emit('saveSuperCategory', categoryGroup.superCategoryCode, superEditingText);
+};
+
 const offEditMode = () => {
   editCategoryCode.value = null;
   editingText.value = '';
   editMode.value = false;
+};
+
+const offEditModeSuper = () => {
+  superEditingText.value = '';
+  superEditMode.value = false;
 };
 </script>
 
@@ -126,5 +163,16 @@ const offEditMode = () => {
 
 .empty-sub-category {
   color: var(--p-surface-400);
+}
+
+.super-category-title {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .action-buttons {
+    display: flex;
+    gap: 5px;
+  }
 }
 </style>
