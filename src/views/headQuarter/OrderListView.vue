@@ -186,7 +186,7 @@ const onExportExcel = () => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
 
-      const excelManager = new ExcelManager(tableRows, orderedFields);
+      const excelManager = new ExcelManager(rows, orderedFields);
       excelManager.setHeaderNames(headerNames);
       excelManager.export(`주문목록${dayjs().format('YYMMDD')}`);
     });

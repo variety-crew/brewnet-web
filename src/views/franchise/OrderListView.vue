@@ -22,8 +22,10 @@
       :columns="columns"
       :total-elements="totalElements"
       :rows-per-page="size"
+      show-excel-export
       @reload="reloadData"
       @change-page="onChangePage"
+      @export-excel="onExportExcel"
     />
 
     <DynamicDialog />
@@ -32,6 +34,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -43,10 +46,12 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import { useUserStore } from '@/stores/user';
 import FCOrderApi from '@/utils/api/FCOrderApi';
 import { CRITERIA_FC_ORDER_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import { formatKoOrderStatus, formatKoSearchCriteria } from '@/utils/format';
 import { getOrderStatusSeverity, makeSelectOption } from '@/utils/helper';
 
 const router = useRouter();
+const toast = useToast();
 
 const totalElements = ref(0);
 const page = ref(0);
@@ -61,7 +66,7 @@ const getInitialCriteria = () => ({
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
-const FcOrderApi = new FCOrderApi();
+const fcOrderApi = new FCOrderApi();
 const searchFilter = ref('orderCode');
 const searchOptions = computed(() => {
   return CRITERIA_FC_ORDER_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
@@ -117,17 +122,19 @@ const columns = [
 ];
 
 const getOrders = () => {
-  FcOrderApi.searchOrders({
-    page: page.value,
-    size: size.value,
-    startDate: criteria.value.startDate,
-    endDate: criteria.value.endDate,
-    criteria: criteria.value.criteria,
-    keyword: criteria.value.keyword,
-  }).then(data => {
-    totalElements.value = data.totalElements;
-    paginatedOrders.value = data.content;
-  });
+  fcOrderApi
+    .searchOrders({
+      page: page.value,
+      size: size.value,
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(data => {
+      totalElements.value = data.totalElements;
+      paginatedOrders.value = data.content;
+    });
 };
 
 const onSearch = () => {
@@ -147,6 +154,28 @@ const reloadData = () => {
 const onChangePage = event => {
   page.value = event.page;
   getOrders();
+};
+
+const onExportExcel = () => {
+  fcOrderApi
+    .getAllOrders({
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(rows => {
+      if (rows.length === 0) {
+        toast.add({ severity: 'error', summary: '처리 실패', detail: '출력할 데이터가 없습니다.', life: 3000 });
+        return;
+      }
+      const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
+      const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
+
+      const excelManager = new ExcelManager(rows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`나의주문목록${dayjs().format('YYMMDD')}`);
+    });
 };
 
 onMounted(() => {
