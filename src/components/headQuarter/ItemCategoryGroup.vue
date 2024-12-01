@@ -1,23 +1,23 @@
 <template>
   <div>
-    <h2 class="mb-3">{{ title }}</h2>
+    <h2 class="mb-3">{{ categoryGroup.superCategoryName }}</h2>
     <ul class="category-list">
       <li
-        v-for="category in categories"
-        :key="category.categoryCode"
-        @mouseenter="() => onMouseEnter(category.categoryCode)"
+        v-for="subCategory in categoryGroup.subCategories"
+        :key="subCategory.subCategoryCode"
+        @mouseenter="() => onMouseEnter(subCategory.subCategoryCode)"
         @mouseleave="onMouseLeave"
       >
-        <div v-if="editCategoryCode === category.categoryCode" class="edit-area">
+        <div v-if="editCategoryCode === subCategory.subCategoryCode" class="edit-area">
           <AppInputText v-model="editingText" />
           <Button label="저장" size="small" @click="clickSave" />
           <Button rounded icon="pi pi-times" size="small" variant="text" @click="offEditMode" />
         </div>
-        <p v-else>{{ category.categoryName }}</p>
+        <p v-else>{{ subCategory.subCategoryName }}</p>
 
-        <div class="overlay" :class="{ show: mouseEnterCategoryCode === category.categoryCode }">
-          <Button label="수정" size="small" severity="secondary" @click="clickEdit(category)" />
-          <Button label="삭제" size="small" severity="danger" @click="clickRemove(category)" />
+        <div class="overlay" :class="{ show: mouseEnterCategoryCode === subCategory.subCategoryCode }">
+          <Button label="수정" size="small" severity="secondary" @click="clickEdit(subCategory)" />
+          <Button label="삭제" size="small" severity="danger" @click="clickRemove(subCategory)" />
         </div>
       </li>
     </ul>
@@ -29,13 +29,9 @@ import { ref } from 'vue';
 
 import AppInputText from '../common/form/AppInputText.vue';
 
-const { title, categories } = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  categories: {
-    type: Array,
+const { categoryGroup } = defineProps({
+  categoryGroup: {
+    type: Object,
     required: true,
   },
 });
@@ -60,8 +56,8 @@ const clickEdit = targetCategory => {
   mouseEnterCategoryCode.value = null;
 
   editMode.value = true;
-  editCategoryCode.value = targetCategory.categoryCode;
-  editingText.value = targetCategory.categoryName;
+  editCategoryCode.value = targetCategory.subCategoryCode;
+  editingText.value = targetCategory.subCategoryName;
 };
 
 const clickRemove = targetCategory => {

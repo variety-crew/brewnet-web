@@ -4,14 +4,14 @@
       <Button label="카테고리 추가" icon="pi pi-plus" size="small" @click="clickAddCategory" />
     </div>
 
-    <ItemCategoryList
-      title="비식품"
-      :categories="nonFoodCategories"
+    <ItemCategoryGroup
+      v-for="categoryGroup in categoryGroupList"
+      :key="categoryGroup.superCategoryCode"
+      :category-group="categoryGroup"
       class="mb-8"
       @save-category="onSave"
       @remove-category="onRemove"
     />
-    <ItemCategoryList title="식품" :categories="foodCategories" @save-category="onSave" @remove-category="onRemove" />
 
     <Dialog
       v-model:visible="showAddCategoryModal"
@@ -36,16 +36,15 @@ import { computed, onMounted, ref } from 'vue';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
-import ItemCategoryList from '@/components/headQuarter/ItemCategoryList.vue';
+import ItemCategoryGroup from '@/components/headQuarter/ItemCategoryGroup.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import CategoryApi from '@/utils/api/CategoryApi';
 import { makeSelectOption } from '@/utils/helper';
-import { mockupFoodItemCategories, mockupNonFoodItemCategories } from '@/utils/mockup';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 
-const nonFoodCategories = ref([]);
-const foodCategories = ref([]);
+const categoryGroupList = ref([]);
 const showAddCategoryModal = ref(false);
 const addingCategoryName = ref('');
 const selectedSuperCategory = ref('');
@@ -53,6 +52,36 @@ const superCategoryList = ref([]);
 const superCategoryOptions = computed(() => {
   return superCategoryList.value.map(e => makeSelectOption(e, e));
 });
+
+const categoryApi = new CategoryApi();
+
+const getCategories = () => {
+  categoryApi.getCategories().then(data => {
+    const arrangedCategories = []; // [{ superCategoryCode: number, superCategoryName: string, subCategories: []}];
+
+    data.forEach(category => {
+      const founded = arrangedCategories.find(e => e.superCategoryCode === category.superCategoryCode);
+      const insertSubCategory = {
+        subCategoryCode: category.subCategoryCode,
+        subCategoryName: category.subCategoryName,
+      };
+
+      if (founded && founded.subCategories) {
+        // 이미 추가했다면 더 추가
+        founded.subCategories.push(insertSubCategory);
+      } else {
+        // 새로 추가하는 거라면
+        arrangedCategories.push({
+          superCategoryCode: category.superCategoryCode,
+          superCategoryName: category.superCategoryName,
+          subCategories: [insertSubCategory],
+        });
+      }
+    });
+
+    categoryGroupList.value = arrangedCategories;
+  });
+};
 
 const onSave = targetCategory => {
   // TODO 카테고리 수정 API
@@ -91,8 +120,7 @@ const clickSaveAdd = () => {
 };
 
 onMounted(() => {
-  nonFoodCategories.value = [...mockupNonFoodItemCategories];
-  foodCategories.value = [...mockupFoodItemCategories];
+  getCategories();
 
   superCategoryList.value = ['NON_FOOD', 'FOOD'];
 });
