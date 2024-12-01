@@ -1,7 +1,15 @@
 <template>
-  <div>본사 대시보드 페이지</div>
+  <div class="hq-home-container">
+    <PageTitle>대시보드</PageTitle>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import PageTitle from '@/components/headQuarter/PageTitle.vue';
+</script>
 
-<style scoped></style>
+<style scoped>
+.hq-home-container {
+  padding: 32px 24px;
+}
+</style>
