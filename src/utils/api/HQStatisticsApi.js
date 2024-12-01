@@ -15,7 +15,7 @@ export default class HQStatisticsApi extends BaseApiService {
   getWarningSafetyStock() {
     const searchParams = new URLSearchParams();
     searchParams.append('page', 0);
-    searchParams.append('size', 10); // 10개만 조회
+    searchParams.append('size', 5); // 5개만 조회
 
     return this.get(`/safe-stock?${searchParams.toString()}`);
   }
@@ -47,16 +47,16 @@ export default class HQStatisticsApi extends BaseApiService {
   getNewOrders() {
     const searchParams = new URLSearchParams();
     searchParams.append('page', 0);
-    searchParams.append('size', 10); // 10개만 조회
+    searchParams.append('size', 5); // 5개만 조회
 
     return this.get(`/new-order?${searchParams.toString()}`);
   }
 
   // 나의 결재 대기 목록
-  getNewOrders() {
+  getDraftListOnWaitingMyApproval() {
     const searchParams = new URLSearchParams();
     searchParams.append('page', 0);
-    searchParams.append('size', 10); // 10개만 조회
+    searchParams.append('size', 5); // 5개만 조회
 
     return this.get(`/my-wait-approval?${searchParams.toString()}`);
   }
