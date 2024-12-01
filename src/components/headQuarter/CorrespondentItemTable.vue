@@ -10,6 +10,8 @@
       :rows-per-page="pageSize"
       :paginated-data="paginatedItems"
       :total-elements="totalElements"
+      @change-page="onChangePage"
+      @reload="onReload"
     />
   </div>
 </template>
@@ -36,11 +38,12 @@ const { correspondentCode, selectedItems } = defineProps({
 
 const emit = defineEmits(['choose', 'remove']);
 
+const page = ref(1);
 const paginatedItems = ref([]);
 const totalElements = ref(0);
 const pageSize = 15;
 
-const getInitialCriteria = () => ({ itemUniqueCode: '', itemName: '', page: 1 });
+const getInitialCriteria = () => ({ itemUniqueCode: '', itemName: '' });
 const criteria = ref(getInitialCriteria());
 
 const hqCorrespondentApi = new HQCorrespondentApi();
@@ -95,10 +98,20 @@ const getCorrespondentItems = () => {
 };
 const onReset = () => {
   criteria.value = getInitialCriteria();
+  page.value = 1;
   getCorrespondentItems();
 };
 
 const onSearch = () => {
+  getCorrespondentItems();
+};
+
+const onChangePage = event => {
+  page.value = event.page + 1;
+  getCorrespondentItems();
+};
+
+const onReload = () => {
   getCorrespondentItems();
 };
 

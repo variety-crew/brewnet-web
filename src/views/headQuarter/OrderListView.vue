@@ -8,8 +8,13 @@
         label="작성일자"
         class="criteria created-at"
       />
-      <AppSelect v-model="searchFilter" label="검색조건" :options="searchOptions" :initial-value="searchFilter" />
-      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="검색어" />
+      <AppSelect
+        v-model="criteria.criteria"
+        label="검색조건"
+        :options="searchOptions"
+        :initial-value="criteria.criteria"
+      />
+      <AppInputText id="input_name_keyword" v-model="criteria.keyword" label="검색어" />
     </SearchArea>
 
     <AppTable
@@ -17,8 +22,10 @@
       :columns="columns"
       :total-elements="totalElements"
       :rows-per-page="size"
+      show-excel-export
       @reload="reloadData"
       @change-page="onChangePage"
+      @export-excel="onExportExcel"
     />
 
     <DynamicDialog />
@@ -27,20 +34,29 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { ref, onMounted } from 'vue';
+import { useToast } from 'primevue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQOrderApi from '@/utils/api/HQOrderApi';
-import { formatKoApproval, formatKoDrafterApproved, formatKoOrderStatus } from '@/utils/format';
-import { getOrderStatusSeverity, getDrafterApprovedStatusSeverity, getApprovalStatusSeverity } from '@/utils/helper';
+import { CRITERIA_HQ_ORDER_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
+import { formatKoApproval, formatKoDrafterApproved, formatKoOrderStatus, formatKoSearchCriteria } from '@/utils/format';
+import {
+  getOrderStatusSeverity,
+  getDrafterApprovedStatusSeverity,
+  getApprovalStatusSeverity,
+  makeSelectOption,
+} from '@/utils/helper';
 
 const router = useRouter();
+const toast = useToast();
 
-const nameKeyword = ref('');
 const totalElements = ref(0);
 const page = ref(0);
 const size = ref(15);
@@ -48,20 +64,16 @@ const size = ref(15);
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
   endDate: new Date(),
-  orderCode: null,
-  managerName: null,
-  franchiseName: null,
+  criteria: SEARCH_CRITERIA.ORDER_CODE,
+  keyword: '',
 });
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
 const hqOrderApi = new HQOrderApi();
-const searchFilter = ref('orderCode');
-const searchOptions = [
-  { label: '주문번호', value: 'orderCode' },
-  { label: '주문지점', value: 'franchiseName' },
-  { label: '주문담당자', value: 'managerName' },
-];
+const searchOptions = computed(() => {
+  return CRITERIA_HQ_ORDER_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
+});
 
 function clickGoDetail(data) {
   router.push({ name: 'hq:order:detail', params: { orderCode: data.orderCode } });
@@ -90,8 +102,8 @@ const columns = [
     },
   },
   { field: 'orderCode', header: '주문번호', sortable: true },
-  { field: 'orderFranchise.franchiseName', header: '주문지점' },
-  { field: 'orderFranchise.itemName', header: '주문품목명' },
+  { field: 'orderFranchise', header: '주문지점', render: data => data.orderFranchise.franchiseName },
+  { field: 'orderItemList', header: '주문품목명', render: data => data.orderItemList.map(e => e.name).join(', ') },
   { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
   {
     field: 'approvalStatus',
@@ -131,14 +143,13 @@ const columns = [
 
 const getOrders = () => {
   hqOrderApi
-    .getOrders({
+    .searchOrders({
       page: page.value,
       size: size.value,
       startDate: criteria.value.startDate,
       endDate: criteria.value.endDate,
-      orderCode: criteria.value.orderCode,
-      managerName: criteria.value.managerName,
-      franchiseName: criteria.value.franchiseName,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
     })
     .then(data => {
       totalElements.value = data.totalElements;
@@ -151,25 +162,53 @@ const reloadData = () => {
 };
 
 const onChangePage = event => {
-  page.value = event.page + 1;
+  page.value = event.page;
   getOrders();
 };
 
 const onSearch = () => {
-  // TODO
   getOrders();
 };
 
 const onReset = () => {
-  // TODO
   criteria.value = getInitialCriteria();
+  page.value = 0;
   getOrders();
+};
+
+const onExportExcel = () => {
+  hqOrderApi
+    .getAllOrders({
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
+      const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
+
+      const tableRows = rows.map(row => ({
+        ...row,
+        orderStatusHistoryList: formatKoOrderStatus(getMostRecentOrderStatus(row.orderStatusHistoryList)),
+        orderFranchise: row.orderFranchise.franchiseName,
+        orderItemList: row.orderItemList.map(item => item.name).join(', '),
+        approvalStatus: formatKoApproval(row.approvalStatus),
+        drafterApproved: formatKoDrafterApproved(row.drafterApproved),
+      }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`주문목록${dayjs().format('YYMMDD')}`);
+    })
+    .catch(e => {
+      toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
+    });
 };
 
 onMounted(() => {
   getOrders();
 });
-``;
 </script>
 
 <style scoped>

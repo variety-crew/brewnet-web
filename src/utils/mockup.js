@@ -139,14 +139,6 @@ export const mockupCompanySealHistory = [
   makeMockCompanySealHistory(122, '홍길동', '발주서 출력을 위해 사용됨', '2024/01/11'),
 ];
 
-// 결재라인
-export const mockupApprovalLines = [
-  { code: 'purchase', title: '발주 결재라인', positions: ['MANAGER'] },
-  { code: 'order', title: '주문 결재라인', positions: ['MANAGER'] },
-  { code: 'exchange', title: '교환 결재라인', positions: ['MANAGER'] },
-  { code: 'return', title: '반품 결재라인', positions: [] },
-];
-
 // 공지사항
 function makeMockNotice(code, title, content, createdAt, author, images) {
   return { code, title, content, createdAt, author, images };
@@ -545,4 +537,20 @@ export const mockupPurchases = [
     '2024-11-11',
     '발주에 대한 비고사항입니다~ 참고해주세요',
   ),
+];
+
+function makeMockItemCategory(categoryCode, categoryName) {
+  return { categoryCode, categoryName };
+}
+
+export const mockupNonFoodItemCategories = [
+  makeMockItemCategory(100, '머신'),
+  makeMockItemCategory(101, '세제'),
+  makeMockItemCategory(102, '일회용기'),
+];
+
+export const mockupFoodItemCategories = [
+  makeMockItemCategory(200, '원두'),
+  makeMockItemCategory(201, '냉동식품'),
+  makeMockItemCategory(202, '시럽'),
 ];

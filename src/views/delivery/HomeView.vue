@@ -19,8 +19,8 @@ import { onMounted, ref } from 'vue';
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
-import { DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
-import { formatKoOrderStatus } from '@/utils/format';
+import { DELIVERY_STATUS, DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
+import { formatKoDeliveryStatus } from '@/utils/format';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -68,11 +68,11 @@ const clickChangeStatus = data => {
   let message = '';
   let toStatus = null;
 
-  if (currentStatus === ORDER_STATUS.APPROVED) {
+  if (currentStatus === DELIVERY_STATUS.START_DELIVERY) {
     header = '배송 시작';
     acceptLabel = '배송 시작';
     message = '배송을 시작하시겠습니까?';
-    toStatus = ORDER_STATUS.SHIPPING;
+    toStatus = DELIVERY_STATUS.SHIPPING;
   }
 
   if (!toStatus) {
@@ -126,20 +126,22 @@ const columns = [
     template: {
       button: [
         {
-          getLabel: data => {
-            if (isShowActionButton(data.deliveryStatus)) {
-              return getDeliveryButtonLabel(data.deliveryStatus);
-            }
-            return formatKoOrderStatus(data.deliveryStatus);
-          },
-          getVariant: data => {
-            if (isShowActionButton(data.deliveryStatus)) {
-              return undefined;
-            }
-            return 'text';
-          },
+          // getLabel: data => {
+          //   if (isShowActionButton(data.deliveryStatus)) {
+          //     return getDeliveryButtonLabel(data.deliveryStatus);
+          //   }
+          //   return formatKoOrderStatus(data.deliveryStatus);
+          // },
+          getLabel: data => formatKoDeliveryStatus(data.deliveryStatus),
+          getVariant: data => undefined,
+          // getVariant: data => {
+          //   if (isShowActionButton(data.deliveryStatus)) {
+          //     return undefined;
+          //   }
+          //   return 'text';
+          // },
           clickHandler: clickChangeStatus,
-          getDisabled: data => !isShowActionButton(data.deliveryStatus),
+          // getDisabled: data => !isShowActionButton(data.deliveryStatus),
         },
       ],
     },
@@ -152,6 +154,10 @@ const getDeliveryList = () => {
     .then(data => {
       paginatedOrderDeliveries.value = data.content;
       totalElements.value = data.totalElements;
+    })
+    .catch(e => {
+      paginatedOrderDeliveries.value = [];
+      totalElements.value = 0;
     });
 };
 

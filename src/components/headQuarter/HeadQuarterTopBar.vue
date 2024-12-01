@@ -68,10 +68,16 @@ const { showConfirm } = useAppConfirmModal();
 const userMenu = ref();
 const userMenus = ref([
   { label: '내 정보', icon: 'pi pi-user', command: clickMyPage },
+  { label: '내 문서함', icon: 'pi pi-inbox', command: clickMyInbox },
   {
     label: '로그아웃',
     icon: 'pi pi-sign-out',
     command: clickLogout,
+  },
+  {
+    label: '강제로그아웃(임시)',
+    icon: 'pi pi-sign-out',
+    command: clickForceLogout,
   },
 ]);
 const topBarMenus = computed(() => {
@@ -98,8 +104,17 @@ function clickLogout() {
   });
 }
 
+function clickForceLogout() {
+  userStore.clearUserData();
+  router.replace({ name: 'auth:login' });
+}
+
 function clickMyPage() {
   router.push({ name: 'hq:my' });
+}
+
+function clickMyInbox() {
+  router.push({ name: 'hq:my:draft' });
 }
 </script>
 

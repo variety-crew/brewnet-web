@@ -19,8 +19,13 @@ import { onMounted, ref } from 'vue';
 import AppTable from '@/components/common/AppTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import DeliverApi from '@/utils/api/DeliveryApi';
-import { DRAFT_KIND, EXCHANGE_STATUS, RETURN_STATUS } from '@/utils/constant';
-import { formatKoDraftKind, formatKoExchangeStatus, formatKoReturnStatus } from '@/utils/format';
+import { DELIVERY_STATUS, DRAFT_KIND, EXCHANGE_STATUS, RETURN_STATUS } from '@/utils/constant';
+import {
+  formatKoDeliveryStatus,
+  formatKoDraftKind,
+  formatKoExchangeStatus,
+  formatKoReturnStatus,
+} from '@/utils/format';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -81,6 +86,11 @@ const clickChangeStatus = data => {
       acceptLabel = '회수 시작';
       message = '회수를 시작하시겠습니까?';
       toStatus = EXCHANGE_STATUS.PICKING;
+    } else if (currentStatus === EXCHANGE_STATUS.PICKED) {
+      header = '재배송 시작';
+      acceptLabel = '재배송 시작';
+      message = '재배송을 시작하시겠습니까?';
+      toStatus = EXCHANGE_STATUS.SHIPPING;
     }
   } else if (data.deliveryKind === DRAFT_KIND.RETURN) {
     // 반품일 때
@@ -115,7 +125,7 @@ const clickChangeStatus = data => {
 const isShowActionButton = (deliveryKind, deliveryStatus) => {
   // 교환/반품 -> APPROVED 상태일 때에만
   if (deliveryKind === DRAFT_KIND.EXCHANGE) {
-    return deliveryStatus === EXCHANGE_STATUS.APPROVED;
+    return deliveryStatus === EXCHANGE_STATUS.APPROVED || deliveryStatus === EXCHANGE_STATUS.PICKED;
   }
 
   return deliveryStatus === RETURN_STATUS.APPROVED;
@@ -161,6 +171,7 @@ const columns = [
 
             return formatKoReturnStatus(data.deliveryStatus);
           },
+          // getLabel: data => formatKoDeliveryStatus(data.deliveryStatus),
           getVariant: data => {
             if (isShowActionButton(data.deliveryKind, data.deliveryStatus)) {
               return undefined;
@@ -181,6 +192,10 @@ const getDeliveryList = () => {
     .then(data => {
       paginatedExchangeDeliveries.value = data.content;
       totalElements.value = data.totalElements;
+    })
+    .catch(e => {
+      paginatedExchangeDeliveries.value = [];
+      totalElements.value = 0;
     });
 };
 

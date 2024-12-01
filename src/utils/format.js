@@ -11,6 +11,7 @@ import {
   APPROVAL,
   SEARCH_CRITERIA,
   APPROVER_APPROVED_STATUS,
+  DELIVERY_STATUS,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
@@ -25,7 +26,7 @@ export const formatKoEmployeePosition = position => {
       return '과장';
 
     case POSITION.CEO:
-      return '대표이사';
+      return '대표';
 
     default:
       return '';
@@ -263,6 +264,15 @@ export const formatKoSearchCriteria = criteria => {
     case SEARCH_CRITERIA.STORAGE_CODE:
       return '창고코드';
 
+    case SEARCH_CRITERIA.ORDER_CODE:
+      return '주문번호';
+
+    case SEARCH_CRITERIA.ORDER_MANAGER:
+      return '주문담당자';
+
+    case SEARCH_CRITERIA.ORDERED_FRANCHISE_NAME:
+      return '주문지점';
+
     default:
       return '';
   }
@@ -299,18 +309,44 @@ export const formatKoReturnStatus = status => {
   }
 };
 
-export const formatKoDeliveryStatus = orderStatus => {
-  switch (orderStatus) {
-    case ORDER_STATUS.APPROVED:
-      return '배송전';
+export const formatKoDeliveryStatus = status => {
+  switch (status) {
+    case DELIVERY_STATUS.START_DELIVERY:
+      return '배송 시작';
 
-    case ORDER_STATUS.SHIPPING:
+    case DELIVERY_STATUS.SHIPPING:
       return '배송중';
 
-    case ORDER_STATUS.SHIPPED:
-      return '배송완료';
+    case DELIVERY_STATUS.SHIPPED:
+      return '배송 완료';
+
+    case DELIVERY_STATUS.START_PICK:
+      return '회수 시작';
+
+    case DELIVERY_STATUS.PICKING:
+      return '회수중';
+
+    case DELIVERY_STATUS.PICKED:
+      return '회수 완료';
 
     default:
       return '';
   }
+};
+
+export const formatBusinessNumber = rawBusinessNumber => {
+  if (rawBusinessNumber.length !== 10) return rawBusinessNumber;
+
+  const front = rawBusinessNumber.slice(0, 3);
+  const middle = rawBusinessNumber.slice(3, 5);
+  const back = rawBusinessNumber.slice(6);
+  return `${front}-${middle}-${back}`;
+};
+
+export const formatCorporateNumber = rawCorporateNumber => {
+  if (rawCorporateNumber.length !== 13) return rawCorporateNumber;
+
+  const start = rawCorporateNumber.slice(0, 6);
+  const end = rawCorporateNumber.slice(6);
+  return `${start}-${end}`;
 };

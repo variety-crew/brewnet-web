@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SearchArea grid @reset="onReset" @search="onSearch">
+    <SearchArea grid @form-reset="onReset" @search="onSearch">
       <AppSelect
         v-model="selectedStorage"
         :options="storageOptions"
@@ -17,13 +17,17 @@
       :paginated-data="paginatedItems"
       :rows-per-page="pageSize"
       :total-elements="totalElements"
+      show-excel-export
       @reload="onReload"
       @change-page="onChangePage"
+      @export-excel="onExportExcel"
     />
   </div>
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
@@ -32,7 +36,10 @@ import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQStorageApi from '@/utils/api/HQStorageApi';
 import { SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import { makeSelectOption } from '@/utils/helper';
+
+const toast = useToast();
 
 const page = ref(1);
 const pageSize = ref(15);
@@ -122,6 +129,27 @@ const onReload = () => {
 const onChangePage = event => {
   page.value = event.page + 1;
   getStockList();
+};
+
+const onExportExcel = () => {
+  if (!selectedStorage.value) {
+    toast.add({ severity: 'error', summary: '입력 확인', detail: '창고가 선택되어야 합니다.', life: 3000 });
+    return;
+  }
+
+  hqStorageApi
+    .getAllStockList({
+      storageCode: selectedStorage.value,
+      itemName: criteria.value.keyword,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field);
+      const headerNames = columns.filter(e => e.field).map(e => e.header);
+
+      const excelManager = new ExcelManager(rows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`창고별재고리스트${dayjs().format('YYMMDD')}`);
+    });
 };
 
 onMounted(() => {

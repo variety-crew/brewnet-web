@@ -5,10 +5,13 @@
     <AppLabelText v-else label="아이디" :text="loginId" />
 
     <!-- 비밀번호 -->
-    <div>
+    <div v-if="!editMode">
       <AppInputPassword v-model="password" label="비밀번호" name="password" class="mb-2" />
       <AppInputPassword v-model="confirmPassword" name="confirmPassword" />
     </div>
+
+    <!-- 점주명 -->
+    <AppInputText v-model="username" label="점주명" />
 
     <!-- 이메일 -->
     <AppInputText v-model="email" label="이메일" name="email" />
@@ -50,17 +53,22 @@ import AppLabelText from '@/components/common/AppLabelText.vue';
 import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
 import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import AuthApi from '@/utils/api/AuthApi';
+import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
+import HQMemberApi from '@/utils/api/HQMemberApi';
+import MemberApi from '@/utils/api/MemberApi';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
-import { mockupFranchiseAccounts, mockupFranchises } from '@/utils/mockup';
-import { emailRegex, loginIdRegex } from '@/utils/regex';
+import { emailRegex, loginIdRegex, notNumber } from '@/utils/regex';
 
 const router = useRouter();
 const route = useRoute();
+const { memberCode } = route.params;
 const toast = useToast();
 
 const loginId = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const username = ref('');
 const email = ref('');
 const phone = ref('');
 const selectedFranchise = ref(null);
@@ -68,8 +76,13 @@ const filteredFranchises = ref([]);
 const editMode = ref(false);
 
 const franchiseSuggestions = computed(() => {
-  return filteredFranchises.value.map(e => makeAutocompleteSuggestion(e.code, e.franchiseName));
+  return filteredFranchises.value.map(e => makeAutocompleteSuggestion(e.franchiseCode, e.franchiseName));
 });
+
+const authApi = new AuthApi();
+const hqFranchiseApi = new HQFranchiseApi();
+const hqMemberApi = new HQMemberApi();
+const memberApi = new MemberApi();
 
 const checkForm = () => {
   emailRegex.lastIndex = 0;
@@ -101,17 +114,49 @@ const checkForm = () => {
   }
 };
 
-const onFormSubmit = () => {
+const onFormSubmit = async () => {
   const isPass = checkForm();
-  if (isPass) {
-    console.log('통과');
+  if (!isPass) return;
+
+  let successMsg = '';
+  const requestBody = {
+    name: username.value,
+    email: email.value,
+    contact: phone.value.replace(notNumber, ''),
+    franchiseCode: selectedFranchise.value.code,
+  };
+
+  if (editMode.value) {
+    // 수정
+    requestBody.memberCode = memberCode;
+    await memberApi.changeMemberInfo(requestBody);
+
+    successMsg = '가맹점 계정 정보가 수정되었습니다.';
+  } else {
+    // 등록
+    requestBody.id = loginId.value;
+    requestBody.password = password.value;
+    await authApi.createMember(requestBody);
+
+    successMsg = '가맹점 계정이 생성되었습니다.';
   }
+
+  if (!successMsg) return;
+
+  toast.add({ severity: 'success', summary: '처리 성공', detail: successMsg, life: 3000 });
+  router.push({ name: 'hq:partner:franchise-account:list' });
 };
 
 const search = event => {
-  console.log('auto complete 검색할 keyword:', event.query);
   // 가맹점 검색
-  filteredFranchises.value = [...mockupFranchises];
+  hqFranchiseApi
+    .getFranchiseList({ franchiseName: event.query || undefined })
+    .then(data => {
+      filteredFranchises.value = data.content;
+    })
+    .catch(() => {
+      filteredFranchises.value = [];
+    });
 };
 
 const clickAddFranchise = () => {
@@ -126,13 +171,15 @@ watch(
     if (newVal) {
       editMode.value = true;
 
-      const foundEmployee = mockupFranchiseAccounts.find(e => e.code == route.params.memberCode);
-      if (!foundEmployee) return;
+      hqMemberApi.getMemberInfo(memberCode).then(member => {
+        if (!member) return;
 
-      loginId.value = foundEmployee.id;
-      email.value = foundEmployee.email;
-      phone.value = foundEmployee.contact;
-      selectedFranchise.value = { label: foundEmployee.franchiseName, code: 500 };
+        loginId.value = member.id;
+        username.value = member.name;
+        email.value = member.email;
+        phone.value = member.contact;
+        selectedFranchise.value = { label: member.franchiseName, code: member.franchiseCode };
+      });
     } else {
       // 생성모드는 값 초기화
       editMode.value = false;

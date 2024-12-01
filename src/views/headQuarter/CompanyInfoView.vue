@@ -1,7 +1,10 @@
 <template>
   <div class="company-info-container">
     <div class="button-area">
-      <Button v-if="!editMode" size="small" label="수정" @click="clickEdit" />
+      <template v-if="!editMode">
+        <Button v-if="companyCode" size="small" label="수정" @click="clickEdit" />
+        <Button v-else size="small" label="등록" @click="clickEdit" />
+      </template>
       <template v-else>
         <Button size="small" label="취소" variant="outlined" severity="secondary" @click="clickCancel" />
         <Button size="small" label="저장" @click="clickSave" />
@@ -17,10 +20,10 @@
             <AppInputText v-model="name" />
           </td>
           <th>사업자등록번호</th>
-          <td v-if="!editMode">{{ companyInfo.businessNum }}</td>
+          <td v-if="!editMode">{{ formatBusinessNumber(companyInfo.businessNum) }}</td>
           <td v-else><AppInputText v-model="businessNum" /></td>
           <th>법인등록번호</th>
-          <td v-if="!editMode">{{ companyInfo.corporateNum }}</td>
+          <td v-if="!editMode">{{ formatCorporateNumber(companyInfo.corporateNum) }}</td>
           <td v-else>
             <AppInputText v-model="corporateNum" />
           </td>
@@ -60,11 +63,18 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { onMounted, ref, watch } from 'vue';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import CompanyApi from '@/utils/api/CompanyApi';
+import MasterCompanyApi from '@/utils/api/MasterCompanyApi';
+import { formatBusinessNumber, formatCorporateNumber } from '@/utils/format';
 
+const toast = useToast();
+
+const companyCode = ref(null);
 const companyInfo = ref({
   name: '',
   businessNum: '',
@@ -86,6 +96,9 @@ const contact = ref('');
 const establishDate = ref('');
 const editMode = ref(false);
 
+const companyApi = new CompanyApi();
+const masterCompanyApi = new MasterCompanyApi();
+
 const clickEdit = () => {
   editMode.value = true;
 };
@@ -94,33 +107,78 @@ const clickCancel = () => {
   editMode.value = false;
 };
 
-const clickSave = () => {
+const clickSave = async () => {
+  if (companyCode.value === null) {
+    // 생성
+    await masterCompanyApi.createCompanyInfo({
+      name: name.value,
+      businessNumber: businessNum.value,
+      corporateNumber: corporateNum.value,
+      ceoName: ceo.value,
+      address: address.value,
+      typeOfBusiness: businessType.value,
+      contact: contact.value,
+      dateOfEstablishment: establishDate.value,
+    });
+  } else {
+    // 수정
+    await masterCompanyApi.editCompanyInfo({
+      name: name.value,
+      businessNumber: businessNum.value,
+      corporateNumber: corporateNum.value,
+      ceoName: ceo.value,
+      address: address.value,
+      typeOfBusiness: businessType.value,
+      contact: contact.value,
+      dateOfEstablishment: establishDate.value,
+    });
+  }
+
   editMode.value = false;
+  toast.add({ severity: 'success', summary: '처리 성공', detail: '회사정보가 변경되었습니다.', life: 3000 });
+
+  // 데이터 새로고침
+  getCompanyInfo();
+};
+
+const getCompanyInfo = () => {
+  companyApi.getCompanyInfo().then(data => {
+    if (!data) return;
+
+    companyInfo.value = {
+      name: data.name,
+      businessNum: data.businessNumber,
+      corporateNum: data.corporateNumber,
+      ceo: data.ceoName,
+      address: data.address,
+      businessType: data.typeOfBusiness,
+      contact: data.contact,
+      establishDate: data.dateOfEstablishment,
+    };
+
+    companyCode.value = data.companyCode;
+  });
 };
 
 onMounted(() => {
-  companyInfo.value = {
-    name: '주식회사 메가가가가커피',
-    businessNum: '111-11-11111',
-    corporateNum: '',
-    ceo: '김대표',
-    address: '서울 동작구 보라매로 87, 3층 플레이데이터',
-    businessType: '일반소매업',
-    contact: '1688-0000',
-    establishDate: '2021-11-11',
-  };
+  getCompanyInfo();
 });
 
 watch(editMode, newVal => {
   if (newVal) {
-    name.value = companyInfo.value.name;
-    businessNum.value = companyInfo.value.businessNum;
-    corporateNum.value = companyInfo.value.corporateNum;
-    ceo.value = companyInfo.value.ceo;
-    address.value = companyInfo.value.address;
-    businessType.value = companyInfo.value.businessType;
-    contact.value = companyInfo.value.contact;
-    establishDate.value = companyInfo.value.establishDate;
+    if (companyCode.value) {
+      // 수정모드라면
+      name.value = companyInfo.value.name;
+      businessNum.value = companyInfo.value.businessNum;
+      corporateNum.value = companyInfo.value.corporateNum;
+      ceo.value = companyInfo.value.ceo;
+      address.value = companyInfo.value.address;
+      businessType.value = companyInfo.value.businessType;
+      contact.value = companyInfo.value.contact;
+      establishDate.value = companyInfo.value.establishDate;
+    } else {
+      // 생성모드
+    }
   }
 });
 </script>

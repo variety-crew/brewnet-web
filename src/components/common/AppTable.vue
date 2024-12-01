@@ -27,6 +27,7 @@
       scrollable
       scroll-height="400px"
       class="app-table"
+      @sort="onSort"
     >
       <template #header>
         <div class="table-header">
@@ -52,9 +53,8 @@
               icon="pi pi-download"
               label="엑셀 다운로드"
               size="small"
-              variant="outlined"
-              severity="secondary"
-              @click="exportCSV($event)"
+              severity="success"
+              @click="onClickExportToExcel"
             />
             <Button
               v-if="addButton"
@@ -214,12 +214,20 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
   },
 });
 
-const emit = defineEmits(['changePage', 'reload']);
+const emit = defineEmits(['changePage', 'reload', 'exportExcel', 'changeSort']);
 const sorting = defineModel('sorting', { type: String, required: false });
 
 const dt = ref();
 const exportCSV = () => {
   dt.value.exportCSV();
+};
+
+const onClickExportToExcel = () => {
+  emit('exportExcel');
+};
+
+const onSort = event => {
+  emit('changeSort', event.sortField, event.sortOrder);
 };
 </script>
 

@@ -12,8 +12,10 @@
       :columns="columns"
       :total-elements="exchanges.length"
       :rows-per-page="pageSize"
+      show-excel-export
       @change-page="onChangePage"
       @reload="reload"
+      @export-excel="onExportExcel"
     />
 
     <DynamicDialog />
@@ -22,6 +24,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -31,12 +34,15 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
+import HQExchangeTempApi from '@/utils/api/HQExchangeTempApi';
+import ExcelManager from '@/utils/ExcelManager';
 import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
 import { mockupExchanges } from '@/utils/mockup';
 
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const { openModal } = useModal();
+const toast = useToast();
 
 const nameKeyword = ref('');
 const exchanges = ref([]);
@@ -46,6 +52,8 @@ const paginatedExchanges = computed(() => {
 const pageSize = ref(15);
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
+
+const hqExchangeTempApi = new HQExchangeTempApi();
 
 const goToDetail = exchangeCode => {
   router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode } });
@@ -80,6 +88,27 @@ const onChangePage = event => {
 
 const reload = () => {
   console.log('reload 테이블');
+};
+
+const onExportExcel = () => {
+  hqExchangeTempApi
+    .getAllExchangeList({
+      // startDate: criteria.value.startDate,
+      // endDate: criteria.value.endDate,
+      // criteria: criteria.value.criteria,
+      // keyword: criteria.value.keyword,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
+      const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
+
+      const excelManager = new ExcelManager(rows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`교환목록${dayjs().format('YYMMDD')}`);
+    })
+    .catch(e => {
+      toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
+    });
 };
 
 onMounted(() => {

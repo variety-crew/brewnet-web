@@ -9,6 +9,8 @@
       <div class="content">
         <RouterView />
       </div>
+
+      <LoadingSpinner />
     </main>
   </div>
 </template>
@@ -17,6 +19,7 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+import LoadingSpinner from '../common/LoadingSpinner.vue';
 import SideMenuBar from '../common/SideMenuBar.vue';
 
 const route = useRoute();
@@ -49,6 +52,7 @@ const home = ref({
     flex-grow: 1;
     overflow-y: auto;
     padding: 5px 5px 20px 5px;
+    position: relative;
 
     .page-title {
       margin: 0 14px;

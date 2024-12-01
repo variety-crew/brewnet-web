@@ -47,7 +47,6 @@ import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import { CRITERIA_IN_STOCK, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoSearchCriteria } from '@/utils/format';
 import { makeSelectOption, makeTabs } from '@/utils/helper';
-import LocalStorageUtil from '@/utils/localStorage';
 
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
@@ -73,22 +72,19 @@ function formatKoTabItem(tabValue) {
   if (tabValue === TAB_ITEM.UNCHECK) return '미확인 입고내역';
   return 'Tab';
 }
-const activeTab = ref(TAB_ITEM.ALL);
+const activeTab = ref(TAB_ITEM.UNCHECK);
 
 const criteriaOptions = computed(() => {
   return CRITERIA_IN_STOCK.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 const tabItems = computed(() => {
-  return [TAB_ITEM.ALL, TAB_ITEM.UNCHECK].map(e => makeTabs(formatKoTabItem(e), e));
+  return [TAB_ITEM.UNCHECK, TAB_ITEM.ALL].map(e => makeTabs(formatKoTabItem(e), e));
 });
 
 const hqPurchaseApi = new HQPurchaseApi();
-const localStorageUtil = new LocalStorageUtil();
 
 const onStockUncheckToCheck = data => {
   hqPurchaseApi.stockIn({ itemCode: data.itemCode, purchaseCode: data.purchaseCode }).then(() => {
-    localStorageUtil.saveCompleteInStock(data.purchaseCode);
-
     toast.add({ severity: 'success', summary: '처리 성공', detail: '입고처리되었습니다.', life: 3000 });
     onReload();
   });
@@ -126,15 +122,15 @@ const columns = [
       button: [
         {
           getLabel: data => {
-            if (localStorageUtil.isCompleteInStock(data.purchaseCode)) {
+            if (data.storageConfirmed) {
               return '입고완료';
             }
             return '입고확인';
           },
           clickHandler: handleStockIn,
-          getDisabled: data => localStorageUtil.isCompleteInStock(data.purchaseCode),
+          getDisabled: data => data.storageConfirmed,
           getSeverity: data => {
-            if (localStorageUtil.isCompleteInStock(data.purchaseCode)) return 'secondary';
+            if (data.storageConfirmed) return 'secondary';
             return undefined;
           },
         },

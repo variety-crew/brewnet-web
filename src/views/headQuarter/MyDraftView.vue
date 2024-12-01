@@ -85,6 +85,7 @@ const clickGoDetail = data => {
   // 기안 타입에 따라 상세보기 페이지 이동
   if (data.kind === DRAFT_KIND.ORDER) {
     // 주문 상세로 이동
+    router.push({ name: 'hq:order:detail', params: { orderCode: data.code } });
   } else if (data.kind === DRAFT_KIND.EXCHANGE) {
     // 교환 상세로 이동
   } else if (data.kind === DRAFT_KIND.RETURN) {

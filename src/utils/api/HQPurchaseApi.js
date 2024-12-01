@@ -57,11 +57,6 @@ export default class HQPurchaseApi extends BaseApiService {
     return this.get(`/${purchaseCode}/approval-line`);
   }
 
-  // 발주 결재라인의 결재자 후보들 조회
-  getPurchaseApproverCandidates() {
-    return this.get('/approvers?approvalLine=PURCHASE');
-  }
-
   // 전체 입고품목 목록 조회(발주 품목)
   getInStockItems({
     page = 1,
@@ -137,6 +132,17 @@ export default class HQPurchaseApi extends BaseApiService {
   rejectPurchase({ purchaseCode, comment }) {
     return this.put(`/reject/${purchaseCode}`, {
       comment,
+    });
+  }
+
+  //
+  // DELETE
+  //
+
+  // 발주(구매품의서) 결재 요청 취소
+  deletePurchase(purchaseCode) {
+    return this.delete('/cancel', {
+      letterOfPurchaseCode: purchaseCode,
     });
   }
 }

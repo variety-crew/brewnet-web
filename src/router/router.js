@@ -223,6 +223,22 @@ const routes = [
               breadcrumb: '거래처 조회',
             },
           },
+          {
+            path: 'correspondent/create',
+            name: 'hq:partner:correspondent:create',
+            component: () => import('@/views/headQuarter/CorrespondentFormView.vue'),
+            meta: {
+              breadcrumb: '거래처 등록',
+            },
+          },
+          {
+            path: 'correspondent/edit/:correspondentCode',
+            name: 'hq:partner:correspondent:edit',
+            component: () => import('@/views/headQuarter/CorrespondentFormView.vue'),
+            meta: {
+              breadcrumb: '거래처 수정',
+            },
+          },
         ],
       },
       {
@@ -266,6 +282,14 @@ const routes = [
             },
           },
           {
+            path: 'storage/edit/:storageCode',
+            name: 'hq:stock:storage:edit',
+            component: () => import('@/views/headQuarter/StorageFormView.vue'),
+            meta: {
+              breadcrumb: '창고 수정',
+            },
+          },
+          {
             path: 'item-category',
             name: 'hq:stock:item-category',
             component: () => import('@/views/headQuarter/ItemCategoryView.vue'),
@@ -279,6 +303,22 @@ const routes = [
             component: () => import('@/views/headQuarter/ItemListView.vue'),
             meta: {
               breadcrumb: '품목 조회',
+            },
+          },
+          {
+            path: 'item/create',
+            name: 'hq:stock:item:create',
+            component: () => import('@/views/headQuarter/ItemFormView.vue'),
+            meta: {
+              breadcrumb: '품목 등록',
+            },
+          },
+          {
+            path: 'item/:itemCode/edit',
+            name: 'hq:stock:item:edit',
+            component: () => import('@/views/headQuarter/ItemFormView.vue'),
+            meta: {
+              breadcrumb: '품목 수정',
             },
           },
         ],

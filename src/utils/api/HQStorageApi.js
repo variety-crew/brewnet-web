@@ -50,4 +50,53 @@ export default class HQStorageApi extends BaseApiService {
   getStorage(storageCode) {
     return this.get(`/${storageCode}`);
   }
+
+  // 전체 데이터 조회 (엑셀 다운로드용)
+  getAllStockList({ storageCode, itemName }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('storageCode', storageCode);
+
+    if (itemName) {
+      searchParams.append('itemName', itemName);
+    }
+
+    return this.get(`/print-stock?${searchParams.toString()}`);
+  }
+
+  //
+  // POST
+  //
+
+  // 창고 등록
+  createStorage({ name, address, contact }) {
+    return this.post('/create', {
+      name,
+      address,
+      contact,
+    });
+  }
+
+  //
+  // PUT
+  //
+
+  // 창고 수정
+  editStorage(storageCode, { name, address, contact }) {
+    return this.put(`/edit/${storageCode}`, {
+      name,
+      address,
+      contact,
+    });
+  }
+
+  //
+  // DELETE
+  //
+
+  // 창고 삭제
+  deleteStorage(storageCode) {
+    return this.delete('/delete', {
+      storageCode,
+    });
+  }
 }

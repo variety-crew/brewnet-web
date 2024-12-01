@@ -5,7 +5,7 @@
     <!-- 주소 검색 -->
     <div>
       <AppInputText
-        v-model="address"
+        :model-value="address"
         label="주소"
         placeholder="주소검색"
         read-only
@@ -18,7 +18,7 @@
       <AppInputText v-model="addressDetail" placeholder="상세주소 입력" />
     </div>
 
-    <AppInputText v-model="contact" label="가맹점 연락처" />
+    <AppInputText v-model="contact" label="가맹점 연락처" placeholder="-없이 숫자만 입력" />
     <AppInputText v-model="businessNumber" label="사업자등록번호" placeholder="-없이 숫자만 입력" />
     <AppInputText v-model="ceo" label="대표자명" />
 
@@ -31,11 +31,14 @@
 <script setup>
 import { useToast } from 'primevue';
 import { defineAsyncComponent, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import { useModal } from '@/hooks/useModal';
+import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
+import ResponsibleFranchiseApi from '@/utils/api/ResponsibleFranchiseApi';
 import { mockupFranchises } from '@/utils/mockup';
+import { notNumber } from '@/utils/regex';
 
 const SearchAddressModalBody = defineAsyncComponent(
   () => import('@/components/headQuarter/SearchAddressModalBody.vue'),
@@ -44,6 +47,8 @@ const SearchAddressModalBody = defineAsyncComponent(
 const toast = useToast();
 const { openModal } = useModal();
 const route = useRoute();
+const franchiseCode = route.params.franchiseCode;
+const router = useRouter();
 
 const franchiseName = ref('');
 const address = ref('');
@@ -53,12 +58,21 @@ const businessNumber = ref('');
 const ceo = ref('');
 const editMode = ref(false);
 
-const choose = data => {
-  console.log('선택된 주소', data);
-};
+const responsibleFranchiseApi = new ResponsibleFranchiseApi();
+const hqFranchiseApi = new HQFranchiseApi();
 
 const onClickSearchAddress = () => {
-  openModal({ component: SearchAddressModalBody, header: '주소 검색' });
+  openModal({
+    component: SearchAddressModalBody,
+    header: '주소 검색',
+    onClose: opt => {
+      const callbackParams = opt.data;
+      if (!callbackParams || !callbackParams.selectedAddress) return;
+
+      // 검색결과로 얻은 주소
+      address.value = callbackParams.selectedAddress;
+    },
+  });
 };
 
 const checkForm = () => {
@@ -76,26 +90,49 @@ const checkForm = () => {
   }
 };
 
-const onSubmit = () => {
+const onSubmit = async () => {
   const isPass = checkForm();
+  if (!isPass) return;
+
+  let successMsg = '';
+
+  const requestBody = {
+    franchiseName: franchiseName.value,
+    address: address.value,
+    detailAddress: addressDetail.value,
+    contact: contact.value.replace(notNumber, ''),
+    businessNumber: businessNumber.value.replace(notNumber, ''),
+    name: ceo.value,
+  };
+
+  if (editMode.value) {
+    requestBody.franchiseCode = franchiseCode;
+    await responsibleFranchiseApi.editFranchise(requestBody);
+    successMsg = '가맹점 정보가 변경되었습니다.';
+  } else {
+    await responsibleFranchiseApi.createFranchise(requestBody);
+    successMsg = '가맹점이 등록되었습니다.';
+  }
+
+  toast.add({ severity: 'success', summary: '처리 성공', detail: successMsg, life: 3000 });
+  router.push({ name: 'hq:partner:franchise:list' });
 };
 
 watch(
   () => route.params.franchiseCode,
   newVal => {
-    // 수정모드인 경우 기본 값 설정
     if (newVal) {
       editMode.value = true;
 
-      const foundFranchise = mockupFranchises.find(e => e.code == newVal);
-      if (!foundFranchise) return;
-
-      franchiseName.value = foundFranchise.franchiseName;
-      address.value = foundFranchise.address;
-      addressDetail.value = foundFranchise.detailAddress;
-      contact.value = foundFranchise.contact;
-      businessNumber.value = foundFranchise.businessNumber;
-      ceo.value = foundFranchise.ceo;
+      // 수정모드인 경우 기본 값 설정
+      hqFranchiseApi.getFranchise(franchiseCode).then(data => {
+        franchiseName.value = data.franchiseName;
+        address.value = data.address;
+        addressDetail.value = data.detailAddress;
+        contact.value = data.contact;
+        businessNumber.value = data.businessNumber;
+        ceo.value = data.name;
+      });
     } else {
       // 생성모드는 값 초기화
       editMode.value = false;

@@ -108,7 +108,7 @@ const onOrderSave = () => {
     .createOrder({
       items: selectedItems.value.map(e => ({ itemCode: e.itemCode, quantity: e.quantity })),
     })
-    .then(newOrderCode => {
+    .then(result => {
       toast.add({
         severity: 'success',
         summary: '처리 성공',
@@ -117,7 +117,7 @@ const onOrderSave = () => {
       });
 
       // 상세 페이지로 이동
-      router.replace({ name: 'fc:home:order:detail', params: { orderCode: newOrderCode } });
+      router.replace({ name: 'fc:home:order:detail', params: { orderCode: result.orderCode } });
     });
 };
 

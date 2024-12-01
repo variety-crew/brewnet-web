@@ -89,7 +89,13 @@ export default class AppMenu {
             this.#makeMenu('가맹점 계정 등록', 'hq:partner:franchise-account:create'),
           ],
         },
-        { label: '거래처', items: [this.#makeMenu('거래처 조회', 'hq:partner:correspondent:list')] },
+        {
+          label: '거래처',
+          items: [
+            this.#makeMenu('거래처 조회', 'hq:partner:correspondent:list'),
+            this.#makeMenu('거래처 등록', 'hq:partner:correspondent:create'),
+          ],
+        },
       ];
     }
 
@@ -137,6 +143,7 @@ export default class AppMenu {
           items: [
             this.#makeMenu('품목 카테고리 관리', 'hq:stock:item-category'),
             this.#makeMenu('품목 조회', 'hq:stock:item:list'),
+            this.#makeMenu('품목 등록', 'hq:stock:item:create'),
           ],
         },
       ];

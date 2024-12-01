@@ -3,10 +3,15 @@
     <header>
       <img src="@/assets/images/logo.png" alt="Logo" class="logo" />
       <h3>{{ $route.meta?.pageTitle || '' }}</h3>
-      <Button label="로그아웃" variant="text" size="small" @click="clickLogout" />
+      <div>
+        <Button label="로그아웃" variant="text" size="small" @click="clickLogout" />
+        <Button label="강제 로그아웃(임시)" variant="text" size="small" @click="clickForceLogout" />
+      </div>
     </header>
     <main>
       <RouterView />
+
+      <LoadingSpinner />
     </main>
     <footer>
       <nav>
@@ -27,6 +32,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import { useUserStore } from '@/stores/user';
 import AuthApi from '@/utils/api/AuthApi';
 
@@ -46,6 +52,11 @@ const clickLogout = () => {
     userStore.clearUserData();
     router.replace({ name: 'auth:login' });
   });
+};
+
+const clickForceLogout = () => {
+  userStore.clearUserData();
+  router.replace({ name: 'auth:login' });
 };
 </script>
 
@@ -73,6 +84,7 @@ const clickLogout = () => {
 
   main {
     flex-grow: 1;
+    position: relative;
   }
 
   footer {

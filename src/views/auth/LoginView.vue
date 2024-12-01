@@ -26,6 +26,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { usePreset } from '@primevue/themes';
 
 import AppCheck from '@/components/common/form/AppCheck.vue';
 import { useUserStore } from '@/stores/user';
@@ -33,6 +34,8 @@ import AuthApi from '@/utils/api/AuthApi';
 import MemberApi from '@/utils/api/MemberApi';
 import { ROLE } from '@/utils/constant';
 import LocalStorageUtil from '@/utils/localStorage';
+import AppPresetFC from '@/assets/AppPresetFC';
+import AppPreset from '@/assets/AppPreset';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -96,17 +99,18 @@ const login = async () => {
       userStore.setUserData(myInfo); // 내 정보 셋팅
     }
 
-    // 메인 페이지로 이동할 준비
-    localStorageUtil.handleRememberLoginId(saveAuth.value, id.value); // 로그인 정보 저장할건지?
+    // 로그인 정보 저장할건지?
+    localStorageUtil.handleRememberLoginId(saveAuth.value, id.value);
+
+    // if (userType === 'fc') {
+    //   usePreset(AppPresetFC)
+    // } else {
+    //   usePreset(AppPreset)
+    // }
+
+    // 메인 페이지로 이동
     router.replace({ name: `${userType}:home` });
   } catch (e) {
-    toast.add({
-      severity: 'error',
-      summary: '로그인 실패',
-      detail: e.message || '로그인 중 에러가 발생했습니다.',
-      life: 3000,
-    });
-
     // 실패한 경우 데이터 clear
     userStore.clearUserData();
   }

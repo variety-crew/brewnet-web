@@ -9,14 +9,14 @@ export default class ItemApi extends BaseApiService {
   // GET
   //
 
-  // 상품 목록 조회 (주문 시)
+  // 상품 목록 조회 (프랜차이즈용)
   getItems({ page = 0, pageSize = 15, itemUniqueCode, itemName }) {
     const searchParams = new URLSearchParams();
-    searchParams.append('pageNumber', page);
-    searchParams.append('pageSize', pageSize);
+    searchParams.append('page', page);
+    searchParams.append('size', pageSize);
 
     if (itemUniqueCode) {
-      searchParams.append('itemUniqueCode', itemUniqueCode);
+      searchParams.append('itemCode', itemUniqueCode);
     }
 
     if (itemName) {
