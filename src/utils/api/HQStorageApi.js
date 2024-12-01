@@ -89,6 +89,15 @@ export default class HQStorageApi extends BaseApiService {
     });
   }
 
+  // 창고별 상품 재고 조정
+  changeStock({ storageCode, itemCode, quantity }) {
+    return this.put('/change-stock', {
+      storageCode,
+      itemCode,
+      quantity,
+    });
+  }
+
   //
   // DELETE
   //
