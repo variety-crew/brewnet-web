@@ -110,6 +110,7 @@ const checkForm = () => {
   try {
     if (!selectedSubCategory.value) throw new Error('하위 카테고리를 선택해주세요.');
     if (!itemName.value) throw new Error('품목명을 입력해주세요.');
+    if (!itemUniqueCode.value) throw new Error('품목코드를 입력해주세요.');
     if (!sellingPrice.value) throw new Error('판매단가를 입력해주세요.');
     if (!purchasePrice.value) throw new Error('구매단가를 입력해주세요.');
     if (!selectedCorrespondent.value) throw new Error('취급거래처를 입력해주세요.');
@@ -145,6 +146,17 @@ const clickSave = async () => {
     successMsg = '상품 정보가 수정되었습니다.';
   } else {
     // 생성
+    await hqItemApi.createItem({
+      categoryCode: selectedSubCategory.value,
+      name: itemName.value,
+      purchasePrice: purchasePrice.value,
+      sellingPrice: sellingPrice.value,
+      safetyStock: safetyStock.value,
+      itemUniqueCode: itemUniqueCode.value,
+      correspondentCode: selectedCorrespondent.value.code,
+      imageFile: itemImageFile.value,
+    });
+    successMsg = '상품이 등록되었습니다.';
   }
 
   if (!successMsg) return;
@@ -178,7 +190,9 @@ watch(
       // 생성모드
       editMode.value = false;
 
+      selectedSubCategory.value = null;
       itemName.value = '';
+      itemUniqueCode.value = '';
       sellingPrice.value = null;
       purchasePrice.value = null;
       selectedCorrespondent.value = null;
