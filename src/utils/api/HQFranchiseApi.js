@@ -35,6 +35,20 @@ export default class HQFranchiseApi extends BaseApiService {
     return this.get(`?${searchParams.toString()}`);
   }
 
+  getAllFranchiseList({ franchiseName = '', citys = [] }) {
+    const searchParams = new URLSearchParams();
+
+    if (franchiseName) {
+      searchParams.append('franchiseName', franchiseName);
+    }
+
+    if (citys.length > 0) {
+      searchParams.append('citys', citys.join(','));
+    }
+
+    return this.get(`/excel?${searchParams.toString()}`);
+  }
+
   // 가맹점 상세조회
   getFranchise(franchiseCode) {
     return this.get(`/detail/${franchiseCode}`);
