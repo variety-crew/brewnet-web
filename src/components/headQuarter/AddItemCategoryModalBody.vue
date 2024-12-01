@@ -6,6 +6,7 @@
       :options="superCateOptions"
       class="mb-3"
       helper-text="미입력 시, 상위 카테고리로 생성됩니다."
+      show-clear
     />
     <AppInputText v-model="addingCategoryName" label="카테고리명" />
 

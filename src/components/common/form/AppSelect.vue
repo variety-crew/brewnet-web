@@ -13,7 +13,7 @@
       :name="name"
       class="app-select"
       :class="{ full: fullWidth }"
-      show-clear
+      :show-clear="showClear"
       @change="onSelectChange"
     />
     <div v-if="helperText" class="app-select-helper-text">{{ helperText }}</div>
@@ -23,64 +23,72 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { modelValue, options, initialValue, label, name, labelPosition, fullWidth, helperText } = defineProps({
-  // 부모로부터 현재 선택된 값을 받아옴
-  modelValue: {
-    type: [String, Number, null],
-    required: true,
-  },
+const { modelValue, options, initialValue, label, name, labelPosition, fullWidth, helperText, showClear } = defineProps(
+  {
+    // 부모로부터 현재 선택된 값을 받아옴
+    modelValue: {
+      type: [String, Number, null],
+      required: true,
+    },
 
-  options: {
-    type: Array,
-    required: true,
-  },
+    options: {
+      type: Array,
+      required: true,
+    },
 
-  /**
-   * options: [{
-   *   label: string
-   *   value: string
-   * }]
-   */
+    /**
+     * options: [{
+     *   label: string
+     *   value: string
+     * }]
+     */
 
-  //
-  // required false
-  //
-  initialValue: {
-    type: String,
-    required: false,
-    default: '',
-  },
+    //
+    // required false
+    //
+    initialValue: {
+      type: String,
+      required: false,
+      default: '',
+    },
 
-  label: {
-    type: String,
-    required: false,
-    default: '',
-  },
+    label: {
+      type: String,
+      required: false,
+      default: '',
+    },
 
-  name: {
-    type: [String, null],
-    required: false,
-    default: null,
-  },
+    name: {
+      type: [String, null],
+      required: false,
+      default: null,
+    },
 
-  labelPosition: {
-    type: String,
-    required: false,
-    default: 'top',
-  },
+    labelPosition: {
+      type: String,
+      required: false,
+      default: 'top',
+    },
 
-  fullWidth: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
+    fullWidth: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
 
-  helperText: {
-    type: [String, null],
-    required: false,
-    default: () => null,
+    helperText: {
+      type: [String, null],
+      required: false,
+      default: () => null,
+    },
+
+    showClear: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
-});
+);
 
 const emit = defineEmits(['update:modelValue']);
 
