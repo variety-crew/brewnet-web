@@ -5,14 +5,15 @@
       <div class="left"></div>
       <div class="right">
         <MyApprovalWaitCard />
+        <NewOrderCard />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import MyApprovalWaitCard from '@/components/headQuarter/MyApprovalWaitCard.vue';
+import NewOrderCard from '@/components/headQuarter/NewOrderCard.vue';
 import PageTitle from '@/components/headQuarter/PageTitle.vue';
 </script>
 
@@ -27,6 +28,9 @@ import PageTitle from '@/components/headQuarter/PageTitle.vue';
 
     .right {
       flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
   }
 }

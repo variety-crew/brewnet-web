@@ -1,43 +1,47 @@
 <template>
-  <Card class="my-approval-wait-card">
+  <Card class="new-order-card">
     <template #title>
-      <div class="my-approval-wait-card-title">
-        <h3>결재대기 목록 ({{ totalElements }}건)</h3>
-        <Button label="전체보기" as="router-link" :to="{ name: 'hq:my:approval' }" size="small" severity="secondary" />
+      <div class="new-order-card-title">
+        <h3>신규주문 목록 ({{ totalElements }}건)</h3>
+        <Button label="전체보기" as="router-link" :to="{ name: 'hq:order:list' }" size="small" severity="secondary" />
       </div>
     </template>
     <template #content>
       <table>
         <thead>
           <tr>
-            <th>기안서구분</th>
-            <th>기안서코드</th>
-            <th>제목</th>
-            <th>기안일자</th>
-            <th>기안자</th>
-            <th>상태</th>
+            <th>주문코드</th>
+            <th>지점명</th>
+            <th>품목</th>
+            <th>총 금액</th>
+            <th>주문일자</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-if="paginatedDraftList.length === 0">
-            <td colspan="7">{{ errMsg }}</td>
+          <tr v-if="paginatedNewOrderList.length === 0">
+            <td colspan="6">{{ errMsg }}</td>
           </tr>
           <template v-else>
-            <tr v-for="draft in paginatedDraftList" :key="`${draft.kind}${draft.code}`">
-              <td>{{ formatKoDraftKind(draft.kind) }}</td>
-              <td>{{ draft.code }}</td>
-              <td>{{ draft.title }}</td>
-              <td>{{ draft.date }}</td>
-              <td>{{ draft.drafterName }}</td>
-              <td>{{ formatKoApprovalStatus(draft.status) }}</td>
+            <tr v-for="newOrder in paginatedNewOrderList" :key="newOrder.orderCode">
+              <td>{{ newOrder.orderCode }}</td>
+              <td>{{ newOrder.franchiseName }}</td>
+              <td>{{ newOrder.itemName }}</td>
+              <td>{{ (newOrder.totalPrice * 1.1).toLocaleString() }}</td>
+              <td>{{ newOrder.createdAt }}</td>
               <td>
                 <Button
-                  label="기안서보기"
+                  label="주문상세"
                   size="small"
                   variant="text"
                   class="action-button"
-                  @click="clickGoDetail(draft)"
+                  as="router-link"
+                  :to="{
+                    name: 'hq:order:detail',
+                    params: {
+                      orderCode: newOrder.orderCode,
+                    },
+                  }"
                 />
               </td>
             </tr>
@@ -51,13 +55,9 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 
-import { useDraftNavigation } from '@/hooks/useDraftNavigation';
 import HQStatisticsApi from '@/utils/api/HQStatisticsApi';
-import { formatKoApprovalStatus, formatKoDraftKind } from '@/utils/format';
 
-const { clickGoDetail } = useDraftNavigation();
-
-const paginatedDraftList = ref([]);
+const paginatedNewOrderList = ref([]);
 const totalElements = ref(0);
 const errMsg = ref('');
 
@@ -65,9 +65,9 @@ const hqStatisticsApi = new HQStatisticsApi();
 
 onMounted(() => {
   hqStatisticsApi
-    .getDraftListOnWaitingMyApproval()
+    .getNewOrders()
     .then(data => {
-      paginatedDraftList.value = data.content;
+      paginatedNewOrderList.value = data.content;
       totalElements.value = data.totalElements;
     })
     .catch(e => {
@@ -77,7 +77,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.my-approval-wait-card {
+.new-order-card {
   box-shadow: var(--p-primary-100) 0px 2px 8px 0px;
 
   table {
@@ -106,7 +106,7 @@ onMounted(() => {
     padding: 2px 5px;
   }
 
-  .my-approval-wait-card-title {
+  .new-order-card-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
