@@ -34,6 +34,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -54,6 +55,7 @@ import {
 } from '@/utils/helper';
 
 const router = useRouter();
+const toast = useToast();
 
 const totalElements = ref(0);
 const page = ref(0);
@@ -189,6 +191,9 @@ const onExportExcel = () => {
       const excelManager = new ExcelManager(rows, orderedFields);
       excelManager.setHeaderNames(headerNames);
       excelManager.export(`주문목록${dayjs().format('YYMMDD')}`);
+    })
+    .catch(e => {
+      toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
     });
 };
 
