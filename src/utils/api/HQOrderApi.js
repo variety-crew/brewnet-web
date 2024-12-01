@@ -71,6 +71,25 @@ export default class HQOrderApi extends BaseApiService {
     return this.get(`/search?${searchParams.toString()}`);
   }
 
+  // 전체 주문 목록 (엑셀 다운로드용)
+  getAllOrders({
+    startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
+    endDate = dayjs().format('YYYY-MM-DD'),
+    criteria,
+    keyword,
+  }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
+
+    if (criteria && keyword) {
+      searchParams.append('criteria', criteria);
+      searchParams.append('searchWord', keyword);
+    }
+
+    return this.get(`/excel?${searchParams.toString()}`);
+  }
+
   // 주문 상세 조회 설정
   getOrderDetail(orderCode) {
     return this.get(`/detail/${orderCode}`);

@@ -22,8 +22,10 @@
       :columns="columns"
       :total-elements="totalElements"
       :rows-per-page="size"
+      show-excel-export
       @reload="reloadData"
       @change-page="onChangePage"
+      @export-excel="onExportExcel"
     />
 
     <DynamicDialog />
@@ -32,6 +34,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -42,6 +45,7 @@ import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQOrderApi from '@/utils/api/HQOrderApi';
 import { CRITERIA_HQ_ORDER_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import { formatKoApproval, formatKoDrafterApproved, formatKoOrderStatus, formatKoSearchCriteria } from '@/utils/format';
 import {
   getOrderStatusSeverity,
@@ -51,6 +55,7 @@ import {
 } from '@/utils/helper';
 
 const router = useRouter();
+const toast = useToast();
 
 const totalElements = ref(0);
 const page = ref(0);
@@ -169,6 +174,27 @@ const onReset = () => {
   criteria.value = getInitialCriteria();
   page.value = 0;
   getOrders();
+};
+
+const onExportExcel = () => {
+  hqOrderApi
+    .getAllOrders({
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
+      const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
+
+      const excelManager = new ExcelManager(rows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`주문목록${dayjs().format('YYMMDD')}`);
+    })
+    .catch(e => {
+      toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
+    });
 };
 
 onMounted(() => {
