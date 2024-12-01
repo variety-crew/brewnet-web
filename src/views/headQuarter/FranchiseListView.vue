@@ -16,13 +16,16 @@
       :columns="columns"
       :total-elements="totalElements"
       :rows-per-page="pageSize"
+      show-excel-export
       @change-page="onChangePage"
       @reload="reload"
+      @export-excel="onExportExcel"
     />
   </div>
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -34,6 +37,7 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQFranchiseApi from '@/utils/api/HQFranchiseApi';
 import ResponsibleFranchiseApi from '@/utils/api/ResponsibleFranchiseApi';
+import ExcelManager from '@/utils/ExcelManager';
 import { makeAutocompleteSuggestion } from '@/utils/helper';
 
 const { showConfirm } = useAppConfirmModal();
@@ -160,6 +164,25 @@ const onReset = () => {
   criteria.value = getInitialCriteria();
   page.value = 0;
   getFranchiseList();
+};
+
+const onExportExcel = () => {
+  hqFranchiseApi
+    .getAllFranchiseList({
+      franchiseName: criteria.value.franchiseNameKeyword,
+      citys: criteria.value.addressKeyword ? [criteria.value.addressKeyword.label] : undefined,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
+      const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
+
+      const excelManager = new ExcelManager(rows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`가맹점목록${dayjs().format('YYMMDD')}`);
+    })
+    .catch(e => {
+      toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
+    });
 };
 
 onMounted(() => {

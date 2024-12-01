@@ -22,8 +22,10 @@
       :columns="columns"
       :total-elements="totalElements"
       :rows-per-page="size"
+      show-excel-export
       @reload="reloadData"
       @change-page="onChangePage"
+      @export-excel="onExportExcel"
     />
 
     <DynamicDialog />
@@ -32,6 +34,7 @@
 
 <script setup>
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -42,11 +45,13 @@ import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import { useUserStore } from '@/stores/user';
 import FCOrderApi from '@/utils/api/FCOrderApi';
-import { CRITERIA_FC_ORDER_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import { CRITERIA_FC_ORDER_LIST, ORDER_STATUS, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import { formatKoOrderStatus, formatKoSearchCriteria } from '@/utils/format';
 import { getOrderStatusSeverity, makeSelectOption } from '@/utils/helper';
 
 const router = useRouter();
+const toast = useToast();
 
 const totalElements = ref(0);
 const page = ref(0);
@@ -61,7 +66,7 @@ const getInitialCriteria = () => ({
 
 const criteria = ref(getInitialCriteria());
 const paginatedOrders = ref([]);
-const FcOrderApi = new FCOrderApi();
+const fcOrderApi = new FCOrderApi();
 const searchFilter = ref('orderCode');
 const searchOptions = computed(() => {
   return CRITERIA_FC_ORDER_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
@@ -84,7 +89,7 @@ const columns = [
   },
   { field: 'orderCode', header: '주문번호' },
   {
-    field: 'itemName',
+    field: 'orderItemList',
     header: '주문품목명',
     render: data => data.orderItemList.map(item => item.name).join(', '),
   },
@@ -117,17 +122,19 @@ const columns = [
 ];
 
 const getOrders = () => {
-  FcOrderApi.searchOrders({
-    page: page.value,
-    size: size.value,
-    startDate: criteria.value.startDate,
-    endDate: criteria.value.endDate,
-    criteria: criteria.value.criteria,
-    keyword: criteria.value.keyword,
-  }).then(data => {
-    totalElements.value = data.totalElements;
-    paginatedOrders.value = data.content;
-  });
+  fcOrderApi
+    .searchOrders({
+      page: page.value,
+      size: size.value,
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(data => {
+      totalElements.value = data.totalElements;
+      paginatedOrders.value = data.content;
+    });
 };
 
 const onSearch = () => {
@@ -147,6 +154,33 @@ const reloadData = () => {
 const onChangePage = event => {
   page.value = event.page;
   getOrders();
+};
+
+const onExportExcel = () => {
+  fcOrderApi
+    .getAllOrders({
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
+      const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
+
+      // 데이터 표시 수정
+      const tableRows = rows.map(row => ({
+        ...row,
+        recentOrderStatus: formatKoOrderStatus(row.recentOrderStatus),
+        orderItemList: row.orderItemList.map(item => item.name).join(', '),
+        recentOrderStatusCreatedAt:
+          row.recentOrderStatus === ORDER_STATUS.SHIPPED ? row.recentOrderStatusCreatedAt : '', // Display only if status is SHIPPED
+      }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`나의주문목록${dayjs().format('YYMMDD')}`);
+    });
 };
 
 onMounted(() => {
