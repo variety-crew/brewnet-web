@@ -13,18 +13,20 @@
       :name="name"
       class="app-select"
       :class="{ full: fullWidth }"
+      show-clear
       @change="onSelectChange"
     />
+    <div v-if="helperText" class="app-select-helper-text">{{ helperText }}</div>
   </AppFormField>
 </template>
 
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { modelValue, options, initialValue, label, name, labelPosition, fullWidth } = defineProps({
+const { modelValue, options, initialValue, label, name, labelPosition, fullWidth, helperText } = defineProps({
   // 부모로부터 현재 선택된 값을 받아옴
   modelValue: {
-    type: [String, Number],
+    type: [String, Number, null],
     required: true,
   },
 
@@ -72,6 +74,12 @@ const { modelValue, options, initialValue, label, name, labelPosition, fullWidth
     required: false,
     default: false,
   },
+
+  helperText: {
+    type: [String, null],
+    required: false,
+    default: () => null,
+  },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -85,5 +93,9 @@ function onSelectChange(event) {
 <style scoped>
 .app-select.full {
   flex-grow: 1;
+}
+.app-select-helper-text {
+  color: var(--p-surface-500);
+  font-size: 12px;
 }
 </style>

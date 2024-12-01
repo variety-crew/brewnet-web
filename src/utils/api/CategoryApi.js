@@ -18,4 +18,16 @@ export default class CategoryApi extends BaseApiService {
   getSuperCategories() {
     return this.get('/super');
   }
+
+  //
+  // POST
+  //
+
+  // 카테고리 생성
+  createCategory(superCategoryCode, categoryName) {
+    return this.post('', {
+      superCategoryCode,
+      categoryName,
+    });
+  }
 }
