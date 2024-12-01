@@ -6,6 +6,7 @@
       <div class="right">
         <DashboardMyApprovalWaitCard />
         <DashboardNewOrderCard />
+        <DashboardSafetyStockCard />
       </div>
     </div>
   </div>
@@ -14,6 +15,7 @@
 <script setup>
 import DashboardMyApprovalWaitCard from '@/components/headQuarter/DashboardMyApprovalWaitCard.vue';
 import DashboardNewOrderCard from '@/components/headQuarter/DashboardNewOrderCard.vue';
+import DashboardSafetyStockCard from '@/components/headQuarter/DashboardSafetyStockCard.vue';
 import PageTitle from '@/components/headQuarter/PageTitle.vue';
 </script>
 
