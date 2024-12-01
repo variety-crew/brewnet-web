@@ -93,14 +93,6 @@ const clickRemoveSuper = () => {
   emit('removeSuperCategory', categoryGroup.superCategoryCode, categoryGroup.superCategoryName);
 };
 
-const clickSave = () => {
-  emit('saveCategory', editCategoryCode.value, editingText);
-};
-
-const clickSaveSuper = () => {
-  emit('saveSuperCategory', categoryGroup.superCategoryCode, superEditingText);
-};
-
 const offEditMode = () => {
   editCategoryCode.value = null;
   editingText.value = '';
@@ -110,6 +102,16 @@ const offEditMode = () => {
 const offEditModeSuper = () => {
   superEditingText.value = '';
   superEditMode.value = false;
+};
+
+const clickSave = () => {
+  emit('saveCategory', editCategoryCode.value, editingText.value);
+  offEditMode();
+};
+
+const clickSaveSuper = () => {
+  emit('saveSuperCategory', categoryGroup.superCategoryCode, superEditingText.value);
+  offEditModeSuper();
 };
 </script>
 

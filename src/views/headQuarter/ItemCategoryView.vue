@@ -73,13 +73,17 @@ const getPageData = async () => {
 };
 
 const onSave = (targetCategoryCode, newName) => {
-  // TODO 카테고리 수정 API
-  toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리명이 수정되었습니다.', life: 3000 });
+  categoryApi.editSubCategory(targetCategoryCode, newName).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리명이 수정되었습니다.', life: 3000 });
+    getPageData();
+  });
 };
 
 const onSaveSuper = (targetCategoryCode, newName) => {
-  // TODO 카테고리 수정 API
-  toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리명이 수정되었습니다.', life: 3000 });
+  categoryApi.editSuperCategory(targetCategoryCode, newName).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '카테고리명이 수정되었습니다.', life: 3000 });
+    getPageData();
+  });
 };
 
 const removeCategory = targetCategoryCode => {
