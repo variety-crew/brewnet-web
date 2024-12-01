@@ -1,20 +1,30 @@
 <template>
   <div>
     <!-- 검색 area -->
-    <SearchArea grid class="exchange-search">
-      <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="사용일자" class="criteria use-date" />
-      <!-- <AppSelect v-model="position" label="직급" :options="positionOptions" :initial-value="initialPosition" /> -->
-      <AppInputText id="input_name_keyword" v-model="nameKeyword" label="임직원명" />
+    <SearchArea grid class="exchange-search" @search="onSearch" @form-reset="onReset">
+      <AppDateRangePicker
+        v-model:start="criteria.startDate"
+        v-model:end="criteria.endDate"
+        label="작성일자"
+        class="criteria created-at"
+      />
+      <AppSelect
+        v-model="criteria.criteria"
+        label="검색조건"
+        :options="searchOptions"
+        :initial-value="criteria.criteria"
+      />
+      <AppInputText id="input_name_keyword" v-model="criteria.keyword" label="검색어" />
     </SearchArea>
 
     <AppTable
       :paginated-data="paginatedExchanges"
       :columns="columns"
-      :total-elements="exchanges.length"
-      :rows-per-page="pageSize"
+      :total-elements="totalElements"
+      :rows-per-page="size"
       show-excel-export
+      @reload="reloadData"
       @change-page="onChangePage"
-      @reload="reload"
       @export-excel="onExportExcel"
     />
 
@@ -32,39 +42,57 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
-import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { useModal } from '@/hooks/useModal';
 import HQExchangeTempApi from '@/utils/api/HQExchangeTempApi';
+import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
+import { getExchangeStatusSeverity } from '@/utils/helper';
 import { mockupExchanges } from '@/utils/mockup';
 
 const router = useRouter();
-const { showConfirm } = useAppConfirmModal();
-const { openModal } = useModal();
 const toast = useToast();
+
+const totalElements = ref(0);
+const page = ref(0);
+const size = ref(15);
 
 const nameKeyword = ref('');
 const exchanges = ref([]);
-const paginatedExchanges = computed(() => {
-  return exchanges.value.slice(0, 15);
-});
-const pageSize = ref(15);
+const paginatedExchanges = ref([]);
+
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
 const endDate = ref(new Date());
 
+const getInitialCriteria = () => ({
+  startDate: dayjs().subtract(1, 'year').toDate(),
+  endDate: new Date(),
+  criteria: SEARCH_CRITERIA.EXCHNAGE_CODE,
+  keyword: '',
+});
+
+const criteria = ref(getInitialCriteria());
 const hqExchangeTempApi = new HQExchangeTempApi();
+const paginatedOrders = ref([]);
 
 const goToDetail = exchangeCode => {
   router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode } });
 };
 
 const columns = [
+  {
+    field: 'status',
+    header: '교환상태',
+    render: data => formatKoExchangeStatus(data.status),
+    template: {
+      tag: {
+        getSeverity: data => getExchangeStatusSeverity(data.orderStatusHistoryList),
+      },
+    },
+  },
   { field: 'exchangeCode', header: '교환번호', sortable: true },
   { field: 'franchiseName', header: '교환요청지점' },
   { field: 'itemName', header: '교환품목명' },
   { field: 'reason', header: '교환사유', render: data => formatKoExchangeReason(data.reason) },
-  { field: 'status', header: '교환상태', render: data => formatKoExchangeStatus(data.status) },
   { field: 'memberCode', header: '교환담당자' },
   { field: 'createdAt', header: '교환요청일자' },
   {
@@ -81,13 +109,39 @@ const columns = [
   },
 ];
 
-const onChangePage = event => {
-  const { page } = event;
-  console.log(page, '페이지로 변경되었다!');
+const getExchanges = () => {
+  hqExchangeTempApi
+    .searchExchanges({
+      page: page.value,
+      size: size.value,
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(data => {
+      totalElements.value = data.totalElements;
+      paginatedExchanges.value = data.content;
+    });
 };
 
-const reload = () => {
-  console.log('reload 테이블');
+const reloadData = () => {
+  getExchanges();
+};
+
+const onChangePage = event => {
+  page.value = event.page;
+  getExchanges();
+};
+
+const onSearch = () => {
+  getExchanges();
+};
+
+const onReset = () => {
+  criteria.value = getInitialCriteria();
+  page.value = 0;
+  getExchanges();
 };
 
 const onExportExcel = () => {
@@ -112,7 +166,7 @@ const onExportExcel = () => {
 };
 
 onMounted(() => {
-  exchanges.value = [...mockupExchanges];
+  getExchanges();
 });
 </script>
 

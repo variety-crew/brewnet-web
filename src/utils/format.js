@@ -273,6 +273,15 @@ export const formatKoSearchCriteria = criteria => {
     case SEARCH_CRITERIA.ORDERED_FRANCHISE_NAME:
       return '주문지점';
 
+    case SEARCH_CRITERIA.EXCHANGE_CODE:
+      return '교환번호';
+
+    case SEARCH_CRITERIA.EXCHANGE_FRANCHISE_NAME:
+      return '교환지점';
+
+    case SEARCH_CRITERIA.EXCHANGE_MANAGER_NAME:
+      return '교환담당자';
+
     default:
       return '';
   }

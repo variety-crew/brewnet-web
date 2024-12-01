@@ -59,9 +59,31 @@ export const getOrderStatusSeverity = orderStatus => {
       return 'danger';
 
     case ORDER_STATUS.APPROVED:
-    case ORDER_STATUS.SHIPPING:
+    case EXCHANGE_STATUS.SHIPPING:
     case ORDER_STATUS.SHIPPED:
     case ORDER_STATUS.PENDING:
+      return 'info';
+
+    default:
+      return 'info';
+  }
+};
+
+export const getExchangeStatusSeverity = exchangeStatus => {
+  switch (exchangeStatus) {
+    case EXCHANGE_STATUS.REQUESTED:
+      return 'success';
+
+    case EXCHANGE_STATUS.CANCELED:
+    case EXCHANGE_STATUS.REJECTED:
+      return 'danger';
+
+    case EXCHANGE_STATUS.APPROVED:
+    case EXCHANGE_STATUS.PICKING:
+    case EXCHANGE_STATUS.PICKED:
+    case EXCHANGE_STATUS.SHIPPING:
+    case EXCHANGE_STATUS.SHIPPED:
+    case EXCHANGE_STATUS.PENDING:
       return 'info';
 
     default:
