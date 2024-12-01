@@ -6,6 +6,8 @@
       :default-value="initialValue"
       option-label="label"
       option-value="value"
+      :option-group-label="grouped ? 'label' : undefined"
+      :option-group-children="grouped ? 'items' : undefined"
       size="small"
       checkmark
       placeholder="===선택해주세요==="
@@ -15,7 +17,11 @@
       :class="{ full: fullWidth }"
       :show-clear="showClear"
       @change="onSelectChange"
-    />
+    >
+      <template v-if="grouped" #optiongroup="slotProps">
+        <div>{{ slotProps.option.label }}</div>
+      </template>
+    </Select>
     <div v-if="helperText" class="app-select-helper-text">{{ helperText }}</div>
   </AppFormField>
 </template>
@@ -23,8 +29,8 @@
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { modelValue, options, initialValue, label, name, labelPosition, fullWidth, helperText, showClear } = defineProps(
-  {
+const { modelValue, options, initialValue, label, name, labelPosition, fullWidth, helperText, showClear, grouped } =
+  defineProps({
     // 부모로부터 현재 선택된 값을 받아옴
     modelValue: {
       type: [String, Number, null],
@@ -47,7 +53,7 @@ const { modelValue, options, initialValue, label, name, labelPosition, fullWidth
     // required false
     //
     initialValue: {
-      type: String,
+      type: [String, Number],
       required: false,
       default: '',
     },
@@ -87,8 +93,13 @@ const { modelValue, options, initialValue, label, name, labelPosition, fullWidth
       required: false,
       default: false,
     },
-  },
-);
+
+    grouped: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  });
 
 const emit = defineEmits(['update:modelValue']);
 
