@@ -50,37 +50,40 @@ const addingCategoryName = ref('');
 const selectedSuperCategory = ref('');
 const superCategoryList = ref([]);
 const superCategoryOptions = computed(() => {
-  return superCategoryList.value.map(e => makeSelectOption(e, e));
+  return superCategoryList.value.map(e => makeSelectOption(e.name, e.superCategoryCode));
 });
 
 const categoryApi = new CategoryApi();
 
 const getCategories = () => {
-  categoryApi.getCategories().then(data => {
+  categoryApi.getCategories().then(foundSubCategories => {
+    // super 카테고리 하위로 재정렬
     const arrangedCategories = []; // [{ superCategoryCode: number, superCategoryName: string, subCategories: []}];
 
-    data.forEach(category => {
-      const founded = arrangedCategories.find(e => e.superCategoryCode === category.superCategoryCode);
-      const insertSubCategory = {
-        subCategoryCode: category.subCategoryCode,
-        subCategoryName: category.subCategoryName,
-      };
-
-      if (founded && founded.subCategories) {
-        // 이미 추가했다면 더 추가
-        founded.subCategories.push(insertSubCategory);
-      } else {
-        // 새로 추가하는 거라면
-        arrangedCategories.push({
-          superCategoryCode: category.superCategoryCode,
-          superCategoryName: category.superCategoryName,
-          subCategories: [insertSubCategory],
-        });
-      }
+    // 1. super 카테고리에 sub 카테고리 맵핑
+    superCategoryList.value.forEach(superCategory => {
+      arrangedCategories.push({
+        superCategoryCode: superCategory.superCategoryCode,
+        superCategoryName: superCategory.name,
+        subCategories: foundSubCategories.filter(
+          subCategory => subCategory.superCategoryCode === superCategory.superCategoryCode,
+        ),
+      });
     });
 
     categoryGroupList.value = arrangedCategories;
   });
+};
+
+const getSuperCategories = async () => {
+  categoryApi.getSuperCategories().then(data => {
+    superCategoryList.value = data;
+  });
+};
+
+const getPageData = async () => {
+  await getSuperCategories();
+  getCategories();
 };
 
 const onSave = targetCategory => {
@@ -120,9 +123,7 @@ const clickSaveAdd = () => {
 };
 
 onMounted(() => {
-  getCategories();
-
-  superCategoryList.value = ['NON_FOOD', 'FOOD'];
+  getPageData();
 });
 </script>
 

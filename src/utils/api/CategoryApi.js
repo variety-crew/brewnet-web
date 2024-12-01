@@ -13,4 +13,9 @@ export default class CategoryApi extends BaseApiService {
   getCategories() {
     return this.get('');
   }
+
+  // 상위 카테고리 목록 조회
+  getSuperCategories() {
+    return this.get('/super');
+  }
 }

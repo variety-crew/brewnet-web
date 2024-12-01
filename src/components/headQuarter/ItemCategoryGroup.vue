@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="mb-3">{{ categoryGroup.superCategoryName }}</h2>
-    <ul class="category-list">
+    <ul v-if="categoryGroup.subCategories.length > 0" class="category-list">
       <li
         v-for="subCategory in categoryGroup.subCategories"
         :key="subCategory.subCategoryCode"
@@ -21,6 +21,7 @@
         </div>
       </li>
     </ul>
+    <div v-else class="empty-sub-category">하위 카테고리 없음</div>
   </div>
 </template>
 
@@ -121,5 +122,9 @@ const offEditMode = () => {
     align-items: center;
     gap: 10px;
   }
+}
+
+.empty-sub-category {
+  color: var(--p-surface-400);
 }
 </style>
