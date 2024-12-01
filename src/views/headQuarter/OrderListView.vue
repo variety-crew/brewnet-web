@@ -102,8 +102,8 @@ const columns = [
     },
   },
   { field: 'orderCode', header: '주문번호', sortable: true },
-  { field: 'orderFranchise.franchiseName', header: '주문지점' },
-  { field: 'orderFranchise.itemName', header: '주문품목명' },
+  { field: 'orderFranchise', header: '주문지점', render: data => data.orderFranchise.franchiseName },
+  { field: 'orderItemList', header: '주문품목명', render: data => data.orderItemList.map(e => e.name).join(', ') },
   { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
   {
     field: 'approvalStatus',
@@ -188,7 +188,16 @@ const onExportExcel = () => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
 
-      const excelManager = new ExcelManager(rows, orderedFields);
+      const tableRows = rows.map(row => ({
+        ...row,
+        orderStatusHistoryList: formatKoOrderStatus(getMostRecentOrderStatus(row.orderStatusHistoryList)),
+        orderFranchise: row.orderFranchise.franchiseName,
+        orderItemList: row.orderItemList.map(item => item.name).join(', '),
+        approvalStatus: formatKoApproval(row.approvalStatus),
+        drafterApproved: formatKoDrafterApproved(row.drafterApproved),
+      }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
       excelManager.setHeaderNames(headerNames);
       excelManager.export(`주문목록${dayjs().format('YYMMDD')}`);
     })
