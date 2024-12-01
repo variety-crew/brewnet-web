@@ -10,6 +10,7 @@ export default class ExcelManager {
   constructor(rows, orderedFields) {
     if (!rows) throw new Error('엑셀 데이터가 필요합니다.');
     if (!orderedFields) throw new Error('엑셀 헤더명이 필요합니다.');
+    if (rows.length === 0) throw new Error('출력할 데이터가 없습니다.');
 
     // orderedField에 있는 property만 가져오도록 (화면에 안 보이는 값은 엑셀 출력에 포함되지 않도록)
     this.#rows = rows.map(obj =>

@@ -165,10 +165,6 @@ const onExportExcel = () => {
       keyword: criteria.value.keyword,
     })
     .then(rows => {
-      if (rows.length === 0) {
-        toast.add({ severity: 'error', summary: '처리 실패', detail: '출력할 데이터가 없습니다.', life: 3000 });
-        return;
-      }
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
 
