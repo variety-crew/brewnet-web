@@ -339,7 +339,7 @@ export const formatBusinessNumber = rawBusinessNumber => {
 
   const front = rawBusinessNumber.slice(0, 3);
   const middle = rawBusinessNumber.slice(3, 5);
-  const back = rawBusinessNumber.slice(6);
+  const back = rawBusinessNumber.slice(5);
   return `${front}-${middle}-${back}`;
 };
 
@@ -349,4 +349,34 @@ export const formatCorporateNumber = rawCorporateNumber => {
   const start = rawCorporateNumber.slice(0, 6);
   const end = rawCorporateNumber.slice(6);
   return `${start}-${end}`;
+};
+
+// 핸드폰 번호
+export const formatMobileNumber = mobileNumber => {
+  if (mobileNumber.length !== 11) return mobileNumber;
+
+  const front = mobileNumber.slice(0, 3);
+  const middle = mobileNumber.slice(3, 7);
+  const back = mobileNumber.slice(7);
+  return `${front}-${middle}-${back}`;
+};
+
+// 서울 지역번호의 전화번호(ex. 02-000-0000)
+export const formatSeoulTelephoneNumber = seoulTelephoneNumber => {
+  if (seoulTelephoneNumber.length !== 9) return seoulTelephoneNumber;
+
+  const front = seoulTelephoneNumber.slice(0, 2);
+  const middle = seoulTelephoneNumber.slice(2, 5);
+  const back = seoulTelephoneNumber.slice(5);
+  return `${front}-${middle}-${back}`;
+};
+
+// 지역번호 앞자리가 3자리인 경우(ex. 031-000-0000)
+export const formatLocalTelephoneNumber = localTelephoneNumber => {
+  if (localTelephoneNumber.length !== 10) return localTelephoneNumber;
+
+  const front = localTelephoneNumber.slice(0, 3);
+  const middle = localTelephoneNumber.slice(3, 6);
+  const back = localTelephoneNumber.slice(6);
+  return `${front}-${middle}-${back}`;
 };
