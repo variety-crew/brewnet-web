@@ -149,7 +149,6 @@ const { purchaseCode } = route.params;
 
 const clickPrintPurchaseDocument = () => {
   // TODO:: 발주서 출력
-  showPrintPdf.value = true;
 };
 
 const clickSendPurchase = () => {
@@ -167,7 +166,7 @@ const clickSendPurchase = () => {
 };
 
 const clickPrintPurchase = () => {
-  // TODO:: 구매품의서 출력
+  showPrintPdf.value = true;
 };
 
 const clickGoToList = () => {

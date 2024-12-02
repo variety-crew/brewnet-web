@@ -1,8 +1,13 @@
 <template>
   <Dialog v-model:visible="show" :draggable="false">
-    <div id="export_target">
-      <h1 class="mb-8">발주서</h1>
+    <div id="export_target" class="body-area">
+      <h1 class="mb-8">구매품의서</h1>
       <template v-if="purchaseDetail">
+        <DraftApprovalLine
+          class="approval-line-table"
+          :draft-manager-name="purchaseDetail.memberName"
+          :approval-lines="purchaseApprovalLines"
+        />
         <AppTableStyled full-width>
           <tbody>
             <tr>
@@ -49,13 +54,20 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
 import { useUserStore } from '@/stores/user';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import PrintPDFManager from '@/utils/PrintPDFManager';
 
+const route = useRoute();
 const userStore = useUserStore();
 const hqPurchaseApi = new HQPurchaseApi();
+const purchaseApprovalLines = ref([]);
+const { purchaseCode } = route.params;
 
 const { purchaseDetail } = defineProps({
   purchaseDetail: {
@@ -65,13 +77,24 @@ const { purchaseDetail } = defineProps({
 });
 const show = defineModel('show', { type: Boolean, required: true });
 
+const getPurchaseApprovalLines = () => {
+  hqPurchaseApi.getPurchaseApprovalLines(purchaseCode).then(data => {
+    purchaseApprovalLines.value = data.approvers.map(e => ({
+      ...e,
+      createdAt: e.approvedAt,
+    }));
+  });
+};
+
 const printPDFManager = new PrintPDFManager();
 
 const exportDocument = () => {
-  // api 연동 후 필요한 데이터 더 불러와야 함
-  // 외부용인지 내부용인지 선택하는 공간 필요
-  printPDFManager.exportPDF('#export_target', '발주서');
+  printPDFManager.exportPDF('#export_target', '구매품의서');
 };
+
+onMounted(() => {
+  getPurchaseApprovalLines();
+});
 </script>
 
 <style scoped>
@@ -80,5 +103,16 @@ const exportDocument = () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+}
+
+.body-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  .approval-line-table {
+    align-self: flex-end;
+  }
 }
 </style>
