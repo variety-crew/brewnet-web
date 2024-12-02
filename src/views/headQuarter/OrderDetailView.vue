@@ -157,13 +157,11 @@ const clickRequestApproval = () => {
 };
 
 const clickPrintOrder = () => {
-  // TODO:: 주문요청서 출력
   showPrintPdf.value = true;
 };
 
 const clickPrintInvoice = () => {
   // TODO:: 거래명세서 출력
-  showPrintPdf.value = true;
 };
 
 const clickGoToList = () => {
