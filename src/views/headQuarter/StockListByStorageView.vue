@@ -66,7 +66,7 @@ const ChangeStockModalBody = defineAsyncComponent(() => import('@/components/hea
 function changeStock(data) {
   openModal({
     component: ChangeStockModalBody,
-    header: '재고 조정',
+    header: '재고에 합산할 수량을 입력해 주세요.',
     data: {
       storageCode: data.storageCode,
       itemCode: data.itemCode,

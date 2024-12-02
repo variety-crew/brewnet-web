@@ -25,4 +25,9 @@ export default class ItemApi extends BaseApiService {
 
     return this.get(`?${searchParams.toString()}`);
   }
+
+  // 상풍 상세 조회
+  getItem(itemCode) {
+    return this.get(`/${itemCode}`);
+  }
 }
