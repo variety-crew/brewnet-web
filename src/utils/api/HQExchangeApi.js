@@ -69,7 +69,7 @@ export default class HQExchangeApi extends BaseApiService {
     searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
 
     if (criteria && keyword) {
-      searchParams.append('criteria', criteria);
+      searchParams.append('searchFilter', criteria);
       searchParams.append('searchWord', keyword);
     }
 

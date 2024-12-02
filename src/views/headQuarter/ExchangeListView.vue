@@ -45,8 +45,8 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
-import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
-import { getExchangeStatusSeverity } from '@/utils/helper';
+import { formatKoExchangeReason, formatKoExchangeStatus, formatKoSearchCriteria } from '@/utils/format';
+import { getExchangeStatusSeverity, makeSelectOption } from '@/utils/helper';
 import { mockupExchanges } from '@/utils/mockup';
 
 const router = useRouter();
@@ -65,12 +65,15 @@ const endDate = ref(new Date());
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
   endDate: new Date(),
-  criteria: SEARCH_CRITERIA.EXCHNAGE_CODE,
+  criteria: SEARCH_CRITERIA.EXCHANGE_CODE,
   keyword: '',
 });
 
 const criteria = ref(getInitialCriteria());
 const hqExchangeApi = new HQExchangeApi();
+const searchOptions = computed(() => {
+  return CRITERIA_HQ_EXCHANGE_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
+});
 
 function clickGoDetail(data) {
   router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode: data.exchangeCode } });

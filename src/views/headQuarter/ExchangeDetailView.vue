@@ -2,12 +2,12 @@
   <div class="exchange-detail-container">
     <template v-if="exchangeDetail">
       <div class="top-area">
-        <!-- <Tag
+        <Tag
           rounded
-          :value="formatKoExchangeStatus(exchangeDetail.exchangeStatus)"
-          :severity="getExchangeExchangeStatusSeverity(exchangeDetail.exchangeStatus)"
+          :value="formatKoExchangeStatus(exchangeDetail.status)"
+          :severity="getExchangeStatusSeverity(exchangeDetail.exchangeStatus)"
           class="mb-1"
-        /> -->
+        />
         <div class="top-buttons">
           <Button
             label="결재요청하기"
@@ -44,7 +44,7 @@
 
         <DraftApprovalLine
           class="approval-line-table"
-          :draft-manager-name="exchangeDetail.managerName"
+          :draft-manager-name="exchangeDetail.memberName"
           :approval-lines="exchangeApprovalLines"
         />
 
@@ -60,7 +60,7 @@
 
       <DynamicDialog />
 
-      <PrintExchangePdfPreviewModal v-model:show="showPrintPdf" :exchange-detail="exchangeDetail" />
+      <!-- <PrintExchangePdfPreviewModal v-model:show="showPrintPdf" :exchange-detail="exchangeDetail" /> -->
     </template>
   </div>
 </template>
@@ -99,15 +99,15 @@ const exchangeApprovalLines = ref([]);
 const disabledCancelButton = computed(() => {
   // PENDING 상태일 때만 결재취소(기안자가) 가능하므로
   // PENDING 상태가 아니면 결재취소 버튼 disabled
-  return exchangeDetail.value.exchangeStatus !== EXCHANGE_STATUS.PENDING;
+  return exchangeDetail.value.status !== EXCHANGE_STATUS.PENDING;
 });
 
 const isRequested = computed(() => {
-  return exchangeDetail.value.exchangeStatus === EXCHANGE_STATUS.REQUESTED;
+  return exchangeDetail.value.status === EXCHANGE_STATUS.REQUESTED;
 });
 
 const isCompleted = computed(() => {
-  return exchangeDetail.value.exchangeStatus === EXCHANGE_STATUS.SHIPPED;
+  return exchangeDetail.value.status === EXCHANGE_STATUS.SHIPPED;
 });
 
 const hqExchangeApi = new HQExchangeApi();
