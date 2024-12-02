@@ -184,3 +184,11 @@ export const SORTING_OPTION = {
   NAME_ASC: 'nameASC',
   NAME_DESC: 'nameDESC',
 };
+
+// 출력 구분
+export const PRINT_TYPE = {
+  HQ: {
+    ORDER_DRAFT: 'ORDER_DRAFT',
+    ORDER_INVOICE: 'ORDER_INVOICE',
+  },
+};

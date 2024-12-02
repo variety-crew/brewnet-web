@@ -60,7 +60,7 @@
 
       <DynamicDialog />
 
-      <PrintOrderPdfPreviewModal v-model:show="showPrintPdf" :order-detail="orderDetail" />
+      <PrintOrderPdfPreviewModal v-model:show="showPrintPdf" :order-detail="orderDetail" :print-type="printType" />
     </template>
   </div>
 </template>
@@ -78,7 +78,7 @@ import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
-import { DRAFT_KIND, ORDER_STATUS } from '@/utils/constant';
+import { DRAFT_KIND, ORDER_STATUS, PRINT_TYPE } from '@/utils/constant';
 import { formatKoOrderStatus } from '@/utils/format';
 import { getOrderStatusSeverity } from '@/utils/helper';
 
@@ -113,6 +113,7 @@ const hqOrderApi = new HQOrderApi();
 const { orderCode } = route.params;
 
 const showPrintPdf = ref(false);
+const printType = ref(PRINT_TYPE.HQ.ORDER_DRAFT);
 
 const getOrderDetailPageData = () => {
   hqOrderApi.getOrderDetail(orderCode).then(data => {
@@ -157,11 +158,13 @@ const clickRequestApproval = () => {
 };
 
 const clickPrintOrder = () => {
+  printType.value = PRINT_TYPE.HQ.ORDER_DRAFT;
   showPrintPdf.value = true;
 };
 
 const clickPrintInvoice = () => {
-  // TODO:: 거래명세서 출력
+  printType.value = PRINT_TYPE.HQ.ORDER_INVOICE;
+  showPrintPdf.value = true;
 };
 
 const clickGoToList = () => {
