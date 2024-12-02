@@ -3,7 +3,8 @@
     <PageTitle class="no-margin">대시보드</PageTitle>
     <div class="content">
       <div class="left">
-        <DashboardCalendar />
+        <DashboardCalendarCard />
+        <DashboardChartCard />
       </div>
       <div class="right">
         <DashboardMyApprovalWaitCard />
@@ -15,7 +16,8 @@
 </template>
 
 <script setup>
-import DashboardCalendar from '@/components/headQuarter/DashboardCalendar.vue';
+import DashboardCalendarCard from '@/components/headQuarter/DashboardCalendarCard.vue';
+import DashboardChartCard from '@/components/headQuarter/DashboardChartCard.vue';
 import DashboardMyApprovalWaitCard from '@/components/headQuarter/DashboardMyApprovalWaitCard.vue';
 import DashboardNewOrderCard from '@/components/headQuarter/DashboardNewOrderCard.vue';
 import DashboardSafetyStockCard from '@/components/headQuarter/DashboardSafetyStockCard.vue';
@@ -34,6 +36,9 @@ import PageTitle from '@/components/headQuarter/PageTitle.vue';
 
     .left {
       flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
     .right {

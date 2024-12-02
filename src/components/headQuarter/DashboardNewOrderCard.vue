@@ -2,7 +2,7 @@
   <Card class="new-order-card">
     <template #title>
       <div class="new-order-card-title">
-        <h3>신규주문 목록 ({{ totalElements }}건)</h3>
+        <h4>신규주문 목록 ({{ totalElements }}건)</h4>
         <Button
           label="주문 전체보기"
           as="router-link"

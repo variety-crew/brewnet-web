@@ -2,7 +2,7 @@
   <Card class="my-approval-wait-card">
     <template #title>
       <div class="my-approval-wait-card-title">
-        <h3>결재대기 목록 ({{ totalElements }}건)</h3>
+        <h4>결재대기 목록 ({{ totalElements }}건)</h4>
         <Button label="전체보기" as="router-link" :to="{ name: 'hq:my:approval' }" size="small" severity="secondary" />
       </div>
     </template>

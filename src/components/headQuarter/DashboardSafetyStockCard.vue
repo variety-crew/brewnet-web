@@ -2,7 +2,7 @@
   <Card class="safety-stock-card">
     <template #title>
       <div class="safety-stock-card-title">
-        <h3>안전재고 위험 목록 ({{ totalElements }}건)</h3>
+        <h4>안전재고 위험 목록 ({{ totalElements }}건)</h4>
         <Button
           label="재고대시보드 이동"
           as="router-link"
