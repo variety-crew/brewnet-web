@@ -3,7 +3,10 @@
     <template #content>
       <div class="card-title">
         <h3>주문 통계</h3>
-        <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="기간 설정" label-position="left" />
+        <div class="select-date">
+          <AppDateRangePicker v-model:start="startDate" v-model:end="endDate" label="기간 설정" label-position="left" />
+          <Button size="small" icon="pi pi-search" label="조회" @click="onSearch" />
+        </div>
         <h3 style="visibility: hidden">주문 통계</h3>
       </div>
       <div class="chart-area">
@@ -75,7 +78,7 @@ const hqStatisticsApi = new HQStatisticsApi();
 
 const getRandomColor = () => Math.floor(Math.random() * 16777215).toString(16);
 
-onMounted(() => {
+const getGraphData = () => {
   hqStatisticsApi.getOrderGraphData(startDate.value, endDate.value).then(data => {
     orderCount.value = data.orderCount;
     exchangeCount.value = data.exchangeCount;
@@ -85,14 +88,23 @@ onMounted(() => {
     pieChartData.value = data.items.map(e => e.itemCount);
 
     // 랜덤 color 생성
-    const colors = [];
-    for (let i = 0; i < data.items.length; i++) {
-      colors.push(`#${getRandomColor()}`);
+    if (pieChartColors.value.length === 0) {
+      const colors = [];
+      for (let i = 0; i < data.items.length; i++) {
+        colors.push(`#${getRandomColor()}`);
+      }
+      pieChartColors.value = colors;
     }
-    pieChartColors.value = colors;
 
     itemStatistics.value = data.items;
   });
+};
+const onSearch = () => {
+  getGraphData();
+};
+
+onMounted(() => {
+  getGraphData();
 });
 </script>
 
@@ -105,6 +117,12 @@ onMounted(() => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+  }
+
+  .select-date {
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
 
   .chart-area {
