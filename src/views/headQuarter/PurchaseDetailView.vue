@@ -104,6 +104,8 @@
     </template>
 
     <DynamicDialog />
+
+    <PrintPurchasePdfPreviewModal v-model:show="showPrintPdf" :purchase-detail="purchaseDetail" />
   </div>
 </template>
 
@@ -115,6 +117,7 @@ import { useRoute, useRouter } from 'vue-router';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
 import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
+import PrintPurchasePdfPreviewModal from '@/components/headQuarter/PrintPurchasePdfPreviewModal.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
@@ -129,6 +132,7 @@ const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 const userStore = useUserStore();
 
+const showPrintPdf = ref(false);
 const purchaseDetail = ref(null);
 const purchaseApprovalLines = ref([]);
 const disabledDeleteButton = computed(() => {
@@ -162,7 +166,7 @@ const clickSendPurchase = () => {
 };
 
 const clickPrintPurchase = () => {
-  // TODO:: 구매품의서 출력
+  showPrintPdf.value = true;
 };
 
 const clickGoToList = () => {
