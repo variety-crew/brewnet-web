@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 import BaseApiService from './BaseApiService';
 
-export default class HQExchangeTempApi extends BaseApiService {
+export default class HQReturnTempApi extends BaseApiService {
   constructor() {
     super('/v1/hq/return');
   }

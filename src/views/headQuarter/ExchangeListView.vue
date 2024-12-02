@@ -42,7 +42,7 @@ import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
-import HQExchangeTempApi from '@/utils/api/HQExchangeTempApi';
+import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
@@ -57,7 +57,6 @@ const page = ref(0);
 const size = ref(15);
 
 const nameKeyword = ref('');
-const exchanges = ref([]);
 const paginatedExchanges = ref([]);
 
 const startDate = ref(dayjs().subtract(1, 'year').toDate());
@@ -71,12 +70,11 @@ const getInitialCriteria = () => ({
 });
 
 const criteria = ref(getInitialCriteria());
-const hqExchangeTempApi = new HQExchangeTempApi();
-const paginatedOrders = ref([]);
+const hqExchangeApi = new HQExchangeApi();
 
-const goToDetail = exchangeCode => {
-  router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode } });
-};
+function clickGoDetail(data) {
+  router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode: data.exchangeCode } });
+}
 
 const columns = [
   {
@@ -85,7 +83,7 @@ const columns = [
     render: data => formatKoExchangeStatus(data.status),
     template: {
       tag: {
-        getSeverity: data => getExchangeStatusSeverity(data.orderStatusHistoryList),
+        getSeverity: data => getExchangeStatusSeverity(data.status),
       },
     },
   },
@@ -102,7 +100,7 @@ const columns = [
       button: [
         {
           getLabel: () => '상세보기',
-          clickHandler: rowData => goToDetail(rowData.exchangeCode),
+          clickHandler: clickGoDetail,
         },
       ],
     },
@@ -110,7 +108,7 @@ const columns = [
 ];
 
 const getExchanges = () => {
-  hqExchangeTempApi
+  hqExchangeApi
     .searchExchanges({
       page: page.value,
       size: size.value,
@@ -145,7 +143,7 @@ const onReset = () => {
 };
 
 const onExportExcel = () => {
-  hqExchangeTempApi
+  hqExchangeApi
     .getAllExchangeList({
       // startDate: criteria.value.startDate,
       // endDate: criteria.value.endDate,

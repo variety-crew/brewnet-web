@@ -2,10 +2,14 @@ import dayjs from 'dayjs';
 
 import BaseApiService from './BaseApiService';
 
-export default class HQExchangeTempApi extends BaseApiService {
+export default class HQExchangeApi extends BaseApiService {
   constructor() {
     super('/v1/hq/exchange');
   }
+
+  //
+  // GET
+  //
 
   // 전체 교환 목록 (엑셀 다운로드용)
   getAllExchangeList({
@@ -70,5 +74,24 @@ export default class HQExchangeTempApi extends BaseApiService {
     }
 
     return this.get(`/search?${searchParams.toString()}`);
+  }
+
+  // 교환 상세조회
+  getExchangeDetail(exchangeCode) {
+    return this.get(`/${exchangeCode}`);
+  }
+
+  // 교환 결재이력 조회
+  getExchangeApprovalLines(exchangeCode) {
+    return this.get(`/approver/${exchangeCode}`);
+  }
+
+  //
+  // POST
+  //
+
+  // 책임자의 결재 승인/반려
+  managerApprove({ exchangeCode, approval, comment }) {
+    return this.post(`/${exchangeCode}/manager-approve`, { approval, comment });
   }
 }
