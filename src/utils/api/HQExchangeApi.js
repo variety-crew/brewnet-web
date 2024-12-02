@@ -86,6 +86,29 @@ export default class HQExchangeApi extends BaseApiService {
     return this.get(`/approver/${exchangeCode}`);
   }
 
+  // 타부서 교환처리내역 목록 조회/검색
+  searchOtherExchanges({
+    page = 0,
+    size = 15,
+    startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
+    endDate = dayjs().format('YYYY-MM-DD'),
+    criteria,
+    keyword,
+  }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('page', page);
+    searchParams.append('size', size);
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
+
+    if (criteria && keyword) {
+      searchParams.append('searchFilter', criteria);
+      searchParams.append('searchWord', keyword);
+    }
+
+    return this.get(`/other?${searchParams.toString()}`);
+  }
+
   //
   // POST
   //

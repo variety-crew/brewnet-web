@@ -12,6 +12,10 @@ import {
   SEARCH_CRITERIA,
   APPROVER_APPROVED_STATUS,
   DELIVERY_STATUS,
+  EXCHANGE_OTHER_STATUS,
+  RETURNING_OTHER_STATUS,
+  REFUND_OTHER_STATUS,
+  CONFIRMED_STATUS,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
@@ -358,4 +362,65 @@ export const formatCorporateNumber = rawCorporateNumber => {
   const start = rawCorporateNumber.slice(0, 6);
   const end = rawCorporateNumber.slice(6);
   return `${start}-${end}`;
+};
+
+export const formatKoExchangeOtherStatus = status => {
+  switch (status) {
+    case EXCHANGE_OTHER_STATUS.TOTAL_INBOUND:
+      return '전체입고';
+
+    case EXCHANGE_OTHER_STATUS.TOTAL_DISPOSAL:
+      return '전체폐기';
+
+    case EXCHANGE_OTHER_STATUS.PARTIAL_INBOUND:
+      return '부분입고';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoReturningOtherStatus = status => {
+  switch (status) {
+    case RETURNING_OTHER_STATUS.TOTAL_INBOUND:
+      return '전체입고';
+
+    case RETURNING_OTHER_STATUS.TOTAL_DISPOSAL:
+      return '전체폐기';
+
+    case RETURNING_OTHER_STATUS.PARTIAL_INBOUND:
+      return '부분입고';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoRefundOtherStatus = status => {
+  switch (status) {
+    case REFUND_OTHER_STATUS.TOTAL_REFUND:
+      return '전체환불';
+
+    case REFUND_OTHER_STATUS.PARTIAL_REFUND:
+      return '부분환불';
+
+    case REFUND_OTHER_STATUS.NON_REFUNDABLE:
+      return '환불불가';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoConfirmedStatus = status => {
+  switch (status) {
+    case CONFIRMED_STATUS.CONFIRMED:
+      return '처리완료';
+
+    case CONFIRMED_STATUS.UNCONFIRMED:
+      return '미처리';
+
+    default:
+      return '';
+  }
 };

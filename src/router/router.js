@@ -142,6 +142,22 @@ const routes = [
             },
           },
           {
+            path: 'exchange/other-list',
+            name: 'hq:order:exchange:other-list',
+            component: () => import('@/views/headQuarter/ExchangeOtherListView.vue'),
+            meta: {
+              breadcrumb: '교환처리 확인',
+            },
+          },
+          {
+            path: 'exchange/:exchangeStockHistoryCode/other-detail',
+            name: 'hq:order:exchange:other-detail',
+            component: () => import('@/views/headQuarter/ExchangeOtherDetailView.vue'),
+            meta: {
+              breadcrumb: '교환처리 상세',
+            },
+          },
+          {
             path: 'return/list',
             name: 'hq:order:return:list',
             component: () => import('@/views/headQuarter/ReturnListView.vue'),
