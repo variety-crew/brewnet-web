@@ -5,7 +5,7 @@
       <AppDateRangePicker
         v-model:start="criteria.startDate"
         v-model:end="criteria.endDate"
-        label="작성일자"
+        label="주문일자"
         class="criteria created-at"
       />
       <AppSelect

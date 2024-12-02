@@ -1,6 +1,20 @@
 <template>
   <div class="order-form-container">
-    <Button label="주문하기" class="save-button" @click="clickSave" />
+    <div class="top-area">
+      <div class="must-buy" :style="{ visibility: mustBuyItems.length > 0 ? 'visible' : 'hidden' }">
+        <Message severity="warn" icon="pi pi-megaphone" size="small">필수구매품목 안내</Message>
+        <Message
+          v-for="mustBuyItem in mustBuyItems"
+          :key="mustBuyItem.itemCode"
+          severity="warn"
+          variant="outlined"
+          size="small"
+          >{{ mustBuyItem.itemName }} - {{ mustBuyItem.quantity.toLocaleString() }}개</Message
+        >
+      </div>
+
+      <Button label="주문하기" class="save-button" @click="clickSave" />
+    </div>
 
     <div class="table-area">
       <SelectItemTable :selected-items="selectedItems" @choose="chooseItem" @remove="removeItem" />
@@ -49,7 +63,7 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
@@ -59,6 +73,7 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SelectItemTable from '@/components/franchise/SelectItemTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useUserStore } from '@/stores/user';
+import FCItemApi from '@/utils/api/FCItemApi';
 import FCOrderApi from '@/utils/api/FCOrderApi';
 
 const userStore = useUserStore();
@@ -71,8 +86,10 @@ const selectedItems = ref([]); // 선택된 상품(코드)들
 const totalSupplyValue = ref(0);
 const totalTaxValue = ref(0);
 const total = computed(() => totalSupplyValue.value + totalTaxValue.value);
+const mustBuyItems = ref([]);
 
 const fcOrderApi = new FCOrderApi();
+const fcItemApi = new FCItemApi();
 
 const calculateSum = (price, quantity) => {
   if (!price || !quantity) return 0;
@@ -148,6 +165,12 @@ watch(
   },
   { deep: true }, // items 내용이 변하면 watch 되도록 설정
 );
+
+onMounted(() => {
+  fcItemApi.getMustBuyItems().then(data => {
+    mustBuyItems.value = data;
+  });
+});
 </script>
 
 <style scoped>
@@ -157,9 +180,14 @@ watch(
   gap: 24px;
 
   .top-area {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .must-buy {
+    display: flex;
+    gap: 10px;
   }
 
   .table-area {

@@ -142,6 +142,16 @@ export default class HQPurchaseApi extends BaseApiService {
     });
   }
 
+  // 내부용 발주서 출력
+  printInHouseDocument(purchaseCode) {
+    return this.put(`/print-in-house/${purchaseCode}`);
+  }
+
+  // 외부용 발주서 출력
+  printExportDocument(purchaseCode) {
+    return this.put(`/print-export/${purchaseCode}`);
+  }
+
   //
   // DELETE
   //
