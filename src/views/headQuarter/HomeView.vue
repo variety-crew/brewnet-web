@@ -1,6 +1,6 @@
 <template>
   <div class="hq-home-container">
-    <PageTitle>대시보드</PageTitle>
+    <PageTitle class="no-margin">대시보드</PageTitle>
     <div class="content">
       <div class="left">
         <DashboardCalendar />
@@ -25,6 +25,7 @@ import PageTitle from '@/components/headQuarter/PageTitle.vue';
 <style scoped>
 .hq-home-container {
   padding: 32px 24px;
+  overflow-y: auto;
 
   .content {
     display: flex;
@@ -41,6 +42,10 @@ import PageTitle from '@/components/headQuarter/PageTitle.vue';
       flex-direction: column;
       gap: 16px;
     }
+  }
+
+  .no-margin {
+    margin: 0;
   }
 }
 </style>
