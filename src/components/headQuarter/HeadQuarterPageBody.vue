@@ -5,7 +5,7 @@
 
     <main>
       <Breadcrumb :home="home" :model="breadcrumbs" />
-      <h3 class="page-title">{{ currentPageTitle }}</h3>
+      <PageTitle>{{ currentPageTitle }}</PageTitle>
       <div class="content">
         <RouterView />
       </div>
@@ -19,6 +19,7 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
+import PageTitle from './PageTitle.vue';
 import LoadingSpinner from '../common/LoadingSpinner.vue';
 import SideMenuBar from '../common/SideMenuBar.vue';
 
