@@ -3,8 +3,8 @@
     <PageTitle class="no-margin">대시보드</PageTitle>
     <div class="content">
       <div class="left">
-        <DashboardCalendarCard />
         <DashboardChartCard />
+        <DashboardCalendarCard />
       </div>
       <div class="right">
         <DashboardMyApprovalWaitCard />
@@ -12,10 +12,13 @@
         <DashboardSafetyStockCard />
       </div>
     </div>
+
+    <LoadingSpinner />
   </div>
 </template>
 
 <script setup>
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import DashboardCalendarCard from '@/components/headQuarter/DashboardCalendarCard.vue';
 import DashboardChartCard from '@/components/headQuarter/DashboardChartCard.vue';
 import DashboardMyApprovalWaitCard from '@/components/headQuarter/DashboardMyApprovalWaitCard.vue';
