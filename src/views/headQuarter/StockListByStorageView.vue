@@ -22,24 +22,28 @@
       @change-page="onChangePage"
       @export-excel="onExportExcel"
     />
+
+    <DynamicDialog />
   </div>
 </template>
 
 <script setup>
 import dayjs from 'dayjs';
 import { useToast } from 'primevue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
+import { useModal } from '@/hooks/useModal';
 import HQStorageApi from '@/utils/api/HQStorageApi';
 import { SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { makeSelectOption } from '@/utils/helper';
 
 const toast = useToast();
+const { openModal } = useModal();
 
 const page = ref(1);
 const pageSize = ref(15);
@@ -56,6 +60,27 @@ const getInitialCriteria = () => ({
   keyword: '',
 });
 const criteria = ref(getInitialCriteria());
+
+const ChangeStockModalBody = defineAsyncComponent(() => import('@/components/headQuarter/ChangeStockModalBody.vue'));
+
+function changeStock(data) {
+  openModal({
+    component: ChangeStockModalBody,
+    header: '재고에 합산할 수량을 입력해 주세요.',
+    data: {
+      storageCode: data.storageCode,
+      itemCode: data.itemCode,
+    },
+    onClose: opt => {
+      const callbackParams = opt.data;
+      if (!callbackParams) return;
+
+      if (callbackParams.reload) {
+        getStockList();
+      }
+    },
+  });
+}
 
 const columns = [
   { field: 'itemUniqueCode', header: '품목코드', sortable: true },
@@ -84,6 +109,18 @@ const columns = [
     header: '현재재고',
     render: data => data.currentStock.toLocaleString(),
     alignment: 'right',
+  },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
+        {
+          getLabel: () => '재고조정',
+          clickHandler: changeStock,
+        },
+      ],
+    },
   },
 ];
 

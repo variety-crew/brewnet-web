@@ -2,6 +2,7 @@
   <AppFormField :label="label" :full-width="fullWidth" :label-position="labelPosition">
     <InputNumber
       :value="modelValue"
+      :default-value="defaultValue"
       size="small"
       :placeholder="placeholder"
       :fluid="fullWidth"
@@ -32,6 +33,7 @@ const {
   suffix,
   krwCurrency,
   textAlign,
+  defaultValue,
 } = defineProps({
   modelValue: {
     type: [Number, null],
@@ -86,6 +88,11 @@ const {
   },
   textAlign: {
     type: [String, null],
+    required: false,
+    default: null,
+  },
+  defaultValue: {
+    type: [Number, null],
     required: false,
     default: null,
   },

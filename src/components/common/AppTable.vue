@@ -116,7 +116,13 @@
 
         <!-- 이미지로 표시할 경우 -->
         <template v-else-if="col.template?.image" #body="{ data }">
-          <Image v-if="col.template.image.getSrc" :src="col.template.image.getSrc(data)" preview class="image" />
+          <Image
+            v-if="col.template.image.getSrc && col.template.image.getSrc(data)"
+            :src="col.template.image.getSrc(data)"
+            preview
+            class="image"
+          />
+          <div v-else class="empty-image">없음</div>
         </template>
 
         <!-- 
@@ -261,6 +267,11 @@ const onSort = event => {
     width: 50px;
     height: 50px;
     object-fit: cover;
+  }
+
+  .empty-image {
+    font-size: 14px;
+    color: var(--p-surface-400);
   }
 }
 </style>

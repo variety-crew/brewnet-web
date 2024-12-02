@@ -6,6 +6,8 @@
       :default-value="initialValue"
       option-label="label"
       option-value="value"
+      :option-group-label="grouped ? 'label' : undefined"
+      :option-group-children="grouped ? 'items' : undefined"
       size="small"
       checkmark
       placeholder="===선택해주세요==="
@@ -13,66 +15,91 @@
       :name="name"
       class="app-select"
       :class="{ full: fullWidth }"
+      :show-clear="showClear"
       @change="onSelectChange"
-    />
+    >
+      <template v-if="grouped" #optiongroup="slotProps">
+        <div class="group-label">{{ slotProps.option.label }}</div>
+      </template>
+    </Select>
+    <div v-if="helperText" class="app-select-helper-text">{{ helperText }}</div>
   </AppFormField>
 </template>
 
 <script setup>
 import AppFormField from './AppFormField.vue';
 
-const { modelValue, options, initialValue, label, name, labelPosition, fullWidth } = defineProps({
-  // 부모로부터 현재 선택된 값을 받아옴
-  modelValue: {
-    type: [String, Number],
-    required: true,
-  },
+const { modelValue, options, initialValue, label, name, labelPosition, fullWidth, helperText, showClear, grouped } =
+  defineProps({
+    // 부모로부터 현재 선택된 값을 받아옴
+    modelValue: {
+      type: [String, Number, null],
+      required: true,
+    },
 
-  options: {
-    type: Array,
-    required: true,
-  },
+    options: {
+      type: Array,
+      required: true,
+    },
 
-  /**
-   * options: [{
-   *   label: string
-   *   value: string
-   * }]
-   */
+    /**
+     * options: [{
+     *   label: string
+     *   value: string
+     * }]
+     */
 
-  //
-  // required false
-  //
-  initialValue: {
-    type: String,
-    required: false,
-    default: '',
-  },
+    //
+    // required false
+    //
+    initialValue: {
+      type: [String, Number],
+      required: false,
+      default: '',
+    },
 
-  label: {
-    type: String,
-    required: false,
-    default: '',
-  },
+    label: {
+      type: String,
+      required: false,
+      default: '',
+    },
 
-  name: {
-    type: [String, null],
-    required: false,
-    default: null,
-  },
+    name: {
+      type: [String, null],
+      required: false,
+      default: null,
+    },
 
-  labelPosition: {
-    type: String,
-    required: false,
-    default: 'top',
-  },
+    labelPosition: {
+      type: String,
+      required: false,
+      default: 'top',
+    },
 
-  fullWidth: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-});
+    fullWidth: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    helperText: {
+      type: [String, null],
+      required: false,
+      default: () => null,
+    },
+
+    showClear: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    grouped: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  });
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -85,5 +112,13 @@ function onSelectChange(event) {
 <style scoped>
 .app-select.full {
   flex-grow: 1;
+}
+.app-select-helper-text {
+  color: var(--p-surface-500);
+  font-size: 12px;
+}
+
+.group-label {
+  font-size: 14px;
 }
 </style>

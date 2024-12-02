@@ -56,26 +56,60 @@ const criteriaOptions = computed(() => {
   return CRITERIA_ITEM_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 
-const hpItemApi = new HQItemApi();
+const hqItemApi = new HQItemApi();
+
+const getItems = () => {
+  hqItemApi
+    .getItems({
+      page: page.value,
+      pageSize: pageSize.value,
+      itemName: criteria.value.criteria === SEARCH_CRITERIA.ITEM_NAME ? criteria.value.keyword : undefined,
+      itemUniqueCode: criteria.value.criteria === SEARCH_CRITERIA.ITEM_UNIQUE_CODE ? criteria.value.keyword : undefined,
+    })
+    .then(data => {
+      paginatedItems.value = data.content;
+      totalElements.value = data.totalElements;
+    });
+};
+
+const onReload = () => {
+  getItems();
+};
 
 const clickEdit = targetItem => {
   router.push({ name: 'hq:stock:item:edit', params: { itemCode: targetItem.itemCode } });
 };
 
-const onChangeActiveStatus = targetItem => {
+const onChangeActiveStatus = async targetItem => {
+  let successMsg = '';
+
   if (targetItem.active) {
     // 활성 -> 비활성
 
-    // TODO 품목 비활성화 API
-    toast.add({ severity: 'success', summary: '처리 성공', detail: '품목이 비활성화 되었습니다.', life: 3000 });
+    await hqItemApi.deactivateItem(targetItem.itemCode);
+    successMsg = '품목이 비활성화 되었습니다.';
   } else {
     // 비활성 -> 활성
 
-    // TODO 품목 활성 API
-    toast.add({ severity: 'success', summary: '처리 성공', detail: '품목이 활성화 되었습니다.', life: 3000 });
+    await hqItemApi.editItem({
+      itemCode: targetItem.itemCode,
+      categoryCode: targetItem.categoryCode,
+      name: targetItem.name,
+      purchasePrice: targetItem.purchasePrice,
+      sellingPrice: targetItem.sellingPrice,
+      imageUrl: targetItem.imageUrl,
+      safetyStock: targetItem.safetyStock,
+      itemUniqueCode: targetItem.itemUniqueCode,
+      correspondentCode: targetItem.correspondentCode,
+      active: true,
+    });
+    successMsg = '품목이 활성화 되었습니다.';
   }
 
-  // TODO reload
+  if (!successMsg) return;
+
+  toast.add({ severity: 'success', summary: '처리 성공', detail: successMsg, life: 3000 });
+  onReload();
 };
 
 const clickChangeStatus = targetItem => {
@@ -142,20 +176,6 @@ const columns = [
   },
 ];
 
-const getItems = () => {
-  hpItemApi
-    .getItems({
-      page: page.value,
-      pageSize: pageSize.value,
-      itemName: criteria.value.criteria === SEARCH_CRITERIA.ITEM_NAME ? criteria.value.keyword : undefined,
-      itemUniqueCode: criteria.value.criteria === SEARCH_CRITERIA.ITEM_UNIQUE_CODE ? criteria.value.keyword : undefined,
-    })
-    .then(data => {
-      paginatedItems.value = data.content;
-      totalElements.value = data.totalElements;
-    });
-};
-
 const onSearch = () => {
   getItems();
 };
@@ -163,10 +183,6 @@ const onSearch = () => {
 const onReset = () => {
   criteria.value = getInitialCriteria();
   page.value = 0;
-  getItems();
-};
-
-const onReload = () => {
   getItems();
 };
 
