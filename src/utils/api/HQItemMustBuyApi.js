@@ -31,6 +31,6 @@ export default class HQItemMustBuyApi extends BaseApiService {
 
   // 필수 구매 품목 수정
   editMustBuy({ itemCode, quantity, dueDate }) {
-    return this.patch(`/update/${itemCode}`, { quantity, dueDate });
+    return this.patch(`/update/${itemCode}`, { quantity, dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm:ss') });
   }
 }

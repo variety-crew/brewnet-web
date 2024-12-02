@@ -44,9 +44,48 @@ const columns = [
     header: '구분코드',
   },
   { field: 'itemCode', header: '상품코드' },
-  { field: 'quantity', header: '최소구매수량' },
-  { field: 'dueDate', header: '마감 기한', render: data => dayjs(data.dueDate).format('YYYY-MM-DD') },
+  { field: 'itemName', header: '상품명' },
+  { field: 'quantity', header: '최소구매수량', render: data => data.quantity.toLocaleString() },
+  {
+    field: 'dueDate',
+    header: '마감 기한',
+    render: data => {
+      const now = dayjs().format('YYYY-MM-DD');
+      const formattedDueDate = dayjs(data.dueDate).format('YYYY-MM-DD');
+      const diffDay = dayjs(formattedDueDate).diff(dayjs(now), 'day');
+
+      return `${formattedDueDate} (D-${diffDay})`;
+    },
+  },
   { field: 'createdAt', header: '생성일시' },
+  {
+    field: '',
+    header: '',
+    template: {
+      button: [
+        {
+          getLabel: () => '수정',
+          clickHandler: data => {
+            openModal({
+              component: AddMustBuyItemModalBody,
+              header: '필수구매품목 정보 수정',
+              data: {
+                itemData: data,
+              },
+              onClose: opt => {
+                const callbackParams = opt.data;
+                if (!callbackParams) return;
+
+                if (callbackParams.reload) {
+                  onReload();
+                }
+              },
+            });
+          },
+        },
+      ],
+    },
+  },
 ];
 
 const getMustBuyItems = () => {

@@ -2,6 +2,7 @@
   <AppModalBody action-button-label="저장" @click-action-button="clickSave">
     <div class="content">
       <AppTable
+        v-if="!editMode"
         :columns="columns"
         :paginated-data="paginatedItems"
         :rows-per-page="pageSize"
@@ -10,8 +11,9 @@
       />
 
       <div class="right">
-        <AppLabelText label="상품" :text="selectedItem ? selectedItem.name : '상품을 선택해주세요.'" />
-        <AppInputNumber v-model="quantity" label="최소 구매 수량" />
+        <AppLabelText v-if="editMode" label="상품" :text="editingItem.itemName" />
+        <AppLabelText v-else label="상품" :text="selectedItem ? selectedItem.name : '상품을 선택해주세요.'" />
+        <AppInputNumber v-model="quantity" label="최소 구매 수량" :default-value="quantity" />
         <AppDatePicker v-model:date="dueDate" label="마감 기한" />
       </div>
     </div>
@@ -44,7 +46,9 @@ const paginatedItems = ref([]);
 const totalElements = ref(0);
 const itemName = ref('');
 const itemUniqueCode = ref('');
-const selectedItem = ref(null);
+const selectedItem = ref(null); // 생성모드일 때 사용
+const editMode = ref(false);
+const editingItem = ref(null);
 
 const hqItemMustBuyApi = new HQItemMustBuyApi();
 const hqItemApi = new HQItemApi();
@@ -98,24 +102,43 @@ const columns = [
   },
 ];
 
-const clickSave = () => {
+const clickSave = async () => {
   try {
-    if (!selectedItem.value) throw new Error('상품을 선택해주세요.');
+    if (!editMode.value && !selectedItem.value) throw new Error('상품을 선택해주세요.');
     if (!quantity.value) throw new Error('최소 구매 수량을 입력해주세요.');
     if (!dueDate.value) throw new Error('마감 기한을 입력해주세요.');
 
-    hqItemMustBuyApi
-      .setMustBuy({
+    let successMsg = '';
+
+    if (editMode.value) {
+      // 수정모드
+      await hqItemMustBuyApi.editMustBuy({
+        itemCode: editingItem.value.itemCode,
+        quantity: quantity.value,
+        dueDate: dueDate.value,
+      });
+      successMsg = '필수구매품목 정보가 수정되었습니다.';
+    } else {
+      // 생성모드
+      await hqItemMustBuyApi.setMustBuy({
         itemCode: selectedItem.value.itemCode,
         quantity: quantity.value,
         dueDate: dueDate.value,
-      })
-      .then(() => {
-        toast.add({ severity: 'success', summary: '처리 성공', detail: '필수구매품목이 등록되었습니다.', life: 3000 });
-
-        // close
-        dialogRef.value.close({ reload: true });
       });
+      successMsg = '필수구매품목이 등록되었습니다.';
+    }
+
+    if (!successMsg) return;
+
+    toast.add({
+      severity: 'success',
+      summary: '처리 성공',
+      detail: successMsg,
+      life: 3000,
+    });
+
+    // close
+    dialogRef.value.close({ reload: true });
   } catch (e) {
     toast.add({ severity: 'error', summary: '입력 확인', detail: e.message, life: 3000 });
   }
@@ -126,6 +149,18 @@ const onReload = () => {
 };
 
 onMounted(() => {
+  const dialogData = dialogRef.value.data;
+  if (dialogData && dialogData.itemData) {
+    editMode.value = true;
+    editingItem.value = dialogData.itemData;
+
+    quantity.value = dialogData.itemData.quantity;
+    dueDate.value = new Date(dialogData.itemData.dueDate);
+    return;
+  }
+
+  // 생성모드일 때에만 상품 선택을 위해 조회 API 호출
+  editMode.value = false;
   getItems();
 });
 </script>
