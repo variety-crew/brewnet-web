@@ -111,7 +111,7 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
@@ -119,6 +119,7 @@ import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHis
 import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
 import PrintPurchasePdfPreviewModal from '@/components/headQuarter/PrintPurchasePdfPreviewModal.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
+import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import { APPROVAL_STATUS, DRAFT_KIND } from '@/utils/constant';
@@ -143,12 +144,18 @@ const isApproved = computed(() => {
   return purchaseDetail.value.allApproved === APPROVAL_STATUS.APPROVED;
 });
 
+const PrintPurposeModalBody = defineAsyncComponent(() => import('@/components/headQuarter/PrintPurposeModalBody.vue'));
+
 const localStorageUtil = new LocalStorageUtil();
 const hqPurchaseApi = new HQPurchaseApi();
 const { purchaseCode } = route.params;
+const { openModal } = useModal();
 
 const clickPrintPurchaseDocument = () => {
-  // TODO:: 발주서 출력
+  openModal({
+    component: PrintPurposeModalBody,
+    header: '발주서 출력 용도를 선택해 주세요.',
+  });
 };
 
 const clickSendPurchase = () => {
