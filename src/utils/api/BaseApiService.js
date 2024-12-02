@@ -123,6 +123,20 @@ export default class BaseApiService {
     return this.#callApi(endpoint, fetchOptions);
   }
 
+  async patch(endpoint, data) {
+    let requestBody = JSON.stringify(data);
+    if (data instanceof FormData) {
+      requestBody = data; // formData는 stringify 처리 X
+    }
+
+    const fetchOptions = {
+      method: 'PATCH',
+      body: requestBody,
+    };
+
+    return this.#callApi(endpoint, fetchOptions);
+  }
+
   async delete(endpoint, data) {
     let requestBody = JSON.stringify(data);
     const fetchOptions = {
