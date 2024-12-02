@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import BaseApiService from './BaseApiService';
 
 export default class HQItemMustBuyApi extends BaseApiService {
@@ -20,7 +22,7 @@ export default class HQItemMustBuyApi extends BaseApiService {
 
   // 필수 구매 품목 지정
   setMustBuy({ itemCode, quantity, dueDate }) {
-    return this.post(`/set/${itemCode}`, { quantity, dueDate });
+    return this.post(`/set/${itemCode}`, { quantity, dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm:ss') });
   }
 
   //
