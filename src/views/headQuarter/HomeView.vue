@@ -2,7 +2,9 @@
   <div class="hq-home-container">
     <PageTitle>대시보드</PageTitle>
     <div class="content">
-      <div class="left"></div>
+      <div class="left">
+        <DashboardCalendar />
+      </div>
       <div class="right">
         <DashboardMyApprovalWaitCard />
         <DashboardNewOrderCard />
@@ -13,6 +15,7 @@
 </template>
 
 <script setup>
+import DashboardCalendar from '@/components/headQuarter/DashboardCalendar.vue';
 import DashboardMyApprovalWaitCard from '@/components/headQuarter/DashboardMyApprovalWaitCard.vue';
 import DashboardNewOrderCard from '@/components/headQuarter/DashboardNewOrderCard.vue';
 import DashboardSafetyStockCard from '@/components/headQuarter/DashboardSafetyStockCard.vue';
@@ -27,6 +30,10 @@ import PageTitle from '@/components/headQuarter/PageTitle.vue';
     display: flex;
     gap: 16px;
     margin-top: 20px;
+
+    .left {
+      flex-grow: 1;
+    }
 
     .right {
       flex-shrink: 0;
