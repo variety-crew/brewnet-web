@@ -7,7 +7,7 @@
       </div>
     </template>
     <template #content>
-      <table>
+      <DashboardTable>
         <thead>
           <tr>
             <th>기안서구분</th>
@@ -27,8 +27,8 @@
             <tr v-for="draft in paginatedDraftList" :key="`${draft.kind}${draft.code}`">
               <td>{{ formatKoDraftKind(draft.kind) }}</td>
               <td>{{ draft.code }}</td>
-              <td>{{ draft.title }}</td>
-              <td>{{ draft.date }}</td>
+              <td class="ellipsis">{{ draft.title }}</td>
+              <td>{{ dayjs(draft.date).format('YYYY-MM-DD') }}</td>
               <td>{{ draft.drafterName }}</td>
               <td>{{ formatKoApprovalStatus(draft.status) }}</td>
               <td>
@@ -43,17 +43,20 @@
             </tr>
           </template>
         </tbody>
-      </table>
+      </DashboardTable>
     </template>
   </Card>
 </template>
 
 <script setup>
+import dayjs from 'dayjs';
 import { onMounted, ref } from 'vue';
 
 import { useDraftNavigation } from '@/hooks/useDraftNavigation';
 import HQStatisticsApi from '@/utils/api/HQStatisticsApi';
 import { formatKoApprovalStatus, formatKoDraftKind } from '@/utils/format';
+
+import DashboardTable from './DashboardTable.vue';
 
 const { clickGoDetail } = useDraftNavigation();
 
@@ -80,36 +83,17 @@ onMounted(() => {
 .my-approval-wait-card {
   box-shadow: var(--p-primary-100) 0px 2px 8px 0px;
 
-  table {
-    width: 100%;
-
-    th {
-      background-color: var(--p-surface-100);
-      padding: 5px 10px;
-      border: 1px solid var(--p-surface-200);
-    }
-
-    td {
-      padding: 5px 10px;
-      border: 1px solid var(--p-surface-200);
-      text-align: center;
-    }
-
-    th,
-    td {
-      font-size: 13px;
-    }
-  }
-
-  .action-button {
-    font-size: 13px;
-    padding: 2px 5px;
-  }
-
   .my-approval-wait-card-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .ellipsis {
+    max-width: 100px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 }
 </style>
