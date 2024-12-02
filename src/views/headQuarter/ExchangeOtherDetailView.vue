@@ -1,34 +1,35 @@
 <template>
   <div class="exchange-detail-container">
-    <template v-if="exchangeDetail">
+    <template v-if="exchangeOtherDetail">
       <div class="top-area">
         <Tag
           rounded
-          :value="formatKoExchangeStatus(exchangeDetail.status)"
-          :severity="getExchangeStatusSeverity(exchangeDetail.exchangeStatus)"
+          :value="formatKoExchangeOtherStatus(exchangeOtherDetail.status)"
+          :severity="getExchangeStatusSeverity(exchangeOtherDetail.exchangeStatus)"
           class="mb-1"
         />
         <div class="top-buttons">
           <Button
-            label="결재요청하기"
+            label="재고조정"
             variant="outlined"
             size="small"
             :disabled="!isRequested"
             @click="clickRequestApproval"
           />
-          <Button label="교환요청서 출력" variant="outlined" size="small" @click="clickPrintExchange" />
+          <Button label="교환완료" variant="outlined" size="small" @click="clickPrintExchange" />
           <Button
-            label="거래명세서 출력"
+            label="교환보기"
             variant="outlined"
             size="small"
             :disabled="!isCompleted"
             @click="clickPrintInvoice"
           />
+          <Button label="처리내역출력" variant="outlined" size="small" @click="clickGoToList" />
           <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
 
           <!-- 기안 담당자인 경우에만 결재요청취소 버튼 표시 -->
           <Button
-            v-if="exchangeDetail.managerName === userStore.username"
+            v-if="exchangeOtherDetail.managerName === userStore.username"
             label="결재요청취소"
             severity="danger"
             size="small"
@@ -40,23 +41,25 @@
       </div>
 
       <div class="body-area">
-        <h1>교환상세</h1>
+        <h1>교환처리내역</h1>
 
-        <DraftApprovalLine
+        <!-- <DraftApprovalLine
           class="approval-line-table"
           :draft-manager-name="exchangeDetail.memberName"
           :approval-lines="exchangeApprovalLines"
-        />
+        /> -->
 
-        <ExchangeDetailTable v-if="exchangeDetail" :exchange-detail="exchangeDetail" />
+        <div style="margin-bottom: 2%"></div>
+
+        <ExchangeOtherDetailTable v-if="exchangeOtherDetail" :exchange-other-detail="exchangeOtherDetail" />
       </div>
 
-      <DraftApprovalHistoryTable
+      <!-- <DraftApprovalHistoryTable
         :approval-lines="exchangeApprovalLines"
         :draft-kind="DRAFT_KIND.EXCHANGE"
         :draft-code="exchangeCode"
         @complete-approval="onCompleteApproval"
-      />
+      /> -->
 
       <DynamicDialog />
 
@@ -72,13 +75,13 @@ import { useRoute, useRouter } from 'vue-router';
 
 import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
 import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
-import ExchangeDetailTable from '@/components/headQuarter/ExchangeDetailTable.vue';
+import ExchangeOtherDetailTable from '@/components/headQuarter/ExchangeOtherDetailTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { DRAFT_KIND, EXCHANGE_STATUS } from '@/utils/constant';
-import { formatKoExchangeStatus } from '@/utils/format';
+import { formatKoExchangeOtherStatus } from '@/utils/format';
 import { getExchangeStatusSeverity } from '@/utils/helper';
 
 // import PrintExchangePdfPreviewModal from '@/components/headQuarter/PrintExchangePdfPreviewModal.vue';
@@ -94,85 +97,76 @@ const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 const { openModal } = useModal();
 
-const exchangeDetail = ref(null);
+const exchangeOtherDetail = ref(null);
 const exchangeApprovalLines = ref([]);
 const disabledCancelButton = computed(() => {
   // PENDING 상태일 때만 결재취소(기안자가) 가능하므로
   // PENDING 상태가 아니면 결재취소 버튼 disabled
-  return exchangeDetail.value.status !== EXCHANGE_STATUS.PENDING;
+  return exchangeOtherDetail.value.status !== EXCHANGE_STATUS.PENDING;
 });
 
 const isRequested = computed(() => {
-  return exchangeDetail.value.status === EXCHANGE_STATUS.REQUESTED;
+  return exchangeOtherDetail.value.status === EXCHANGE_STATUS.REQUESTED;
 });
 
 const isCompleted = computed(() => {
-  return exchangeDetail.value.status === EXCHANGE_STATUS.SHIPPED;
+  return exchangeOtherDetail.value.status === EXCHANGE_STATUS.SHIPPED;
 });
 
 const hqExchangeApi = new HQExchangeApi();
-const { exchangeCode } = route.params;
+const { exchangeStockHistoryCode } = route.params;
 
 const showPrintPdf = ref(false);
 
-const getExchangeDetailPageData = () => {
-  hqExchangeApi.getExchangeDetail(exchangeCode).then(data => {
-    exchangeDetail.value = data;
-  });
-
-  hqExchangeApi.getExchangeApprovalLines(exchangeCode).then(data => {
-    exchangeApprovalLines.value = data.map(e => ({
-      ...e,
-      positionName: e.position,
-      approved: e.approval,
-    }));
+const getExchangeOtherDetailPageData = () => {
+  hqExchangeApi.getExchangeOtherDetail(exchangeStockHistoryCode).then(data => {
+    exchangeOtherDetail.value = data;
   });
 };
 
-const handleRequestApproval = (approverCode, comment) => {
-  hqExchangeApi.requestApproval({ exchangeCode, superManagerMemberCode: approverCode, comment }).then(() => {
-    toast.add({
-      severity: 'success',
-      summary: '처리 성공',
-      detail: '교환에 대한 결재요청이 등록되었습니다.',
-      life: 3000,
-    });
+// const handleRequestApproval = (approverCode, comment) => {
+//   hqExchangeApi.requestApproval({ exchangeCode, superManagerMemberCode: approverCode, comment }).then(() => {
+//     toast.add({
+//       severity: 'success',
+//       summary: '처리 성공',
+//       detail: '교환에 대한 결재요청이 등록되었습니다.',
+//       life: 3000,
+//     });
 
-    // page reload
-    getExchangeDetailPageData();
-  });
-};
+//     // page reload
+//     getExchangeDetailPageData();
+//   });
+// };
+// const clickRequestApproval = () => {
+//   openModal({
+//     component: ApprovalRequestModalBody,
+//     header: '결재요청',
+//     data: {
+//       draftKind: DRAFT_KIND.EXCHANGE,
+//     },
+//     onClose: opt => {
+//       const callbackParams = opt.data;
+//       if (!callbackParams) return;
 
-const clickRequestApproval = () => {
-  openModal({
-    component: ApprovalRequestModalBody,
-    header: '결재요청',
-    data: {
-      draftKind: DRAFT_KIND.EXCHANGE,
-    },
-    onClose: opt => {
-      const callbackParams = opt.data;
-      if (!callbackParams) return;
+//       const { approverCode, comment } = callbackParams;
 
-      const { approverCode, comment } = callbackParams;
+//       handleRequestApproval(approverCode, comment);
+//     },
+//   });
+// };
 
-      handleRequestApproval(approverCode, comment);
-    },
-  });
-};
+// const clickPrintExchange = () => {
+//   // TODO:: 교환요청서 출력
+//   showPrintPdf.value = true;
+// };
 
-const clickPrintExchange = () => {
-  // TODO:: 교환요청서 출력
-  showPrintPdf.value = true;
-};
-
-const clickPrintInvoice = () => {
-  // TODO:: 거래명세서 출력
-  showPrintPdf.value = true;
-};
+// const clickPrintInvoice = () => {
+//   // TODO:: 거래명세서 출력
+//   showPrintPdf.value = true;
+// };
 
 const clickGoToList = () => {
-  router.replace({ name: 'hq:order:exchange:list' });
+  router.replace({ name: 'hq:order:exchange:other-list' });
 };
 
 const cancelExchange = () => {
@@ -180,7 +174,7 @@ const cancelExchange = () => {
     toast.add({ severity: 'error', summary: '처리 성공', detail: '결재 요청이 취소되었습니다.', life: 3000 });
 
     // page reload
-    getExchangeDetailPageData();
+    getExchangeOtherDetailPageData();
   });
 };
 
@@ -195,12 +189,12 @@ const clickCancel = () => {
 };
 
 const onCompleteApproval = () => {
-  getExchangeDetailPageData();
+  getExchangeOtherDetailPageData();
 };
 
 onMounted(() => {
   // 교환 상세 데이터 셋팅
-  getExchangeDetailPageData();
+  getExchangeOtherDetailPageData();
 });
 </script>
 

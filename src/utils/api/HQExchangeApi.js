@@ -109,6 +109,11 @@ export default class HQExchangeApi extends BaseApiService {
     return this.get(`/other?${searchParams.toString()}`);
   }
 
+  // 타부서 교환처리내역 상세조회
+  getExchangeOtherDetail(exchangeStockHistoryCode) {
+    return this.get(`/other/${exchangeStockHistoryCode}`);
+  }
+
   //
   // POST
   //

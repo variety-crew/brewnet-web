@@ -121,7 +121,7 @@ const columns = [
   },
 ];
 
-const getExchanges = () => {
+const getExchangesOther = () => {
   hqExchangeApi
     .searchOtherExchanges({
       page: page.value,
@@ -138,22 +138,22 @@ const getExchanges = () => {
 };
 
 const reloadData = () => {
-  getExchanges();
+  getExchangesOther();
 };
 
 const onChangePage = event => {
   page.value = event.page;
-  getExchanges();
+  getExchangesOther();
 };
 
 const onSearch = () => {
-  getExchanges();
+  getExchangesOther();
 };
 
 const onReset = () => {
   criteria.value = getInitialCriteria();
   page.value = 0;
-  getExchanges();
+  getExchangesOther();
 };
 
 // const onExportExcel = () => {
@@ -178,7 +178,7 @@ const onReset = () => {
 // };
 
 onMounted(() => {
-  getExchanges();
+  getExchangesOther();
 });
 </script>
 
