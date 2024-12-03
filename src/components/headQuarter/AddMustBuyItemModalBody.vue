@@ -8,6 +8,7 @@
         :rows-per-page="pageSize"
         :total-elements="totalElements"
         @reload="onReload"
+        @change-page="onChangePage"
       />
 
       <div class="right">
@@ -145,6 +146,11 @@ const clickSave = async () => {
 };
 
 const onReload = () => {
+  getItems();
+};
+
+const onChangePage = event => {
+  page.value = event.page;
   getItems();
 };
 
