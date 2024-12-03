@@ -56,10 +56,19 @@
     <AppLabelText label="반품사유 설명" :text="returnDetail.explanation" />
 
     <AppImageList :images="returnDetail.returningImageList" />
+
+    <Button
+      v-if="returnDetail.status === RETURN_STATUS.REQUESTED"
+      label="반품취소"
+      severity="secondary"
+      size="small"
+      @click="clickCancel"
+    />
   </div>
 </template>
 
 <script setup>
+import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -67,13 +76,16 @@ import AppImageList from '@/components/common/AppImageList.vue';
 import AppLabel from '@/components/common/AppLabel.vue';
 import AppLabelText from '@/components/common/AppLabelText.vue';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import FCReturnApi from '@/utils/api/FCReturnApi';
-import { RETURN_STEP_LIST } from '@/utils/constant';
+import { RETURN_STATUS, RETURN_STEP_LIST } from '@/utils/constant';
 import { formatKoReturnReason, formatKoReturnStatus } from '@/utils/format';
 import { getReturnStatusSeverity } from '@/utils/helper';
 
 const route = useRoute();
 const { returnCode } = route.params;
+const { showConfirm } = useAppConfirmModal();
+const toast = useToast();
 
 const returnDetail = ref(null);
 const statusHistory = ref([]);
@@ -102,6 +114,22 @@ const getPageData = () => {
   // 반품 상태변경 이력
   fcReturnApi.getReturnStatusHistory(returnCode).then(data => {
     statusHistory.value = data;
+  });
+};
+
+const onCancel = () => {
+  fcReturnApi.cancelReturn(returnCode).then(() => {
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '반품요청이 취소되었습니다.', life: 3000 });
+    getPageData();
+  });
+};
+
+const clickCancel = () => {
+  showConfirm({
+    header: '반품취소',
+    message: '반품요청을 취소하시겠습니까?',
+    acceptLabel: '네, 취소합니다.',
+    onAccept: onCancel,
   });
 };
 

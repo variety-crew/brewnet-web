@@ -69,4 +69,9 @@ export default class FCReturnApi extends BaseApiService {
 
     return this.post('/', formData);
   }
+
+  // 반품 취소
+  cancelReturn(returnCode) {
+    return this.post(`/cancel/${returnCode}`);
+  }
 }
