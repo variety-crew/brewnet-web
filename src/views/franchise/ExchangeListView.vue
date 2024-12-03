@@ -67,7 +67,7 @@ const getInitialCriteria = () => ({
 const criteria = ref(getInitialCriteria());
 const paginatedExchanges = ref([]);
 const fcExchangeApi = new FCExchangeApi();
-const searchFilter = ref('ExchangeCode');
+const searchFilter = ref('exchangeCode');
 const searchOptions = computed(() => {
   return CRITERIA_FC_EXCHANGE_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
@@ -84,7 +84,7 @@ const columns = [
     },
   },
   { field: 'exchangeCode', header: '주문번호' },
-  { field: 'itemName',header: '주문품목명'},
+  { field: 'itemName', header: '주문품목명' },
   {
     field: 'sumPrice',
     header: '주문금액',
@@ -93,7 +93,7 @@ const columns = [
     },
   },
   { field: 'createdAt', header: '주문일자' },
-  {field: 'completedAt', header: '완료일자'},
+  { field: 'completedAt', header: '완료일자' },
   {
     field: '',
     header: '',
@@ -146,33 +146,6 @@ const onChangePage = event => {
   page.value = event.page;
   getExchanges();
 };
-
-// const onExportExcel = () => {
-//   fcOrderApi
-//     .getAllOrders({
-//       startDate: criteria.value.startDate,
-//       endDate: criteria.value.endDate,
-//       criteria: criteria.value.criteria,
-//       keyword: criteria.value.keyword,
-//     })
-//     .then(rows => {
-//       const exchangedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
-//       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
-
-//       // 데이터 표시 수정
-//       const tableRows = rows.map(row => ({
-//         ...row,
-//         recentOrderStatus: formatKoOrderStatus(row.recentOrderStatus),
-//         orderItemList: row.orderItemList.map(item => item.name).join(', '),
-//         recentOrderStatusCreatedAt:
-//           row.recentOrderStatus === ORDER_STATUS.SHIPPED ? row.recentOrderStatusCreatedAt : '', // Display only if status is SHIPPED
-//       }));
-
-//       const excelManager = new ExcelManager(tableRows, exchangedFields);
-//       excelManager.setHeaderNames(headerNames);
-//       excelManager.export(`나의주문목록${dayjs().format('YYMMDD')}`);
-//     });
-// };
 
 onMounted(() => {
   getExchanges();
