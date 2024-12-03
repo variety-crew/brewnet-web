@@ -278,6 +278,12 @@ export const formatKoSearchCriteria = criteria => {
     case SEARCH_CRITERIA.RETURN_CODE:
       return '반품코드';
 
+    case SEARCH_CRITERIA.RETURN_FRANCHISE_NAME:
+      return '반품지점';
+
+    case SEARCH_CRITERIA.RETURN_MANAGER_NAME:
+      return '반품담당자';
+
     default:
       return '';
   }
