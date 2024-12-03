@@ -87,3 +87,28 @@ export const getDrafterApprovedStatusSeverity = drafterApproved => {
       return 'info';
   }
 };
+
+export const getReturnStatusSeverity = status => {
+  switch (status) {
+    case RETURN_STATUS.REQUESTED:
+    case RETURN_STATUS.PENDING:
+      return 'warn';
+
+    case RETURN_STATUS.APPROVED:
+      return 'secondary';
+
+    case RETURN_STATUS.CANCELED:
+    case RETURN_STATUS.REJECTED:
+      return 'danger';
+
+    case RETURN_STATUS.PICKING:
+    case RETURN_STATUS.PICKED:
+      return 'info';
+
+    case RETURN_STATUS.COMPLETED:
+      return 'success';
+
+    default:
+      return undefined;
+  }
+};
