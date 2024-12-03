@@ -24,6 +24,7 @@
       :rows-per-page="pageSize"
       :paginated-data="paginatedReturnList"
       @reload="onReload"
+      @change-page="onChangePage"
     />
   </div>
 </template>
@@ -122,6 +123,11 @@ const onSearch = () => {
 const onReset = () => {
   page.value = 0;
   criteria.value = getInitialCriteria();
+  getReturnList();
+};
+
+const onChangePage = event => {
+  page.value = event.page;
   getReturnList();
 };
 
