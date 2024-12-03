@@ -72,10 +72,6 @@ const searchOptions = computed(() => {
   return CRITERIA_FC_EXCHANGE_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 
-function clickGoDetail(data) {
-  router.push({ name: 'fc:home:exchange:detail', params: { exchangeCode: data.exchangeCode } });
-}
-
 const columns = [
   {
     field: 'status',
@@ -111,6 +107,10 @@ const columns = [
     },
   },
 ];
+
+function clickGoDetail(data) {
+  router.push({ name: 'fc:home:exchange:detail', params: { exchangeCode: data.exchangeCode } });
+}
 
 const getExchanges = () => {
   fcExchangeApi

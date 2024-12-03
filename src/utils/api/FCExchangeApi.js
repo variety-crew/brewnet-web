@@ -42,9 +42,9 @@ export default class FCExchangeApi extends BaseApiService {
   }
 
   // 교환 상세조회 설정
-  //   getExchangeDetail(exchangeCode) {
-  //     return this.get(`/${exchangeCode}`);
-  //   }
+  getExchangeDetail(exchangeCode) {
+    return this.get(`/${exchangeCode}`);
+  }
 
   //
   // POST

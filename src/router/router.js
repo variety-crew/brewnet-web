@@ -553,6 +553,14 @@ const routes = [
             },
           },
           {
+            path: 'exchange/:exchangeCode/detail',
+            name: 'fc:home:exchange:detail',
+            component: () => import('@/views/franchise/ExchangeDetailView.vue'),
+            meta: {
+              breadcrumb: '교환 상세',
+            },
+          },
+          {
             path: 'exchange/form',
             name: 'fc:home:exchange:form',
             component: () => import('@/views/franchise/ExchangeFormView.vue'),
