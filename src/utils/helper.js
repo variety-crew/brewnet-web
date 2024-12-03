@@ -5,6 +5,8 @@ import {
   PURCHASE_STATUS,
   RETURN_STATUS,
   DRAFTER_APPROVED,
+  EXCHANGE_OTHER_STATUS,
+  CONFIRMED_STATUS,
 } from './constant';
 
 // 프라임뷰에 사용될 데이터
@@ -71,6 +73,27 @@ export const getOrderStatusSeverity = orderStatus => {
       return 'info';
   }
 };
+export const getExchangeStatusSeverity = exchangeStatus => {
+  switch (exchangeStatus) {
+    case EXCHANGE_STATUS.REQUESTED:
+      return 'success';
+
+    case EXCHANGE_STATUS.CANCELED:
+    case EXCHANGE_STATUS.REJECTED:
+      return 'danger';
+
+    case EXCHANGE_STATUS.APPROVED:
+    case EXCHANGE_STATUS.PICKING:
+    case EXCHANGE_STATUS.PICKED:
+    case EXCHANGE_STATUS.SHIPPING:
+    case EXCHANGE_STATUS.SHIPPED:
+    case EXCHANGE_STATUS.PENDING:
+      return 'info';
+
+    default:
+      return 'info';
+  }
+};
 
 export const getDrafterApprovedStatusSeverity = drafterApproved => {
   switch (drafterApproved) {
@@ -87,7 +110,6 @@ export const getDrafterApprovedStatusSeverity = drafterApproved => {
       return 'info';
   }
 };
-
 export const getReturnStatusSeverity = status => {
   switch (status) {
     case RETURN_STATUS.REQUESTED:
@@ -110,5 +132,32 @@ export const getReturnStatusSeverity = status => {
 
     default:
       return undefined;
+  }
+};
+export const getExchangeOtherStatusSeverity = status => {
+  switch (status) {
+    case EXCHANGE_OTHER_STATUS.TOTAL_INBOUND:
+      return 'success';
+
+    case EXCHANGE_OTHER_STATUS.TOTAL_DISPOSAL:
+      return 'danger';
+
+    case EXCHANGE_OTHER_STATUS.PARTIAL_INBOUND:
+      return 'info';
+
+    default:
+      return 'info';
+  }
+};
+export const getConfirmedStatusSeverity = status => {
+  switch (status) {
+    case CONFIRMED_STATUS.CONFIRMED:
+      return 'success';
+
+    case CONFIRMED_STATUS.UNCONFIRMED:
+      return 'danger';
+
+    default:
+      return 'info';
   }
 };
