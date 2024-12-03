@@ -184,7 +184,7 @@ onMounted(() => {
 
 <style scoped>
 .exchange-search {
-  .criteria.use-date {
+  .criteria.created-at {
     grid-column: 1 / 7;
   }
 }
