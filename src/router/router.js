@@ -321,6 +321,14 @@ const routes = [
               breadcrumb: '품목 수정',
             },
           },
+          {
+            path: 'item/must-buy/list',
+            name: 'hq:stock:item-must-buy:list',
+            component: () => import('@/views/headQuarter/ItemMustBuyListView.vue'),
+            meta: {
+              breadcrumb: '필수구매품목 관리',
+            },
+          },
         ],
       },
       {
