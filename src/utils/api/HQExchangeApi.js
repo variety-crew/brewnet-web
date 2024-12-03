@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 import BaseApiService from './BaseApiService';
+import { SEARCH_CRITERIA } from '../constant';
 
 export default class HQExchangeApi extends BaseApiService {
   constructor() {
@@ -46,11 +47,24 @@ export default class HQExchangeApi extends BaseApiService {
     searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
 
     if (criteria && keyword) {
+      switch (criteria) {
+        case SEARCH_CRITERIA.EXCHANGE_CODE:
+          criteria = 'exchangeCode';
+          break;
+        case SEARCH_CRITERIA.EXCHANGE_FRANCHISE_NAME:
+          criteria = '';
+          break;
+        case SEARCH_CRITERIA.EXCHANGE_MANAGER_NAME:
+          criteria = 'itemName';
+          break;
+        default:
+          break;
+      }
       searchParams.append('searchFilter', criteria);
       searchParams.append('searchWord', keyword);
     }
 
-    return this.get(`${searchParams.toString()}`);
+    return this.get(`/search${searchParams.toString()}`);
   }
 
   // 교환목록 검색
@@ -69,6 +83,19 @@ export default class HQExchangeApi extends BaseApiService {
     searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
 
     if (criteria && keyword) {
+      switch (criteria) {
+        case SEARCH_CRITERIA.EXCHANGE_CODE:
+          criteria = 'exchangeCode';
+          break;
+        case SEARCH_CRITERIA.EXCHANGE_FRANCHISE_NAME:
+          criteria = '';
+          break;
+        case SEARCH_CRITERIA.EXCHANGE_MANAGER_NAME:
+          criteria = 'itemName';
+          break;
+        default:
+          break;
+      }
       searchParams.append('searchFilter', criteria);
       searchParams.append('searchWord', keyword);
     }

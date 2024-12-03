@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 import BaseApiService from './BaseApiService';
+import { SEARCH_CRITERIA } from '../constant';
 
 export default class FCExchangeApi extends BaseApiService {
   constructor() {
@@ -27,7 +28,17 @@ export default class FCExchangeApi extends BaseApiService {
     searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
 
     if (criteria && keyword) {
-      searchParams.append('criteria', criteria);
+      switch (criteria) {
+        case SEARCH_CRITERIA.EXCHANGE_CODE:
+          criteria = 'exchangeCode';
+          break;
+        case SEARCH_CRITERIA.ITEM_NAME:
+          criteria = 'itemName';
+          break;
+        default:
+          break;
+      }
+      searchParams.append('searchFilter', criteria);
       searchParams.append('searchWord', keyword);
     }
     return this.get(`/search?${searchParams.toString()}`);
