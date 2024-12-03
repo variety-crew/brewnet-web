@@ -26,11 +26,11 @@
           <tr
             v-for="orderItem in availableOrderItems"
             :key="orderItem.itemCode"
-            :class="{ highlight: checkedOrderItems.includes(orderItem.itemCode) }"
+            :class="{ highlight: checkedOrderItemCodeList.includes(orderItem.itemCode) }"
           >
             <td class="align-center">
               <Checkbox
-                v-model="checkedOrderItems"
+                v-model="checkedOrderItemCodeList"
                 name="availableOrderItems"
                 :value="orderItem.itemCode"
                 size="small"
@@ -47,6 +47,12 @@
           <td colspan="6">반품가능한 품목이 없습니다.</td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <th>금액합계</th>
+          <td colspan="5" class="align-right">{{ totalPrice.toLocaleString() }}</td>
+        </tr>
+      </tfoot>
     </AppTableStyled>
 
     <div>
@@ -99,7 +105,15 @@ const reasonOptions = computed(() => {
 const explanation = ref('');
 
 const allCheck = ref(false);
-const checkedOrderItems = ref([]); // 체크된 itemCode 목록이 들어감
+const checkedOrderItemCodeList = ref([]); // 체크된 itemCode 목록이 들어감
+
+const totalPrice = computed(() => {
+  return checkedOrderItemCodeList.value.reduce((acc, currentItemCode) => {
+    const matchOrder = availableOrderItems.value.find(orderItem => orderItem.itemCode === currentItemCode);
+    if (matchOrder) return acc + matchOrder.partSumPrice;
+    return acc;
+  }, 0);
+});
 
 const fcReturnApi = new FCReturnApi();
 
@@ -113,7 +127,7 @@ const onCompleteInputOrderCode = event => {
 const checkForm = () => {
   try {
     if (!selectedOrder.value || !selectedOrder.value.code) throw new Error('반품할 주문을 입력해주세요');
-    if (checkedOrderItems.value.length === 0) throw new Error('반품신청할 품목을 선택해주세요');
+    if (checkedOrderItemCodeList.value.length === 0) throw new Error('반품신청할 품목을 선택해주세요');
     if (!reason.value) throw new Error('반품사유를 선택해주세요');
     if (!explanation.value) throw new Error('반품사유를 상세하게 작성해주세요.');
     if (uploadFiles.value.length === 0) throw new Error('품목 상태를 확인할 이미지를 첨부해주세요.');
@@ -132,10 +146,10 @@ const clickRequestReturn = () => {
   fcReturnApi
     .createReturn({
       orderCode: selectedOrder.value.code,
-      returningItemCodeList: checkedOrderItems.value,
+      returningItemCodeList: checkedOrderItemCodeList.value,
       reason: reason.value,
       explanation: explanation.value,
-      sumPrice: checkedOrderItems.value.reduce((acc, current) => acc + current.partSumPrice, 0),
+      sumPrice: checkedOrderItemCodeList.value.reduce((acc, current) => acc + current.partSumPrice, 0),
       imageFiles: uploadFiles.value.map(e => e.file),
     })
     .then(() => {
@@ -158,10 +172,10 @@ watch(selectedOrder, newSelectedOrder => {
 watch(allCheck, newAllCheck => {
   if (newAllCheck) {
     // 전체 체크상태로 변경
-    checkedOrderItems.value = availableOrderItems.value.map(e => e.itemCode);
+    checkedOrderItemCodeList.value = availableOrderItems.value.map(e => e.itemCode);
   } else {
     // 전체 체크 해제
-    checkedOrderItems.value = [];
+    checkedOrderItemCodeList.value = [];
   }
 });
 </script>
