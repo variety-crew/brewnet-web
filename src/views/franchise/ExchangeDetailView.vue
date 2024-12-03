@@ -5,7 +5,7 @@
         <Tag
           rounded
           :value="formatKoExchangeStatus(exchangeDetail.status)"
-          :severity="getExchangeStatusSeverity(exchangeDetail.exchangeStatus)"
+          :severity="getExchangeStatusSeverity(exchangeDetail.status)"
           class="mb-1"
         />
         <div class="top-buttons">
@@ -65,12 +65,13 @@
             </tr>
           </tbody>
           <div style="margin-bottom: 10%"></div>
-
-          <h4 class="mb-1">첨부파일</h4>
-          <div v-for="(image, index) in exchangeDetail.exchangeImageList" :key="index">
-            <Image :src="image" alt="교환 상품 이미지" width="200" preview />
-          </div>
         </AppTableStyled>
+      </div>
+      <h4 class="mb-1">첨부파일</h4>
+      <div class="image-gallery">
+        <div v-for="(image, index) in exchangeDetail.exchangeImageList" :key="index" class="image-item">
+          <Image :src="image" alt="교환 상품 이미지" width="200" preview />
+        </div>
       </div>
     </template>
   </div>
@@ -78,12 +79,10 @@
 
 <script setup>
 import { useToast } from 'primevue';
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
-import { useModal } from '@/hooks/useModal';
-import { useUserStore } from '@/stores/user';
 import FCExchangeApi from '@/utils/api/FCExchangeApi';
 import { EXCHANGE_STATUS } from '@/utils/constant';
 import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
@@ -172,6 +171,17 @@ onMounted(() => {
     .approval-line-table {
       align-self: flex-end;
     }
+  }
+
+  .image-gallery {
+    display: flex;
+    gap: 10px;
+    /* flex-wrap: wrap; */
+    float: left;
+  }
+
+  .image-item {
+    /* flex: 0 0 auto; */
   }
 }
 </style>
