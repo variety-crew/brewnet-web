@@ -12,8 +12,8 @@ export default class HQItemApi extends BaseApiService {
   // 상품 목록 조회 (본사용)
   getItems({ page = 0, pageSize = 15, itemUniqueCode, itemName }) {
     const searchParams = new URLSearchParams();
-    searchParams.append('pageNumber', page);
-    searchParams.append('pageSize', pageSize);
+    searchParams.append('page', page);
+    searchParams.append('size', pageSize);
 
     if (itemUniqueCode) {
       searchParams.append('itemCode', itemUniqueCode);
