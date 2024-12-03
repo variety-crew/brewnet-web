@@ -164,7 +164,7 @@ watch(selectedOrder, newSelectedOrder => {
 
     console.log('***exchange newSelectedOrderCode:', newSelectedOrderCode);
 
-    // 반품 가능한 품목 조회
+    // 교환 가능한 품목 조회
     fcExchangeApi.getAvailableItems(newSelectedOrderCode).then(data => {
       availableOrderItems.value = data;
     });

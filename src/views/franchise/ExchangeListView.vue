@@ -22,7 +22,6 @@
       :columns="columns"
       :total-elements="totalElements"
       :rows-per-page="size"
-      show-excel-export
       @reload="reloadData"
       @change-page="onChangePage"
       @export-excel="onExportExcel"

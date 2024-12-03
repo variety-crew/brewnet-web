@@ -1,147 +1,140 @@
 <template>
-  <div class="exchange-detail-container">
-    <template v-if="exchangeDetail">
-      <div class="top-area">
-        <Tag
-          rounded
-          :value="formatKoExchangeStatus(exchangeDetail.status)"
-          :severity="getExchangeStatusSeverity(exchangeDetail.status)"
-          class="mb-1"
-        />
-        <div class="top-buttons">
-          <Button label="교환상태조회" variant="outlined" size="small" @click="checkStatus" />
-          <Button
-            label="취소"
-            severity="danger"
-            size="small"
-            variant="outlined"
-            :disabled="!isRequested"
-            @click="clickCancel"
-          />
-          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
-        </div>
-      </div>
+  <div v-if="exchangeDetail" class="exchange-detail-container">
+    <Tag
+      size="small"
+      :value="formatKoExchangeStatus(exchangeDetail.status)"
+      :severity="getExchangeStatusSeverity(exchangeDetail.status)"
+    />
 
-      <div class="body-area">
-        <h1>교환상세</h1>
-        <div style="margin-bottom: 2%"></div>
-
-        <AppTableStyled full-width>
-          <tbody>
-            <tr>
-              <th>주문번호</th>
-              <td>{{ exchangeDetail.orderCode }}</td>
-              <th>교환사유</th>
-              <td colspan="3">{{ formatKoExchangeReason(exchangeDetail.reason) }}</td>
-              <th>교환신청일자</th>
-              <td colspan="2">{{ exchangeDetail.createdAt }}</td>
-            </tr>
-            <tr>
-              <th>교환사유 설명</th>
-              <td colspan="8">{{ exchangeDetail.explanation }}</td>
-            </tr>
-            <tr>
-              <th colspan="8">교환품목</th>
-            </tr>
-            <tr>
-              <th>품목코드</th>
-              <th colspan="3">품목명</th>
-              <th>수량</th>
-              <th>단가</th>
-              <th>주문금액</th>
-              <th>부가세</th>
-            </tr>
-            <tr v-for="item in exchangeDetail.exchangeItemList" :key="item.itemCode">
-              <td class="align-center">{{ item.itemUniqueCode }}</td>
-              <td colspan="3">{{ item.itemName }}</td>
-              <td class="align-right">{{ item.quantity.toLocaleString() }}</td>
-              <td class="align-right">{{ item.sellingPrice.toLocaleString() }}</td>
-              <td class="align-right">{{ (item.quantity * item.sellingPrice).toLocaleString() }}</td>
-              <td class="align-right">{{ (item.quantity * item.sellingPrice * 0.1).toLocaleString() }}</td>
-            </tr>
-            <tr>
-              <th>금액합계</th>
-              <td class="align-right" colspan="7">{{ totalPrice.toLocaleString() }}</td>
-            </tr>
-          </tbody>
-          <div style="margin-bottom: 10%"></div>
-        </AppTableStyled>
-      </div>
-      <h4 class="mb-1">첨부파일</h4>
-      <div class="image-gallery">
-        <div v-for="(image, index) in exchangeDetail.exchangeImageList" :key="index" class="image-item">
-          <Image :src="image" alt="교환 상품 이미지" width="200" preview />
+    <div class="status-history">
+      <div v-for="(step, i) in statusStepList" :key="i" class="status-item">
+        <div class="stepper">
+          <div class="dot" :class="{ active: step.active }"></div>
+          <div class="line" :class="{ active: step.active }"></div>
         </div>
+        <p class="title" :class="{ active: step.active }">
+          {{ formatKoExchangeStatus(step.status) }}
+        </p>
+        <p class="date" :class="{ active: step.active }">{{ step.processedAt }}</p>
       </div>
-    </template>
+    </div>
+
+    <AppLabelText label="주문코드" :text="exchangeDetail.orderCode" />
+
+    <div>
+      <AppLabel use-margin-bottom label="교환 품목" />
+      <AppTableStyled>
+        <thead>
+          <tr>
+            <th>품목코드</th>
+            <th>품목명</th>
+            <th>수량</th>
+            <th>단가</th>
+            <th>주문금액</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="exchangeItem in exchangeDetail.exchangeItemList" :key="exchangeItem.itemCode">
+            <td class="align-center">{{ exchangeItem.itemUniqueCode }}</td>
+            <td class="align-center">{{ exchangeItem.itemName }}</td>
+            <td class="align-center">{{ exchangeItem.quantity.toLocaleString() }}</td>
+            <td class="align-right">{{ exchangeItem.sellingPrice.toLocaleString() }}</td>
+            <td class="align-right">{{ exchangeItem.partSumPrice.toLocaleString() }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>금액합계</th>
+            <td colspan="4" class="align-right">{{ totalPrice.toLocaleString() }}</td>
+          </tr>
+        </tfoot>
+      </AppTableStyled>
+    </div>
+
+    <AppLabelText label="교환사유" :text="formatKoExchangeReason(exchangeDetail.reason)" />
+
+    <AppLabelText label="교환사유 설명" :text="exchangeDetail.explanation" />
+
+    <AppImageList :images="exchangeDetail.exchangeImageList" />
+
+    <Button
+      v-if="exchangeDetail.status === EXCHANGE_STATUS.REQUESTED"
+      label="교환취소"
+      severity="secondary"
+      size="small"
+      @click="clickCancel"
+    />
   </div>
 </template>
 
 <script setup>
 import { useToast } from 'primevue';
 import { computed, onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
+import AppImageList from '@/components/common/AppImageList.vue';
+import AppLabel from '@/components/common/AppLabel.vue';
+import AppLabelText from '@/components/common/AppLabelText.vue';
+import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import FCExchangeApi from '@/utils/api/FCExchangeApi';
-import { EXCHANGE_STATUS } from '@/utils/constant';
+import { EXCHANGE_STATUS, EXCHANGE_STEP_LIST } from '@/utils/constant';
 import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
 import { getExchangeStatusSeverity } from '@/utils/helper';
 
 const route = useRoute();
-const router = useRouter();
+const { exchangeCode } = route.params;
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
 
-const totalPrice = ref(null);
 const exchangeDetail = ref(null);
+const statusHistory = ref([]);
+const statusStepList = computed(() => {
+  return EXCHANGE_STEP_LIST.reduce((acc, current) => {
+    const match = statusHistory.value.find(e => e.status === current);
+    acc.push({ status: current, active: match !== undefined, processedAt: match?.processedAt || null });
 
-const isRequested = computed(() => {
-  return exchangeDetail.value.status === EXCHANGE_STATUS.REQUESTED;
+    return acc;
+  }, []);
+});
+const totalPrice = computed(() => {
+  if (exchangeDetail.value === null) return 0;
+
+  return exchangeDetail.value.exchangeItemList.reduce((acc, current) => acc + current.partSumPrice, 0);
 });
 
 const fcExchangeApi = new FCExchangeApi();
-const { exchangeCode } = route.params;
 
-const getExchangeDetailPageData = () => {
+const getPageData = () => {
+  // 교환 상세정보
   fcExchangeApi.getExchangeDetail(exchangeCode).then(data => {
     exchangeDetail.value = data;
-    totalPrice.value = exchangeDetail.value.exchangeItemList.reduce((total, item) => {
-      return total + item.quantity * item.sellingPrice;
-    }, 0);
+  });
+
+  // 교환 상태변경 이력
+  fcExchangeApi.getExchangeStatus(exchangeCode).then(data => {
+    statusHistory.value = data;
   });
 };
 
-const checkStatus = () => {
-  fcExchangeApi.getExchangeStatus(exchangeCode).then(() => {});
-};
-
-const clickGoToList = () => {
-  router.replace({ name: 'fc:home:exchange:list' });
-};
-
-const cancelExchange = () => {
+const onCancel = () => {
   fcExchangeApi.cancelExchange(exchangeCode).then(() => {
-    toast.add({ severity: 'error', summary: '처리 성공', detail: '교환 취소되었습니다.', life: 3000 });
-
-    // 교환 목록 페이지로 이동
-    clickGoToList();
+    toast.add({ severity: 'success', summary: '처리 성공', detail: '교환요청이 취소되었습니다.', life: 3000 });
+    getPageData();
   });
 };
 
 const clickCancel = () => {
   showConfirm({
-    header: '교환 요청 취소',
-    message: '교환 요청을 취소하시겠습니까?',
-    acceptLabel: '교환 요청 취소',
-    onAccept: cancelExchange,
-    danger: true,
+    header: '교환취소',
+    message: '교환요청을 취소하시겠습니까?',
+    acceptLabel: '네, 취소합니다.',
+    onAccept: onCancel,
   });
 };
 
 onMounted(() => {
-  // 교환 상세 데이터 셋팅
-  getExchangeDetailPageData();
+  getPageData();
 });
 </script>
 
@@ -150,38 +143,77 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  align-items: flex-start;
 
-  .top-area {
+  .status-history {
+    padding: 16px;
+    border-radius: 5px;
+    border: 1px solid var(--p-surface-300);
+    box-shadow: var(--p-primary-100) 0px 2px 8px 0px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .top-buttons {
-      display: flex;
-      gap: 5px;
-    }
+    justify-content: center;
+    align-self: stretch;
   }
 
-  .body-area {
+  .status-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    width: 120px;
 
-    .approval-line-table {
-      align-self: flex-end;
+    &:last-child .line {
+      display: none;
     }
-  }
 
-  .image-gallery {
-    display: flex;
-    gap: 10px;
-    /* flex-wrap: wrap; */
-    float: left;
-  }
+    .stepper {
+      position: relative;
+    }
 
-  .image-item {
-    /* flex: 0 0 auto; */
+    .dot {
+      background-color: var(--p-surface-400);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 3px solid white;
+      position: relative;
+      z-index: 2;
+
+      &.active {
+        background-color: var(--p-primary-700);
+      }
+    }
+
+    .line {
+      position: absolute;
+      width: 130px;
+      height: 2px;
+      background-color: var(--p-surface-400);
+      top: 6px;
+      z-index: 1;
+
+      &.active {
+        background-color: var(--p-primary-700);
+      }
+    }
+
+    .title {
+      color: var(--p-surface-400);
+
+      &.active {
+        color: var(--p-primary-700);
+      }
+    }
+
+    .date {
+      visibility: hidden;
+      color: var(--p-primary-700);
+      font-size: 12px;
+      text-align: center;
+
+      &.active {
+        visibility: visible;
+      }
+    }
   }
 }
 </style>
