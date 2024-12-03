@@ -5,6 +5,11 @@ import dayjs from 'dayjs';
 
 export default class FileUtil {
   async compressFile(file) {
+    if (file.size <= 1 * 1024 * 1024) {
+      // 1MB 이하는 파일 그대로 사용
+      return file;
+    }
+
     const BLOB_TYPE = 'image/jpeg';
     const ext = 'jpeg';
 
