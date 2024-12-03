@@ -12,37 +12,14 @@ export default class HQExchangeApi extends BaseApiService {
   // GET
   //
 
-  // 전체 교환 목록 (엑셀 다운로드용)
-  getAllExchangeList({
+  // 엑셀 다운로드용 교환목록 조회
+  getExchangesExcelData({
     startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
     endDate = dayjs().format('YYYY-MM-DD'),
     criteria,
     keyword,
   }) {
     const searchParams = new URLSearchParams();
-    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
-    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
-
-    if (criteria && keyword) {
-      searchParams.append('searchFilter', criteria);
-      searchParams.append('searchWord', keyword);
-    }
-
-    return this.get(`/excel-data?${searchParams.toString()}`);
-  }
-
-  // 교환목록 조회
-  getExchanges({
-    page = 1,
-    size = 15,
-    startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
-    endDate = dayjs().format('YYYY-MM-DD'),
-    criteria,
-    keyword,
-  }) {
-    const searchParams = new URLSearchParams();
-    searchParams.append('page', page);
-    searchParams.append('size', size);
     searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
     searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
 
@@ -52,10 +29,10 @@ export default class HQExchangeApi extends BaseApiService {
           criteria = 'exchangeCode';
           break;
         case SEARCH_CRITERIA.EXCHANGE_FRANCHISE_NAME:
-          criteria = '';
+          criteria = 'franchiseName';
           break;
         case SEARCH_CRITERIA.EXCHANGE_MANAGER_NAME:
-          criteria = 'itemName';
+          criteria = 'managerName';
           break;
         default:
           break;
@@ -64,7 +41,7 @@ export default class HQExchangeApi extends BaseApiService {
       searchParams.append('searchWord', keyword);
     }
 
-    return this.get(`/search${searchParams.toString()}`);
+    return this.get(`/excel-data?${searchParams.toString()}`);
   }
 
   // 교환목록 검색
@@ -88,10 +65,10 @@ export default class HQExchangeApi extends BaseApiService {
           criteria = 'exchangeCode';
           break;
         case SEARCH_CRITERIA.EXCHANGE_FRANCHISE_NAME:
-          criteria = '';
+          criteria = 'franchiseName';
           break;
         case SEARCH_CRITERIA.EXCHANGE_MANAGER_NAME:
-          criteria = 'itemName';
+          criteria = 'managerName';
           break;
         default:
           break;

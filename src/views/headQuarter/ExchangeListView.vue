@@ -47,7 +47,6 @@ import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { formatKoExchangeReason, formatKoExchangeStatus, formatKoSearchCriteria } from '@/utils/format';
 import { getExchangeStatusSeverity, makeSelectOption } from '@/utils/helper';
-import { mockupExchanges } from '@/utils/mockup';
 
 const router = useRouter();
 const toast = useToast();
@@ -56,11 +55,7 @@ const totalElements = ref(0);
 const page = ref(0);
 const size = ref(15);
 
-const nameKeyword = ref('');
 const paginatedExchanges = ref([]);
-
-const startDate = ref(dayjs().subtract(1, 'year').toDate());
-const endDate = ref(new Date());
 
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
@@ -156,11 +151,11 @@ const onReset = () => {
 
 const onExportExcel = () => {
   hqExchangeApi
-    .getAllExchangeList({
-      // startDate: criteria.value.startDate,
-      // endDate: criteria.value.endDate,
-      // criteria: criteria.value.criteria,
-      // keyword: criteria.value.keyword,
+    .getExchangesExcelData({
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
     })
     .then(rows => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
@@ -182,7 +177,7 @@ onMounted(() => {
 
 <style scoped>
 .exchange-search {
-  .criteria.use-date {
+  .criteria.created-at {
     grid-column: 1 / 7;
   }
 }
