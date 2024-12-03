@@ -38,5 +38,9 @@ const { fullWidth } = defineProps({
   :slotted(td.align-right) {
     text-align: right;
   }
+
+  :slotted(tr.highlight) {
+    background-color: #fff9db;
+  }
 }
 </style>

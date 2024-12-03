@@ -561,6 +561,14 @@ const routes = [
             },
           },
           {
+            path: 'return/:returnCode/detail',
+            name: 'fc:home:return:detail',
+            component: () => import('@/views/franchise/ReturnDetailView.vue'),
+            meta: {
+              breadcrumb: '반품 상세',
+            },
+          },
+          {
             path: 'return/form',
             name: 'fc:home:return:form',
             component: () => import('@/views/franchise/ReturnFormView.vue'),

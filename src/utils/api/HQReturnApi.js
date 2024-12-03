@@ -2,9 +2,22 @@ import dayjs from 'dayjs';
 
 import BaseApiService from './BaseApiService';
 
-export default class HQExchangeTempApi extends BaseApiService {
+export default class HQReturnApi extends BaseApiService {
   constructor() {
     super('/v1/hq/return');
+  }
+
+  //
+  // GET
+  //
+
+  // 반품요청 목록 조회
+  getReturnList({ page = 0, pageSize = 15 }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('page', page);
+    searchParams.append('size', pageSize);
+
+    return this.get(`?${searchParams.toString()}`);
   }
 
   // 전체 교환 목록 (엑셀 다운로드용)
