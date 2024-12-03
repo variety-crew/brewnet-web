@@ -46,6 +46,10 @@ export default class FCExchangeApi extends BaseApiService {
     return this.get(`/${exchangeCode}`);
   }
 
+  getExchangeStatus(exchangeCode) {
+    return this.get(`/status/${exchangeCode}`);
+  }
+
   //
   // POST
   //
@@ -75,5 +79,10 @@ export default class FCExchangeApi extends BaseApiService {
     });
 
     return this.post('/', formData);
+  }
+
+  // 가맹점의 교환요청 취소
+  cancelExchange(exchangeCode) {
+    return this.post(`/cancel/${exchangeCode}`);
   }
 }

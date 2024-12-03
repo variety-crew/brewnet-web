@@ -9,33 +9,16 @@
           class="mb-1"
         />
         <div class="top-buttons">
+          <Button label="교환상태조회" variant="outlined" size="small" @click="checkStatus" />
           <Button
-            label="결재요청하기"
-            variant="outlined"
-            size="small"
-            :disabled="!isRequested"
-            @click="clickRequestApproval"
-          />
-          <Button label="교환요청서 출력" variant="outlined" size="small" @click="clickPrintExchange" />
-          <Button
-            label="거래명세서 출력"
-            variant="outlined"
-            size="small"
-            :disabled="!isCompleted"
-            @click="clickPrintInvoice"
-          />
-          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
-
-          <!-- 기안 담당자인 경우에만 결재요청취소 버튼 표시 -->
-          <Button
-            v-if="exchangeDetail.managerName === userStore.username"
-            label="결재요청취소"
+            label="취소"
             severity="danger"
             size="small"
             variant="outlined"
-            :disabled="disabledCancelButton"
+            :disabled="!isRequested"
             @click="clickCancel"
           />
+          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
         </div>
       </div>
 
@@ -47,7 +30,7 @@
           <tbody>
             <tr>
               <th>주문번호</th>
-              <td>{{ exchangeDetail.exchangeCode }}</td>
+              <td>{{ exchangeDetail.orderCode }}</td>
               <th>교환사유</th>
               <td colspan="3">{{ formatKoExchangeReason(exchangeDetail.reason) }}</td>
               <th>교환신청일자</th>
@@ -98,50 +81,28 @@ import { useToast } from 'primevue';
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import ExchangeDetailTable from '@/components/headQuarter/ExchangeDetailTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import FCExchangeApi from '@/utils/api/FCExchangeApi';
-import { DRAFT_KIND, EXCHANGE_STATUS } from '@/utils/constant';
+import { EXCHANGE_STATUS } from '@/utils/constant';
 import { formatKoExchangeReason, formatKoExchangeStatus } from '@/utils/format';
 import { getExchangeStatusSeverity } from '@/utils/helper';
 
-// import PrintExchangePdfPreviewModal from '@/components/headQuarter/PrintExchangePdfPreviewModal.vue';
-
-const ApprovalRequestModalBody = defineAsyncComponent(
-  () => import('@/components/headQuarter/ApprovalRequestModalBody.vue'),
-);
-
-const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 const toast = useToast();
-const { openModal } = useModal();
 
 const totalPrice = ref(null);
-
 const exchangeDetail = ref(null);
-const exchangeApprovalLines = ref([]);
-const disabledCancelButton = computed(() => {
-  // PENDING 상태일 때만 결재취소(기안자가) 가능하므로
-  // PENDING 상태가 아니면 결재취소 버튼 disabled
-  return exchangeDetail.value.status !== EXCHANGE_STATUS.PENDING;
-});
 
 const isRequested = computed(() => {
   return exchangeDetail.value.status === EXCHANGE_STATUS.REQUESTED;
 });
 
-const isCompleted = computed(() => {
-  return exchangeDetail.value.status === EXCHANGE_STATUS.SHIPPED;
-});
-
 const fcExchangeApi = new FCExchangeApi();
 const { exchangeCode } = route.params;
-
-const showPrintPdf = ref(false);
 
 const getExchangeDetailPageData = () => {
   fcExchangeApi.getExchangeDetail(exchangeCode).then(data => {
@@ -152,73 +113,31 @@ const getExchangeDetailPageData = () => {
   });
 };
 
-const handleRequestApproval = (approverCode, comment) => {
-  hqExchangeApi.requestApproval({ exchangeCode, superManagerMemberCode: approverCode, comment }).then(() => {
-    toast.add({
-      severity: 'success',
-      summary: '처리 성공',
-      detail: '교환에 대한 결재요청이 등록되었습니다.',
-      life: 3000,
-    });
-
-    // page reload
-    getExchangeDetailPageData();
-  });
-};
-
-const clickRequestApproval = () => {
-  openModal({
-    component: ApprovalRequestModalBody,
-    header: '결재요청',
-    data: {
-      draftKind: DRAFT_KIND.EXCHANGE,
-    },
-    onClose: opt => {
-      const callbackParams = opt.data;
-      if (!callbackParams) return;
-
-      const { approverCode, comment } = callbackParams;
-
-      handleRequestApproval(approverCode, comment);
-    },
-  });
-};
-
-const clickPrintExchange = () => {
-  // TODO:: 교환요청서 출력
-  showPrintPdf.value = true;
-};
-
-const clickPrintInvoice = () => {
-  // TODO:: 거래명세서 출력
-  showPrintPdf.value = true;
+const checkStatus = () => {
+  fcExchangeApi.getExchangeStatus(exchangeCode).then(() => {});
 };
 
 const clickGoToList = () => {
-  router.replace({ name: 'hq:order:exchange:list' });
+  router.replace({ name: 'fc:home:exchange:list' });
 };
 
 const cancelExchange = () => {
-  hqExchangeApi.cancelApproval(exchangeCode).then(() => {
-    toast.add({ severity: 'error', summary: '처리 성공', detail: '결재 요청이 취소되었습니다.', life: 3000 });
+  fcExchangeApi.cancelExchange(exchangeCode).then(() => {
+    toast.add({ severity: 'error', summary: '처리 성공', detail: '교환 취소되었습니다.', life: 3000 });
 
-    // page reload
-    getExchangeDetailPageData();
+    // 교환 목록 페이지로 이동
+    clickGoToList();
   });
 };
 
 const clickCancel = () => {
   showConfirm({
-    header: '결재 요청 취소',
-    message: '결재 요청을 취소하시겠습니까?',
-    acceptLabel: '결재 요청 취소',
+    header: '교환 요청 취소',
+    message: '교환 요청을 취소하시겠습니까?',
+    acceptLabel: '교환 요청 취소',
     onAccept: cancelExchange,
     danger: true,
   });
-};
-
-const onCompleteApproval = () => {
-  getExchangeDetailPageData();
 };
 
 onMounted(() => {
