@@ -251,6 +251,7 @@ export const formatKoSearchCriteria = criteria => {
       return '품목코드';
 
     case SEARCH_CRITERIA.ITEM_NAME:
+    case SEARCH_CRITERIA.RETURN_ITEM_NAME:
       return '품목명';
 
     case SEARCH_CRITERIA.CORRESPONDENT_NAME:
@@ -273,6 +274,9 @@ export const formatKoSearchCriteria = criteria => {
 
     case SEARCH_CRITERIA.ORDERED_FRANCHISE_NAME:
       return '주문지점';
+
+    case SEARCH_CRITERIA.RETURN_CODE:
+      return '반품코드';
 
     default:
       return '';

@@ -105,6 +105,8 @@ export const SEARCH_CRITERIA = {
   ORDER_CODE: 'ORDER_CODE',
   ORDER_MANAGER: 'ORDER_MANAGER',
   ORDERED_FRANCHISE_NAME: 'ORDERED_FRANCHISE_NAME',
+  RETURN_ITEM_NAME: 'itemName',
+  RETURN_CODE: 'returningCode',
 };
 // 입고 확인 페이지 criteria
 export const CRITERIA_IN_STOCK = [
@@ -129,6 +131,8 @@ export const CRITERIA_HQ_ORDER_LIST = [
 ];
 // 가맹점 주문 목록 페이지 criteria
 export const CRITERIA_FC_ORDER_LIST = [SEARCH_CRITERIA.ORDER_CODE, SEARCH_CRITERIA.ITEM_NAME];
+// 가맹점 반품목록 페이지 criteria
+export const CRITERIA_FC_RETURN_LIST = [SEARCH_CRITERIA.RETURN_CODE, SEARCH_CRITERIA.RETURN_ITEM_NAME];
 
 // 주문 상태
 export const ORDER_STATUS = {

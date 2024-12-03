@@ -1,5 +1,23 @@
 <template>
   <div>
+    <SearchArea grid @form-reset="onReset" @search="onSearch">
+      <AppDateRangePicker
+        v-model:start="criteria.startDate"
+        v-model:end="criteria.endDate"
+        label="반품신청일"
+        label-position="left"
+        class="criteria date"
+      />
+      <AppSelect
+        v-model="criteria.criteria"
+        label="검색조건"
+        label-position="left"
+        :options="searchOptions"
+        :initial-value="criteria.criteria"
+      />
+      <AppInputText v-model="criteria.keyword" />
+    </SearchArea>
+
     <AppTable
       :columns="columns"
       :total-elements="totalElements"
@@ -11,13 +29,19 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import dayjs from 'dayjs';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
+import AppInputText from '@/components/common/form/AppInputText.vue';
+import AppSelect from '@/components/common/form/AppSelect.vue';
+import SearchArea from '@/components/common/SearchArea.vue';
 import FCReturnApi from '@/utils/api/FCReturnApi';
-import { formatKoReturnStatus } from '@/utils/format';
-import { getReturnStatusSeverity } from '@/utils/helper';
+import { CRITERIA_FC_RETURN_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import { formatKoReturnStatus, formatKoSearchCriteria } from '@/utils/format';
+import { getReturnStatusSeverity, makeSelectOption } from '@/utils/helper';
 
 const router = useRouter();
 
@@ -25,14 +49,33 @@ const paginatedReturnList = ref([]);
 const page = ref(0);
 const pageSize = ref(15);
 const totalElements = ref(0);
+const getInitialCriteria = () => ({
+  startDate: dayjs().subtract(1, 'year').toDate(),
+  endDate: new Date(),
+  criteria: SEARCH_CRITERIA.RETURN_CODE,
+  keyword: '',
+});
+const criteria = ref(getInitialCriteria());
+const searchOptions = computed(() => {
+  return CRITERIA_FC_RETURN_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
+});
 
 const fcReturnApi = new FCReturnApi();
 
 const getReturnList = () => {
-  fcReturnApi.getReturnList({ page: page.value, pageSize: pageSize.value }).then(data => {
-    paginatedReturnList.value = data.content;
-    totalElements.value = data.totalElements;
-  });
+  fcReturnApi
+    .getReturnList({
+      page: page.value,
+      pageSize: pageSize.value,
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(data => {
+      paginatedReturnList.value = data.content;
+      totalElements.value = data.totalElements;
+    });
 };
 
 const columns = [
@@ -47,6 +90,7 @@ const columns = [
     },
   },
   { field: 'orderCode', header: '주문코드' },
+  { field: 'returningCode', header: '반품코드' },
   { field: 'itemName', header: '주문품목명' },
   { field: 'sumPrice', header: '주문금액', render: data => data.sumPrice.toLocaleString() },
   { field: 'createdAt', header: '반품신청일자' },
@@ -71,9 +115,23 @@ const onReload = () => {
   getReturnList();
 };
 
+const onSearch = () => {
+  getReturnList();
+};
+
+const onReset = () => {
+  page.value = 0;
+  criteria.value = getInitialCriteria();
+  getReturnList();
+};
+
 onMounted(() => {
   getReturnList();
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.criteria.date {
+  grid-column: 1 / 7;
+}
+</style>

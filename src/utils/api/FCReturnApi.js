@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import BaseApiService from './BaseApiService';
 
 export default class FCReturnApi extends BaseApiService {
@@ -10,12 +12,19 @@ export default class FCReturnApi extends BaseApiService {
   //
 
   // 반품신청 목록 조회
-  getReturnList({ page = 0, pageSize = 15 }) {
+  getReturnList({ page = 0, pageSize = 15, startDate, endDate, criteria, keyword }) {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
     searchParams.append('size', pageSize);
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
 
-    return this.get(`?${searchParams.toString()}`);
+    if (criteria && keyword) {
+      searchParams.append('searchFilter', criteria);
+      searchParams.append('searchWord', keyword);
+    }
+
+    return this.get(`/search?${searchParams.toString()}`);
   }
 
   // 반품신청 가능한 주문 목록 조회
