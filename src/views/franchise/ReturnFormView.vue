@@ -162,6 +162,8 @@ watch(selectedOrder, newSelectedOrder => {
   if (newSelectedOrder && newSelectedOrder.code) {
     const newSelectedOrderCode = newSelectedOrder.code;
 
+    console.log('***return newSelectedOrderCode:', newSelectedOrderCode);
+
     // 반품 가능한 품목 조회
     fcReturnApi.getAvailableOrderItemsList(newSelectedOrderCode).then(data => {
       availableOrderItems.value = data;

@@ -48,7 +48,9 @@ export default class FCExchangeApi extends BaseApiService {
     return this.get(`/available-orders`);
   }
 
-  getAvailableItems({ orderCode }) {
+  getAvailableItems(orderCode) {
+    console.log('*** orderCode:', orderCode);
+
     return this.get(`/available-items/${orderCode}`);
   }
 
@@ -66,27 +68,19 @@ export default class FCExchangeApi extends BaseApiService {
   //
 
   // 가맹점의 교환요청 등록
-  createExchange({ orderCode, exchangeItemList = [], reason, explanation, sumPrice, images }) {
-    // FormData 객체 생성
+  createExchange({ orderCode, exchangeItemList, reason, explanation, sumPrice, imageFiles }) {
     const formData = new FormData();
-
-    exchangeItemList.forEach(file => {
-      formData.append('exchangeImageList', file);
-    });
-
-    // JSON 데이터를 문자열로 변환하여 FormData에 추가
-    const exchangeReqVO = {
+    const dto = {
       orderCode,
-      exchangeItemList,
+      exchangeItemList: exchangeItemList.map(e => ({ itemCode: e })),
       reason,
       explanation,
       sumPrice,
     };
+    formData.append('exchangeReqVO', this.makeBlobJson(dto));
 
-    formData.append('exchangeReqVO', this.makeBlobJson(exchangeReqVO));
-    // formData의 내용 출력
-    formData.forEach((value, key) => {
-      console.log(`*** ${key}:`, value);
+    imageFiles.forEach(imageFile => {
+      formData.append('exchangeImage', imageFile);
     });
 
     return this.post('/', formData);
