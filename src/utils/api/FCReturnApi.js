@@ -37,6 +37,16 @@ export default class FCReturnApi extends BaseApiService {
     return this.get(`/available-items/${orderCode}`);
   }
 
+  // 반품요청 상세조회
+  getReturnDetail(returnCode) {
+    return this.get(`/${returnCode}`);
+  }
+
+  // 반품요청의 상태 History
+  getReturnStatusHistory(returnCode) {
+    return this.get(`/status/${returnCode}`);
+  }
+
   //
   // POST
   //
