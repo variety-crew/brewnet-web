@@ -34,7 +34,6 @@ export default class FCReturnApi extends BaseApiService {
 
   // 반품할 품목 조회
   getAvailableOrderItemsList(orderCode) {
-    console.log('*** orderCode:', orderCode);
     return this.get(`/available-items/${orderCode}`);
   }
 

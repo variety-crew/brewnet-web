@@ -276,6 +276,7 @@ export const formatKoSearchCriteria = criteria => {
 
     case SEARCH_CRITERIA.ORDERED_FRANCHISE_NAME:
       return '주문지점';
+
     case SEARCH_CRITERIA.EXCHANGE_CODE:
       return '교환번호';
 
@@ -284,8 +285,10 @@ export const formatKoSearchCriteria = criteria => {
 
     case SEARCH_CRITERIA.EXCHANGE_MANAGER_NAME:
       return '교환담당자';
+
     case SEARCH_CRITERIA.RETURN_CODE:
       return '반품코드';
+
     default:
       return '';
   }

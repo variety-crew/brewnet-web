@@ -49,8 +49,6 @@ export default class FCExchangeApi extends BaseApiService {
   }
 
   getAvailableItems(orderCode) {
-    console.log('*** orderCode:', orderCode);
-
     return this.get(`/available-items/${orderCode}`);
   }
 

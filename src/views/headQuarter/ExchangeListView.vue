@@ -5,7 +5,7 @@
       <AppDateRangePicker
         v-model:start="criteria.startDate"
         v-model:end="criteria.endDate"
-        label="작성일자"
+        label="교환요청일자"
         class="criteria created-at"
       />
       <AppSelect
@@ -41,6 +41,7 @@ import { useRouter } from 'vue-router';
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
+import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
