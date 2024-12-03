@@ -5,7 +5,7 @@
         <Tag
           rounded
           :value="formatKoExchangeStatus(exchangeDetail.status)"
-          :severity="getExchangeStatusSeverity(exchangeDetail.exchangeStatus)"
+          :severity="getExchangeStatusSeverity(exchangeDetail.status)"
           class="mb-1"
         />
         <div class="top-buttons">
@@ -52,6 +52,7 @@
       </div>
 
       <DraftApprovalHistoryTable
+        v-if="exchangeApprovalLines.length > 0"
         :approval-lines="exchangeApprovalLines"
         :draft-kind="DRAFT_KIND.EXCHANGE"
         :draft-code="exchangeCode"
