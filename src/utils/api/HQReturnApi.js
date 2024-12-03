@@ -45,4 +45,32 @@ export default class HQReturnApi extends BaseApiService {
 
     return this.get(`/excel-data?${searchParams.toString()}`);
   }
+
+  // 반품상세조회
+  getReturnDetail(returnCode) {
+    return this.get(`/${returnCode}`);
+  }
+
+  // 반품의 결재내역 조회
+  getReturnApproverList(returnCode) {
+    return this.get(`/approver/${returnCode}`);
+  }
+
+  //
+  // POST
+  //
+
+  // 기안자의 결재요청
+  requestApproval({ returnCode, approved, comment, approverCode }) {
+    return this.post(`/${returnCode}/drafter-approve`, {
+      approval: approved,
+      comment,
+      approverCodeList: [approverCode],
+    });
+  }
+
+  // 기안자의 결재요청 취소
+  cancelRequestApproval(returnCode) {
+    return this.post(`/cancel-approve/${returnCode}`);
+  }
 }
