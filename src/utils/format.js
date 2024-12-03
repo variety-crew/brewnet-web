@@ -12,6 +12,7 @@ import {
   SEARCH_CRITERIA,
   APPROVER_APPROVED_STATUS,
   DELIVERY_STATUS,
+  RETURN_REASON,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
@@ -379,4 +380,23 @@ export const formatLocalTelephoneNumber = localTelephoneNumber => {
   const middle = localTelephoneNumber.slice(3, 6);
   const back = localTelephoneNumber.slice(6);
   return `${front}-${middle}-${back}`;
+};
+
+export const formatKoReturnReason = reason => {
+  switch (reason) {
+    case RETURN_REASON.DAMAGED:
+      return '파손';
+
+    case RETURN_REASON.DEFECTIVE:
+      return '품질불량';
+
+    case RETURN_REASON.MIND_CHANGE:
+      return '단순 변심';
+
+    case RETURN_REASON.OTHER:
+      return '기타';
+
+    default:
+      return '';
+  }
 };
