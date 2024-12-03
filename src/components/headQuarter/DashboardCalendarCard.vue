@@ -17,12 +17,6 @@
           datesSet: onSetDates,
           eventSources: [
             {
-              events: orderCountEvents,
-              backgroundColor: 'transparent',
-              borderColor: 'transparent',
-              textColor: 'var(--p-surface-500)',
-            },
-            {
               events: orderPriceEvents,
               backgroundColor: 'transparent',
               borderColor: 'transparent',
@@ -44,15 +38,9 @@ import { computed, ref } from 'vue';
 import HQStatisticsApi from '@/utils/api/HQStatisticsApi';
 
 const orderData = ref([]);
-const orderCountEvents = computed(() => {
-  return orderData.value.map(e => ({
-    title: `${e.orderCount}건`,
-    start: e.date,
-  }));
-});
 const orderPriceEvents = computed(() => {
   return orderData.value.map(e => ({
-    title: `${e.orderPrice.toLocaleString()}원`,
+    title: `${e.orderPrice.toLocaleString()}원 (${e.orderCount}건)`,
     start: e.date,
   }));
 });
