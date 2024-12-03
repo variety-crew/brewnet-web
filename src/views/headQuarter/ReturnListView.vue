@@ -23,8 +23,10 @@
       :total-elements="totalElements"
       :rows-per-page="pageSize"
       :paginated-data="paginatedReturnList"
+      show-excel-export
       @reload="onReload"
       @change-page="onChangePage"
+      @export-excel="onExportExcel"
     />
   </div>
 </template>
@@ -41,6 +43,7 @@ import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQReturnApi from '@/utils/api/HQReturnApi';
 import { CRITERIA_HQ_RETURN_LIST, SEARCH_CRITERIA } from '@/utils/constant';
+import ExcelManager from '@/utils/ExcelManager';
 import {
   formatKoApprovalStatus,
   formatKoReturnReason,
@@ -135,6 +138,30 @@ const onReset = () => {
 const onChangePage = event => {
   page.value = event.page;
   getReturnList();
+};
+
+const onExportExcel = () => {
+  hqReturnApi
+    .getAllExchangeList({
+      startDate: criteria.value.startDate,
+      endDate: criteria.value.endDate,
+      criteria: criteria.value.criteria,
+      keyword: criteria.value.keyword,
+    })
+    .then(rows => {
+      const orderedFields = columns.filter(e => e.field).map(e => e.field);
+      const headerNames = columns.filter(e => e.field).map(e => e.header);
+      const tableRows = rows.map(row => ({
+        ...row,
+        reason: formatKoReturnReason(row.reason),
+        status: formatKoReturnStatus(row.status),
+        approvalStatus: formatKoApprovalStatus(row.approvalStatus),
+      }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
+      excelManager.setHeaderNames(headerNames);
+      excelManager.export(`반품요청목록`);
+    });
 };
 
 onMounted(() => {
