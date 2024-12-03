@@ -27,6 +27,7 @@
       :paginated-data="paginatedItems"
       :total-elements="totalElements"
       @reload="onReload"
+      @change-page="onChangePage"
     />
   </div>
 </template>
@@ -172,6 +173,11 @@ const onReset = () => {
 };
 
 const onReload = () => {
+  getInStockItems();
+};
+
+const onChangePage = event => {
+  page.value = event.page + 1;
   getInStockItems();
 };
 

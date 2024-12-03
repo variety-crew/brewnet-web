@@ -337,6 +337,14 @@ const routes = [
               breadcrumb: '품목 수정',
             },
           },
+          {
+            path: 'item/must-buy/list',
+            name: 'hq:stock:item-must-buy:list',
+            component: () => import('@/views/headQuarter/ItemMustBuyListView.vue'),
+            meta: {
+              breadcrumb: '필수구매품목 관리',
+            },
+          },
         ],
       },
       {
@@ -574,6 +582,14 @@ const routes = [
             component: () => import('@/views/franchise/ReturnListView.vue'),
             meta: {
               breadcrumb: '반품 내역 조회',
+            },
+          },
+          {
+            path: 'return/:returnCode/detail',
+            name: 'fc:home:return:detail',
+            component: () => import('@/views/franchise/ReturnDetailView.vue'),
+            meta: {
+              breadcrumb: '반품 상세',
             },
           },
           {
