@@ -61,11 +61,11 @@ export default class HQReturnApi extends BaseApiService {
   //
 
   // 기안자의 결재요청
-  requestApproval({ returnCode, approved, comment, approverCode }) {
+  requestApproval({ returnCode, approved, comment, approverCodeList }) {
     return this.post(`/${returnCode}/drafter-approve`, {
       approval: approved,
       comment,
-      approverCodeList: [approverCode],
+      approverCodeList,
     });
   }
 
