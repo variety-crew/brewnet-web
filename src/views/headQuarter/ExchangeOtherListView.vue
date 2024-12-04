@@ -5,7 +5,7 @@
       <AppDateRangePicker
         v-model:start="criteria.startDate"
         v-model:end="criteria.endDate"
-        label="교환요청일자"
+        label="작성일자"
         class="criteria created-at"
       />
       <AppSelect
@@ -35,19 +35,18 @@
 <script setup>
 import dayjs from 'dayjs';
 import { useToast } from 'primevue';
-import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
-import AppSelect from '@/components/common/form/AppSelect.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
-import { formatKoExchangeReason, formatKoExchangeStatus, formatKoSearchCriteria } from '@/utils/format';
-import { getExchangeStatusSeverity, makeSelectOption } from '@/utils/helper';
+import { formatKoConfirmedStatus, formatKoExchangeOtherStatus, formatKoSearchCriteria } from '@/utils/format';
+import { getConfirmedStatusSeverity, getExchangeOtherStatusSeverity, makeSelectOption } from '@/utils/helper';
 
 const router = useRouter();
 const toast = useToast();
@@ -56,7 +55,11 @@ const totalElements = ref(0);
 const page = ref(0);
 const size = ref(15);
 
+const nameKeyword = ref('');
 const paginatedExchanges = ref([]);
+
+const startDate = ref(dayjs().subtract(1, 'year').toDate());
+const endDate = ref(new Date());
 
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
@@ -72,35 +75,38 @@ const searchOptions = computed(() => {
 });
 
 function clickGoDetail(data) {
-  router.push({ name: 'hq:order:exchange:detail', params: { exchangeCode: data.exchangeCode } });
+  router.push({
+    name: 'hq:order:exchange:other-detail',
+    params: { exchangeStockHistoryCode: data.exchangeStockHistoryCode },
+  });
 }
 
 const columns = [
   {
     field: 'status',
-    header: '교환상태',
-    render: data => formatKoExchangeStatus(data.status),
+    header: '처리상태',
+    render: data => formatKoExchangeOtherStatus(data.status),
     template: {
       tag: {
-        getSeverity: data => getExchangeStatusSeverity(data.status),
+        getSeverity: data => getExchangeOtherStatusSeverity(data.status),
       },
     },
   },
-  { field: 'exchangeCode', header: '교환번호', sortable: true },
-  { field: 'franchiseName', header: '교환요청지점' },
-  { field: 'itemName', header: '교환품목명' },
+  { field: 'exchangeStockHistoryCode', header: '처리번호', sortable: true },
+  { field: 'manager', header: '처리담당자' },
+  { field: 'createdAt', header: '처리완료일자' },
   {
-    field: 'reason',
-    header: '교환사유',
-    render: data => formatKoExchangeReason(data.reason),
+    field: 'confirmed',
+    header: '내역확인여부',
+    render: data => formatKoConfirmedStatus(data.confirmed),
     template: {
       tag: {
-        getSeverity: data => getExchangeStatusSeverity(data.status),
+        getSeverity: data => getConfirmedStatusSeverity(data.confirmed),
       },
     },
   },
-  { field: 'memberCode', header: '교환담당자' },
-  { field: 'createdAt', header: '교환요청일자' },
+  { field: 'exchangeCode', header: '교환번호' },
+  { field: 'exchangeManager', header: '교환담당자' },
   {
     field: '',
     header: '',
@@ -115,9 +121,9 @@ const columns = [
   },
 ];
 
-const getExchanges = () => {
+const getExchangesOther = () => {
   hqExchangeApi
-    .searchExchanges({
+    .searchOtherExchanges({
       page: page.value,
       size: size.value,
       startDate: criteria.value.startDate,
@@ -132,47 +138,47 @@ const getExchanges = () => {
 };
 
 const reloadData = () => {
-  getExchanges();
+  getExchangesOther();
 };
 
 const onChangePage = event => {
   page.value = event.page;
-  getExchanges();
+  getExchangesOther();
 };
 
 const onSearch = () => {
-  getExchanges();
+  getExchangesOther();
 };
 
 const onReset = () => {
   criteria.value = getInitialCriteria();
   page.value = 0;
-  getExchanges();
+  getExchangesOther();
 };
 
-const onExportExcel = () => {
-  hqExchangeApi
-    .getExchangesExcelData({
-      startDate: criteria.value.startDate,
-      endDate: criteria.value.endDate,
-      criteria: criteria.value.criteria,
-      keyword: criteria.value.keyword,
-    })
-    .then(rows => {
-      const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
-      const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
+// const onExportExcel = () => {
+//   hqExchangeApi
+//     .getAllExchangeList({
+//       // startDate: criteria.value.startDate,
+//       // endDate: criteria.value.endDate,
+//       // criteria: criteria.value.criteria,
+//       // keyword: criteria.value.keyword,
+//     })
+//     .then(rows => {
+//       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
+//       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
 
-      const excelManager = new ExcelManager(rows, orderedFields);
-      excelManager.setHeaderNames(headerNames);
-      excelManager.export(`교환목록${dayjs().format('YYMMDD')}`);
-    })
-    .catch(e => {
-      toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
-    });
-};
+//       const excelManager = new ExcelManager(rows, orderedFields);
+//       excelManager.setHeaderNames(headerNames);
+//       excelManager.export(`교환목록${dayjs().format('YYMMDD')}`);
+//     })
+//     .catch(e => {
+//       toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
+//     });
+// };
 
 onMounted(() => {
-  getExchanges();
+  getExchangesOther();
 });
 </script>
 

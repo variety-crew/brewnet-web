@@ -16,7 +16,7 @@
           <td class="align-center">{{ formatKoEmployeePosition(approvalLine.positionName) }}</td>
           <td class="align-center">{{ approvalLine.approverName }}</td>
           <td class="align-center">
-            <template v-if="isNeedMyApproval(approvalLine.approverCode, approvalLine.approved)">
+            <template v-if="isNeedMyApproval(approvalLine.approverCode, approvalLine.approverName)">
               <Button label="결재 진행" size="small" @click="clickDoApproval" />
             </template>
             <template v-else>
@@ -116,6 +116,19 @@ const doingApproval = async (approved, comment) => {
     }
   } else if (draftKind === DRAFT_KIND.EXCHANGE) {
     // 교환에 대한 결재 진행
+    if (approved === APPROVER_APPROVED_STATUS.APPROVED) {
+      await superExchangeApi.managerApprove({
+        exchangeCode: draftCode,
+        approval: APPROVER_APPROVED_STATUS.APPROVED,
+        comment,
+      });
+    } else if (approved === APPROVER_APPROVED_STATUS.REJECTED) {
+      await superExchangeApi.managerApprove({
+        exchangeCode: draftCode,
+        approval: APPROVER_APPROVED_STATUS.REJECTED,
+        comment,
+      });
+    }
   } else if (draftKind === DRAFT_KIND.RETURN) {
     // 반품에 대한 결재 진행
     await hqReturnApi.approval({ returnCode: draftCode, approved, comment });
