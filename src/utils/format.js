@@ -14,7 +14,8 @@ import {
   DELIVERY_STATUS,
   RETURN_REASON,
   RETURN_STOCK_STATUS,
-  RETURN_STOCK_CHECK_STATUS,
+  OTHER_DEPT_CHECK_STATUS,
+  RETURN_REFUND_STATUS,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
@@ -284,7 +285,7 @@ export const formatKoSearchCriteria = criteria => {
       return '반품지점';
 
     case SEARCH_CRITERIA.RETURN_MANAGER_NAME:
-    case SEARCH_CRITERIA.RETURN_STOCK_DEPT_RETURN_MANAGER:
+    case SEARCH_CRITERIA.RETURN_MANGER_IN_OTHER_DEPT:
       return '반품담당자';
 
     case SEARCH_CRITERIA.RETURN_STOCK_DEPT_MANAGER:
@@ -292,6 +293,12 @@ export const formatKoSearchCriteria = criteria => {
 
     case SEARCH_CRITERIA.RETURN_STOCK_DEPT_RETURN_CODE:
       return '재고처리코드';
+
+    case SEARCH_CRITERIA.RETURN_ACCOUNT_DEPT_MANAGER:
+      return '환불담당자';
+
+    case SEARCH_CRITERIA.RETURN_ACCOUNT_DEPT_RETURN_CODE:
+      return '환불처리코드';
 
     default:
       return '';
@@ -436,8 +443,24 @@ export const formatKoReturnStockStatus = status => {
   }
 };
 
-export const formatKoReturnStockCheckStatus = status => {
-  if (status === RETURN_STOCK_CHECK_STATUS.CONFIRMED) return '재고조정완료';
-  if (status === RETURN_STOCK_CHECK_STATUS.UNCONFIRMED) return '미확인';
+export const formatKoReturnRefundStatus = status => {
+  switch (status) {
+    case RETURN_REFUND_STATUS.TOTAL_REFUND:
+      return '전체환불';
+
+    case RETURN_REFUND_STATUS.PARTIAL_REFUND:
+      return '부분환불';
+
+    case RETURN_REFUND_STATUS.NON_REFUNDABLE:
+      return '환불불가';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoOtherDeptCheckStatus = status => {
+  if (status === OTHER_DEPT_CHECK_STATUS.CONFIRMED) return '재고조정완료';
+  if (status === OTHER_DEPT_CHECK_STATUS.UNCONFIRMED) return '미확인';
   return '';
 };

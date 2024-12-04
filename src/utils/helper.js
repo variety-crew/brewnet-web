@@ -5,7 +5,7 @@ import {
   PURCHASE_STATUS,
   RETURN_STATUS,
   DRAFTER_APPROVED,
-  RETURN_STOCK_CHECK_STATUS,
+  OTHER_DEPT_CHECK_STATUS,
 } from './constant';
 
 // 프라임뷰에 사용될 데이터
@@ -117,7 +117,7 @@ export const getReturnStatusSeverity = status => {
 };
 
 export const getReturnStockCheckStatusSeverity = status => {
-  if (status === RETURN_STOCK_CHECK_STATUS.CONFIRMED) return undefined;
-  if (status === RETURN_STOCK_CHECK_STATUS.UNCONFIRMED) return 'secondary';
+  if (status === OTHER_DEPT_CHECK_STATUS.CONFIRMED) return undefined;
+  if (status === OTHER_DEPT_CHECK_STATUS.UNCONFIRMED) return 'secondary';
   return undefined;
 };

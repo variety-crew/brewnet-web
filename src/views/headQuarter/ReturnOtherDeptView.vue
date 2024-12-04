@@ -22,8 +22,8 @@ const TAB_ITEM = {
   ACCOUNT_DEPT: 'ACCOUNT_DEPT',
 };
 function formatKoTabItem(tabValue) {
-  if (tabValue === TAB_ITEM.STOCK_DEPT) return '반품처리내역(재고부서)';
-  if (tabValue === TAB_ITEM.ACCOUNT_DEPT) return '환불처리내역(회계부서)';
+  if (tabValue === TAB_ITEM.STOCK_DEPT) return '반품처리내역';
+  if (tabValue === TAB_ITEM.ACCOUNT_DEPT) return '환불처리내역';
   return 'Tab';
 }
 

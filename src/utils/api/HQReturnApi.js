@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 import BaseApiService from './BaseApiService';
+import { SEARCH_CRITERIA } from '../constant';
 
 export default class HQReturnApi extends BaseApiService {
   constructor() {
@@ -70,6 +71,28 @@ export default class HQReturnApi extends BaseApiService {
     }
 
     return this.get(`/other/return?${searchParams.toString()}`);
+  }
+
+  // 회계부서 처리내역 조회
+  getAccountDeptList({ page = 0, pageSize = 15, startDate, endDate, criteria, keyword }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('page', page);
+    searchParams.append('size', pageSize);
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
+
+    if (criteria && keyword) {
+      let criteriaKey = criteria;
+      if (criteria === SEARCH_CRITERIA.RETURN_ACCOUNT_DEPT_RETURN_CODE) {
+        criteriaKey = 'code';
+      } else if (criteria === SEARCH_CRITERIA.RETURN_ACCOUNT_DEPT_MANAGER) {
+        criteriaKey = 'manager';
+      }
+      searchParams.append('searchFilter', criteriaKey);
+      searchParams.append('searchWord', keyword);
+    }
+
+    return this.get(`/other/refund?${searchParams.toString()}`);
   }
 
   //

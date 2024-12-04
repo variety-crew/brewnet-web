@@ -36,7 +36,7 @@ import { useRouter } from 'vue-router';
 
 import HQReturnApi from '@/utils/api/HQReturnApi';
 import { CRITERIA_RETURN_STOCK_DEPT_LIST, SEARCH_CRITERIA } from '@/utils/constant';
-import { formatKoReturnStockCheckStatus, formatKoReturnStockStatus, formatKoSearchCriteria } from '@/utils/format';
+import { formatKoOtherDeptCheckStatus, formatKoReturnStockStatus, formatKoSearchCriteria } from '@/utils/format';
 import { getReturnStockCheckStatusSeverity, makeSelectOption } from '@/utils/helper';
 
 import AppTable from '../common/AppTable.vue';
@@ -64,7 +64,7 @@ const searchOptions = computed(() => {
 
 const hqReturnApi = new HQReturnApi();
 
-const getReturnList = () => {
+const getReturnStockDeptList = () => {
   hqReturnApi
     .getStockDeptList({
       page: page.value,
@@ -88,7 +88,7 @@ const columns = [
   {
     field: 'confirmed',
     header: '확인여부',
-    render: data => formatKoReturnStockCheckStatus(data.confirmed),
+    render: data => formatKoOtherDeptCheckStatus(data.confirmed),
     template: {
       tag: {
         getSeverity: data => getReturnStockCheckStatusSeverity(data.confirmed),
@@ -114,26 +114,26 @@ const columns = [
 ];
 
 const onReload = () => {
-  getReturnList();
+  getReturnStockDeptList();
 };
 
 const onSearch = () => {
-  getReturnList();
+  getReturnStockDeptList();
 };
 
 const onReset = () => {
   page.value = 0;
   criteria.value = getInitialCriteria();
-  getReturnList();
+  getReturnStockDeptList();
 };
 
 const onChangePage = event => {
   page.value = event.page;
-  getReturnList();
+  getReturnStockDeptList();
 };
 
 onMounted(() => {
-  getReturnList();
+  getReturnStockDeptList();
 });
 </script>
 
