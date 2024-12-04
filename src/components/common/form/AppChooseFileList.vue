@@ -7,7 +7,7 @@
     <input
       ref="inputFileMultipleRef"
       type="file"
-      accept="image/*"
+      accept="image/jpeg, image/png"
       multiple
       style="display: none"
       @change="emit('changeFiles', $event)"

@@ -173,6 +173,30 @@ const routes = [
               breadcrumb: '반품요청 상세',
             },
           },
+          {
+            path: 'return/other-dept',
+            name: 'hq:order:return:other-dept',
+            component: () => import('@/views/headQuarter/ReturnOtherDeptView.vue'),
+            meta: {
+              breadcrumb: '반품 처리내역 조회',
+            },
+          },
+          {
+            path: 'return/stock/:detailCode/detail',
+            name: 'hq:order:return:stock-detail',
+            component: () => import('@/views/headQuarter/ReturnStockDetailView.vue'),
+            meta: {
+              breadcrumb: '반품 재고처리 상세',
+            },
+          },
+          {
+            path: 'return/refund/:detailCode/detail',
+            name: 'hq:order:return:refund-detail',
+            component: () => import('@/views/headQuarter/ReturnRefundDetailView.vue'),
+            meta: {
+              breadcrumb: '반품 환불처리 상세',
+            },
+          },
         ],
       },
       {

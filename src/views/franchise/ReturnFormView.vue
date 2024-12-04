@@ -149,7 +149,7 @@ const clickRequestReturn = () => {
       returningItemCodeList: checkedOrderItemCodeList.value,
       reason: reason.value,
       explanation: explanation.value,
-      sumPrice: checkedOrderItemCodeList.value.reduce((acc, current) => acc + current.partSumPrice, 0),
+      sumPrice: totalPrice.value, // 체크한 항목만 합계
       imageFiles: uploadFiles.value.map(e => e.file),
     })
     .then(() => {

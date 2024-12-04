@@ -53,8 +53,10 @@ const columns = [
       const now = dayjs().format('YYYY-MM-DD');
       const formattedDueDate = dayjs(data.dueDate).format('YYYY-MM-DD');
       const diffDay = dayjs(formattedDueDate).diff(dayjs(now), 'day');
+      const signValue = Math.sign(diffDay);
+      const sign = signValue === -1 ? '+' : '-'; // 이미 지난거는 +로 표시
 
-      return `${formattedDueDate} (D-${diffDay})`;
+      return `${formattedDueDate} (D${sign}${Math.abs(diffDay)})`;
     },
   },
   { field: 'createdAt', header: '생성일시' },

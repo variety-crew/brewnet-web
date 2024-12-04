@@ -52,6 +52,7 @@ import {
   getDrafterApprovedStatusSeverity,
   getApprovalStatusSeverity,
   makeSelectOption,
+  makeOrderItemSummary,
 } from '@/utils/helper';
 
 const router = useRouter();
@@ -103,27 +104,27 @@ const columns = [
   },
   { field: 'orderCode', header: '주문번호', sortable: true },
   { field: 'orderFranchise', header: '주문지점', render: data => data.orderFranchise.franchiseName },
-  { field: 'orderItemList', header: '주문품목명', render: data => data.orderItemList.map(e => e.name).join(', ') },
+  { field: 'orderItemList', header: '주문품목명', render: data => makeOrderItemSummary(data.orderItemList) },
   { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
   {
     field: 'approvalStatus',
     header: '결재상태',
     render: data => formatKoApproval(data.approvalStatus),
-    template: {
-      tag: {
-        getSeverity: data => getApprovalStatusSeverity(data.approvalStatus),
-      },
-    },
+    // template: {
+    //   tag: {
+    //     getSeverity: data => getApprovalStatusSeverity(data.approvalStatus),
+    //   },
+    // },
   },
   {
     field: 'drafterApproved',
-    header: '최초승인여부',
+    header: '주문승인상태',
     render: data => formatKoDrafterApproved(data.drafterApproved),
-    template: {
-      tag: {
-        getSeverity: data => getDrafterApprovedStatusSeverity(data.drafterApproved), //
-      },
-    },
+    // template: {
+    //   tag: {
+    //     getSeverity: data => getDrafterApprovedStatusSeverity(data.drafterApproved),
+    //   },
+    // },
   },
   { field: 'managerName', header: '주문담당자' },
   { field: 'createdAt', header: '주문일자', sortable: true },
@@ -192,7 +193,7 @@ const onExportExcel = () => {
         ...row,
         orderStatusHistoryList: formatKoOrderStatus(getMostRecentOrderStatus(row.orderStatusHistoryList)),
         orderFranchise: row.orderFranchise.franchiseName,
-        orderItemList: row.orderItemList.map(item => item.name).join(', '),
+        orderItemList: makeOrderItemSummary(row.orderItemList),
         approvalStatus: formatKoApproval(row.approvalStatus),
         drafterApproved: formatKoDrafterApproved(row.drafterApproved),
       }));
