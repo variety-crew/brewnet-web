@@ -162,7 +162,13 @@ const onExportExcel = () => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
 
-      const excelManager = new ExcelManager(rows, orderedFields);
+      const tableRows = rows.map(row => ({
+        ...row,
+        status: formatKoExchangeStatus(row.status),
+        reason: formatKoExchangeReason(row.reason),
+      }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
       excelManager.setHeaderNames(headerNames);
       excelManager.export(`교환목록${dayjs().format('YYMMDD')}`);
     })
