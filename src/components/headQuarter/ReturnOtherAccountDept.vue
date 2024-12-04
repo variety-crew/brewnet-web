@@ -109,9 +109,12 @@ const columns = [
       button: [
         {
           getLabel: () => '상세보기',
-          //   clickHandler: data => {
-          //     router.push({ name: 'hq:order:return:detail', params: { returnCode: data.returningCode } });
-          //   },
+          clickHandler: data => {
+            router.push({
+              name: 'hq:order:return:refund-detail',
+              params: { detailCode: data.returningRefundHistoryCode },
+            });
+          },
         },
       ],
     },

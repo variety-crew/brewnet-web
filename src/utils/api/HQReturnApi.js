@@ -95,6 +95,16 @@ export default class HQReturnApi extends BaseApiService {
     return this.get(`/other/refund?${searchParams.toString()}`);
   }
 
+  // 반품의 재고처리내역 상세 조회
+  getReturnStockDetail(returningStockHistoryCode) {
+    return this.get(`/other/return/${returningStockHistoryCode}`);
+  }
+
+  // 반품의 환불처리내역 상세 조회
+  getReturnRefundDetail(returningRefundHistoryCode) {
+    return this.get(`/other/refund/${returningRefundHistoryCode}`);
+  }
+
   //
   // POST
   //
@@ -119,5 +129,15 @@ export default class HQReturnApi extends BaseApiService {
       approval: approved,
       comment,
     });
+  }
+
+  // 본사의 환불처리완료
+  confirmRefund(returningRefundHistoryCode) {
+    return this.post(`/other/refund-complete/${returningRefundHistoryCode}`);
+  }
+
+  // 본사의 반품처리완료
+  confirmStock(returningStockHistoryCode) {
+    return this.post(`/other/stock-complete/${returningStockHistoryCode}`);
   }
 }
