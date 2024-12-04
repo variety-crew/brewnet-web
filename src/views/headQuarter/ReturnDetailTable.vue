@@ -5,17 +5,17 @@
         <th>반품요청지점</th>
         <td>{{ returnDetail.franchiseName }}</td>
         <th>반품요청일</th>
-        <td>{{ returnDetail.createdAt }}</td>
+        <td colspan="2">{{ returnDetail.createdAt }}</td>
         <th>반품담당자</th>
         <td>{{ returnDetail.memberName }}</td>
       </tr>
       <tr>
         <th>반품사유</th>
-        <td colspan="5" class="align-center">{{ formatKoReturnReason(returnDetail.reason) }}</td>
+        <td colspan="6" class="align-center">{{ formatKoReturnReason(returnDetail.reason) }}</td>
       </tr>
       <tr>
         <th>반품 상세사유</th>
-        <td colspan="5" class="align-center">{{ returnDetail.explanation }}</td>
+        <td colspan="6" class="align-center">{{ returnDetail.explanation }}</td>
       </tr>
       <tr>
         <th :rowspan="returnDetail.returningItemList.length + 1">반품품목</th>
@@ -30,7 +30,7 @@
         <td class="align-center" colspan="2">{{ returnItem.itemName }}</td>
         <td class="align-center">{{ returnItem.superCategory }} - {{ returnItem.subCategory }}</td>
         <td class="align-center">{{ returnItem.quantity.toLocaleString() }}</td>
-        <td class="align-right">{{ isCancelInvoice && '-' }}{{ returnItem.partSumPrice.toLocaleString() }}</td>
+        <td class="align-right">{{ cancelInvoice ? '-' : '' }}{{ returnItem.partSumPrice.toLocaleString() }}</td>
       </tr>
     </tbody>
   </AppTableStyled>
@@ -40,12 +40,12 @@
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { formatKoReturnReason } from '@/utils/format';
 
-const { returnDetail, isCancelInvoice } = defineProps({
+const { returnDetail, cancelInvoice } = defineProps({
   returnDetail: {
     type: Object,
     required: true,
   },
-  isCancelInvoice: {
+  cancelInvoice: {
     type: Boolean,
     required: false,
     default: false,
