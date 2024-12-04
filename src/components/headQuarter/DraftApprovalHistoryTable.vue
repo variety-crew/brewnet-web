@@ -103,7 +103,7 @@ const doingApproval = async (approved, comment) => {
     // 발주에 대한 결재 진행
     if (approved === APPROVER_APPROVED_STATUS.APPROVED) {
       await hqPurchaseApi.approvePurchase({ purchaseCode: draftCode, comment });
-      successMeg = '결재 승인되었습니다. 창고시스템으로 주문내역이 전송되었습니다.';
+      successMeg = '결재 승인되었습니다. 창고시스템으로 주문요청서가 전송되었습니다.';
     } else if (approved === APPROVER_APPROVED_STATUS.REJECTED) {
       await hqPurchaseApi.rejectPurchase({ purchaseCode: draftCode, comment });
     }
@@ -119,6 +119,9 @@ const doingApproval = async (approved, comment) => {
   } else if (draftKind === DRAFT_KIND.RETURN) {
     // 반품에 대한 결재 진행
     await hqReturnApi.approval({ returnCode: draftCode, approved, comment });
+    if (approved === APPROVER_APPROVED_STATUS.APPROVED) {
+      successMeg = '결재 승인되었습니다. 창고시스템으로 반품요청서가 전송되었습니다.';
+    }
   }
 
   toast.add({ severity: 'success', summary: '처리 성공', detail: successMeg || '결재가 저장되었습니다.', life: 3000 });
