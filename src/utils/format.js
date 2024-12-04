@@ -226,7 +226,7 @@ export const formatKoOrderStatus = status => {
       return '주문요청';
 
     case ORDER_STATUS.PENDING:
-      return '진행중';
+      return '처리중';
 
     case ORDER_STATUS.CANCELED:
       return '주문취소';

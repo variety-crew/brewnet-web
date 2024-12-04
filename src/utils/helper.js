@@ -56,20 +56,26 @@ export const getApprovalStatusSeverity = status => {
 export const getOrderStatusSeverity = orderStatus => {
   switch (orderStatus) {
     case ORDER_STATUS.REQUESTED:
-      return 'success';
+      return 'secondary';
+
+    case ORDER_STATUS.PENDING:
+      return 'warn';
 
     case ORDER_STATUS.CANCELED:
     case ORDER_STATUS.REJECTED:
       return 'danger';
 
     case ORDER_STATUS.APPROVED:
+      return undefined;
+
     case ORDER_STATUS.SHIPPING:
-    case ORDER_STATUS.SHIPPED:
-    case ORDER_STATUS.PENDING:
       return 'info';
 
+    case ORDER_STATUS.SHIPPED:
+      return 'success';
+
     default:
-      return 'info';
+      return undefined;
   }
 };
 
@@ -120,4 +126,9 @@ export const getReturnStockCheckStatusSeverity = status => {
   if (status === OTHER_DEPT_CHECK_STATUS.CONFIRMED) return undefined;
   if (status === OTHER_DEPT_CHECK_STATUS.UNCONFIRMED) return 'secondary';
   return undefined;
+};
+
+export const makeOrderItemSummary = itemList => {
+  if (itemList.length === 1) return itemList[0].name;
+  return `${itemList[0].name} 외 ${itemList.length - 1}개`;
 };
