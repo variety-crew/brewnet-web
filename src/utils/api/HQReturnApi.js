@@ -56,6 +56,22 @@ export default class HQReturnApi extends BaseApiService {
     return this.get(`/approver/${returnCode}`);
   }
 
+  // 재고부서 처리내역 조회
+  getStockDeptList({ page = 0, pageSize = 15, startDate, endDate, criteria, keyword }) {
+    const searchParams = new URLSearchParams();
+    searchParams.append('page', page);
+    searchParams.append('size', pageSize);
+    searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
+    searchParams.append('endDate', dayjs(endDate).format('YYYY-MM-DD'));
+
+    if (criteria && keyword) {
+      searchParams.append('searchFilter', criteria);
+      searchParams.append('searchWord', keyword);
+    }
+
+    return this.get(`/other/return?${searchParams.toString()}`);
+  }
+
   //
   // POST
   //

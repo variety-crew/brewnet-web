@@ -13,6 +13,8 @@ import {
   APPROVER_APPROVED_STATUS,
   DELIVERY_STATUS,
   RETURN_REASON,
+  RETURN_STOCK_STATUS,
+  RETURN_STOCK_CHECK_STATUS,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
@@ -282,7 +284,14 @@ export const formatKoSearchCriteria = criteria => {
       return '반품지점';
 
     case SEARCH_CRITERIA.RETURN_MANAGER_NAME:
+    case SEARCH_CRITERIA.RETURN_STOCK_DEPT_RETURN_MANAGER:
       return '반품담당자';
+
+    case SEARCH_CRITERIA.RETURN_STOCK_DEPT_MANAGER:
+      return '재고담당자';
+
+    case SEARCH_CRITERIA.RETURN_STOCK_DEPT_RETURN_CODE:
+      return '재고처리코드';
 
     default:
       return '';
@@ -409,4 +418,26 @@ export const formatKoReturnReason = reason => {
     default:
       return '';
   }
+};
+
+export const formatKoReturnStockStatus = status => {
+  switch (status) {
+    case RETURN_STOCK_STATUS.TOTAL_INBOUND:
+      return '전체입고';
+
+    case RETURN_STOCK_STATUS.TOTAL_DISPOSAL:
+      return '전체폐기';
+
+    case RETURN_STOCK_STATUS.PARTIAL_INBOUND:
+      return '부분입고';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoReturnStockCheckStatus = status => {
+  if (status === RETURN_STOCK_CHECK_STATUS.CONFIRMED) return '재고조정완료';
+  if (status === RETURN_STOCK_CHECK_STATUS.UNCONFIRMED) return '미확인';
+  return '';
 };

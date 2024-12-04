@@ -157,6 +157,14 @@ const routes = [
               breadcrumb: '반품요청 상세',
             },
           },
+          {
+            path: 'return/other-dept',
+            name: 'hq:order:return:other-dept',
+            component: () => import('@/views/headQuarter/ReturnOtherDeptView.vue'),
+            meta: {
+              breadcrumb: '반품 처리내역 조회',
+            },
+          },
         ],
       },
       {
