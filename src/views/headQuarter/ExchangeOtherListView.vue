@@ -22,10 +22,8 @@
       :columns="columns"
       :total-elements="totalElements"
       :rows-per-page="size"
-      show-excel-export
       @reload="reloadData"
       @change-page="onChangePage"
-      @export-excel="onExportExcel"
     />
 
     <DynamicDialog />
@@ -44,7 +42,6 @@ import AppInputText from '@/components/common/form/AppInputText.vue';
 import SearchArea from '@/components/common/SearchArea.vue';
 import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
-import ExcelManager from '@/utils/ExcelManager';
 import { formatKoConfirmedStatus, formatKoExchangeOtherStatus, formatKoSearchCriteria } from '@/utils/format';
 import { getConfirmedStatusSeverity, getExchangeOtherStatusSeverity, makeSelectOption } from '@/utils/helper';
 
@@ -82,22 +79,17 @@ function clickGoDetail(data) {
 }
 
 const columns = [
+  { field: 'exchangeStockHistoryCode', header: '교환처리코드', sortable: true },
   {
     field: 'status',
     header: '처리상태',
     render: data => formatKoExchangeOtherStatus(data.status),
-    template: {
-      tag: {
-        getSeverity: data => getExchangeOtherStatusSeverity(data.status),
-      },
-    },
   },
-  { field: 'exchangeStockHistoryCode', header: '처리번호', sortable: true },
   { field: 'manager', header: '처리담당자' },
-  { field: 'createdAt', header: '처리완료일자' },
+  { field: 'createdAt', header: '처리일자' },
   {
     field: 'confirmed',
-    header: '내역확인여부',
+    header: '확인여부',
     render: data => formatKoConfirmedStatus(data.confirmed),
     template: {
       tag: {
@@ -105,7 +97,7 @@ const columns = [
       },
     },
   },
-  { field: 'exchangeCode', header: '교환번호' },
+  { field: 'exchangeCode', header: '교환코드' },
   { field: 'exchangeManager', header: '교환담당자' },
   {
     field: '',
@@ -155,27 +147,6 @@ const onReset = () => {
   page.value = 0;
   getExchangesOther();
 };
-
-// const onExportExcel = () => {
-//   hqExchangeApi
-//     .getAllExchangeList({
-//       // startDate: criteria.value.startDate,
-//       // endDate: criteria.value.endDate,
-//       // criteria: criteria.value.criteria,
-//       // keyword: criteria.value.keyword,
-//     })
-//     .then(rows => {
-//       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
-//       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
-
-//       const excelManager = new ExcelManager(rows, orderedFields);
-//       excelManager.setHeaderNames(headerNames);
-//       excelManager.export(`교환목록${dayjs().format('YYMMDD')}`);
-//     })
-//     .catch(e => {
-//       toast.add({ severity: 'error', summary: '처리 실패', detail: e.message, life: 3000 });
-//     });
-// };
 
 onMounted(() => {
   getExchangesOther();

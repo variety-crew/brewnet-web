@@ -83,19 +83,26 @@ export const getOrderStatusSeverity = orderStatus => {
 export const getExchangeStatusSeverity = exchangeStatus => {
   switch (exchangeStatus) {
     case EXCHANGE_STATUS.REQUESTED:
-      return 'success';
+      return 'secondary';
+
+    case EXCHANGE_STATUS.PENDING:
+      return 'warn';
 
     case EXCHANGE_STATUS.CANCELED:
     case EXCHANGE_STATUS.REJECTED:
       return 'danger';
 
     case EXCHANGE_STATUS.APPROVED:
+      return 'primary';
+
     case EXCHANGE_STATUS.PICKING:
     case EXCHANGE_STATUS.PICKED:
     case EXCHANGE_STATUS.SHIPPING:
     case EXCHANGE_STATUS.SHIPPED:
-    case EXCHANGE_STATUS.PENDING:
       return 'info';
+
+    case EXCHANGE_STATUS.COMPLETED:
+      return 'success';
 
     default:
       return 'info';

@@ -83,10 +83,10 @@ export const formatKoExchangeStatus = status => {
       return '교환요청';
 
     case EXCHANGE_STATUS.PENDING:
-      return '진행중';
+      return '교환처리중';
 
     case EXCHANGE_STATUS.CANCELED:
-      return '교환취소';
+      return '취소';
 
     case EXCHANGE_STATUS.APPROVED:
       return '교환승인';
