@@ -28,7 +28,7 @@ jobs:
     - name: Inject environment variables
       run: |
         echo "VITE_KAKAO_REST_API_KEY=${{ secrets.VITE_KAKAO_REST_API_KEY }}" > .env.local
-        echo "VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }}" > .env.development
+        echo "VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }}" >> .env.development
 
     - name: Build project
       run: npm run build
