@@ -28,6 +28,7 @@ jobs:
     - name: Inject environment variables
       run: |
         echo "VITE_KAKAO_REST_API_KEY=${{ secrets.VITE_KAKAO_REST_API_KEY }}" > .env.local
+        echo "VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }}" > .env.development
 
     - name: Build project
       run: npm run build
@@ -61,6 +62,6 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: Brewnet-frontend
         environment_name: Brewnet-frontend-env
-        version_label: github-action-${{ github.sha }}-$(date +%s)
+        version_label: github-action-${{ github.sha }}
         region: ap-northeast-2
         deployment_package: deploy/deploy.zip
