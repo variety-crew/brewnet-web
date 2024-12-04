@@ -30,13 +30,13 @@
           :disabled="!isShowPrintDraft"
           @click="clickPrintDraft"
         />
-        <!-- <Button
-          label="거래명세서 출력"
+        <Button
+          label="거래취소명세서 출력"
           variant="outlined"
           size="small"
-          :disabled="!isCompleted"
+          :disabled="returnDetail.status !== RETURN_STATUS.COMPLETED"
           @click="clickPrintInvoice"
-        /> -->
+        />
 
         <Button
           v-if="isShowCancelRequestApproval"
@@ -244,6 +244,11 @@ const clickRejectDraft = () => {
 
 const clickPrintDraft = () => {
   printType.value = PRINT_TYPE.HQ.RETURN_DRAFT;
+  showPrintPdf.value = true;
+};
+
+const clickPrintInvoice = () => {
+  printType.value = PRINT_TYPE.HQ.RETURN_INVOICE;
   showPrintPdf.value = true;
 };
 

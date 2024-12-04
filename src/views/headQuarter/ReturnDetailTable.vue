@@ -23,12 +23,14 @@
         <th colspan="2">품목명</th>
         <th>카테고리</th>
         <th>수량</th>
+        <th>부분 합계</th>
       </tr>
       <tr v-for="returnItem in returnDetail.returningItemList" :key="returnItem.itemCode">
         <td class="align-center">{{ returnItem.itemUniqueCode }}</td>
         <td class="align-center" colspan="2">{{ returnItem.itemName }}</td>
         <td class="align-center">{{ returnItem.superCategory }} - {{ returnItem.subCategory }}</td>
         <td class="align-center">{{ returnItem.quantity.toLocaleString() }}</td>
+        <td class="align-right">{{ isCancelInvoice && '-' }}{{ returnItem.partSumPrice.toLocaleString() }}</td>
       </tr>
     </tbody>
   </AppTableStyled>
@@ -38,10 +40,15 @@
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { formatKoReturnReason } from '@/utils/format';
 
-const { returnDetail } = defineProps({
+const { returnDetail, isCancelInvoice } = defineProps({
   returnDetail: {
     type: Object,
     required: true,
+  },
+  isCancelInvoice: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 </script>

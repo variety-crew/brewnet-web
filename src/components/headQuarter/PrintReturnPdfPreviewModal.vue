@@ -4,7 +4,7 @@
       <h1 class="mb-8">{{ title }}</h1>
 
       <!-- 거래명세서 출력은 사업자 정보도 함께 표시 -->
-      <InvoicePdfTable v-if="printType === PRINT_TYPE.HQ.RETURN_INVOICE" />
+      <InvoicePdfTable v-if="printType === PRINT_TYPE.HQ.RETURN_INVOICE" :franchise-code="returnDetail.franchiseCode" />
       <ReturnDetailTable :return-detail="returnDetail" />
     </div>
 
