@@ -86,8 +86,8 @@ export default class HQExchangeApi extends BaseApiService {
   }
 
   // 교환 결재이력 조회
-  getExchangeApproverList(returnCode) {
-    return this.get(`/approver/${returnCode}`);
+  getExchangeApproverList(exchangeCode) {
+    return this.get(`/approver/${exchangeCode}`);
   }
 
   // 타부서 교환처리내역 목록 조회/검색
