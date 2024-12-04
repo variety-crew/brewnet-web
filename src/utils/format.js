@@ -12,6 +12,9 @@ import {
   SEARCH_CRITERIA,
   APPROVER_APPROVED_STATUS,
   DELIVERY_STATUS,
+  RETURN_REASON,
+  EXCHANGE_OTHER_STATUS,
+  CONFIRMED_STATUS,
 } from './constant';
 
 export const formatKoEmployeePosition = position => {
@@ -250,6 +253,7 @@ export const formatKoSearchCriteria = criteria => {
       return '품목코드';
 
     case SEARCH_CRITERIA.ITEM_NAME:
+    case SEARCH_CRITERIA.RETURN_ITEM_NAME:
       return '품목명';
 
     case SEARCH_CRITERIA.CORRESPONDENT_NAME:
@@ -272,6 +276,18 @@ export const formatKoSearchCriteria = criteria => {
 
     case SEARCH_CRITERIA.ORDERED_FRANCHISE_NAME:
       return '주문지점';
+
+    case SEARCH_CRITERIA.EXCHANGE_CODE:
+      return '교환번호';
+
+    case SEARCH_CRITERIA.EXCHANGE_FRANCHISE_NAME:
+      return '교환지점';
+
+    case SEARCH_CRITERIA.EXCHANGE_MANAGER_NAME:
+      return '교환담당자';
+
+    case SEARCH_CRITERIA.RETURN_CODE:
+      return '반품코드';
 
     default:
       return '';
@@ -350,7 +366,6 @@ export const formatCorporateNumber = rawCorporateNumber => {
   const end = rawCorporateNumber.slice(6);
   return `${start}-${end}`;
 };
-
 // 핸드폰 번호
 export const formatMobileNumber = mobileNumber => {
   if (mobileNumber.length !== 11) return mobileNumber;
@@ -379,4 +394,83 @@ export const formatLocalTelephoneNumber = localTelephoneNumber => {
   const middle = localTelephoneNumber.slice(3, 6);
   const back = localTelephoneNumber.slice(6);
   return `${front}-${middle}-${back}`;
+};
+
+export const formatKoReturnReason = reason => {
+  switch (reason) {
+    case RETURN_REASON.DAMAGED:
+      return '파손';
+
+    case RETURN_REASON.DEFECTIVE:
+      return '품질불량';
+
+    case RETURN_REASON.MIND_CHANGE:
+      return '단순 변심';
+
+    case RETURN_REASON.OTHER:
+      return '기타';
+
+    default:
+      return '';
+  }
+};
+export const formatKoExchangeOtherStatus = status => {
+  switch (status) {
+    case EXCHANGE_OTHER_STATUS.TOTAL_INBOUND:
+      return '전체입고';
+
+    case EXCHANGE_OTHER_STATUS.TOTAL_DISPOSAL:
+      return '전체폐기';
+
+    case EXCHANGE_OTHER_STATUS.PARTIAL_INBOUND:
+      return '부분입고';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoReturningOtherStatus = status => {
+  switch (status) {
+    case RETURNING_OTHER_STATUS.TOTAL_INBOUND:
+      return '전체입고';
+
+    case RETURNING_OTHER_STATUS.TOTAL_DISPOSAL:
+      return '전체폐기';
+
+    case RETURNING_OTHER_STATUS.PARTIAL_INBOUND:
+      return '부분입고';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoRefundOtherStatus = status => {
+  switch (status) {
+    case REFUND_OTHER_STATUS.TOTAL_REFUND:
+      return '전체환불';
+
+    case REFUND_OTHER_STATUS.PARTIAL_REFUND:
+      return '부분환불';
+
+    case REFUND_OTHER_STATUS.NON_REFUNDABLE:
+      return '환불불가';
+
+    default:
+      return '';
+  }
+};
+
+export const formatKoConfirmedStatus = status => {
+  switch (status) {
+    case CONFIRMED_STATUS.CONFIRMED:
+      return '처리완료';
+
+    case CONFIRMED_STATUS.UNCONFIRMED:
+      return '미처리';
+
+    default:
+      return '';
+  }
 };

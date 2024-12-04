@@ -15,7 +15,7 @@ const { label, text } = defineProps({
   },
 
   text: {
-    type: String,
+    type: [String, Number],
     required: true,
   },
 });
