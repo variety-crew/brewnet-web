@@ -4,8 +4,8 @@
       <h1 class="mb-8">{{ title }}</h1>
 
       <!-- 거래명세서 출력은 사업자 정보도 함께 표시 -->
-      <InvoicePdfTable v-if="printType === PRINT_TYPE.HQ.ORDER_INVOICE" :franchise-code="orderDetail.franchiseCode" />
-      <OrderDetailTable :order-detail="orderDetail" />
+      <InvoicePdfTable v-if="printType === PRINT_TYPE.HQ.RETURN_INVOICE" />
+      <ReturnDetailTable :return-detail="returnDetail" />
     </div>
 
     <template #footer>
@@ -19,26 +19,26 @@ import { computed } from 'vue';
 
 import { PRINT_TYPE } from '@/utils/constant';
 import PrintPDFManager from '@/utils/PrintPDFManager';
+import ReturnDetailTable from '@/views/headQuarter/ReturnDetailTable.vue';
 
 import InvoicePdfTable from './InvoicePdfTable.vue';
-import OrderDetailTable from './OrderDetailTable.vue';
 
-const { orderDetail, printType } = defineProps({
-  orderDetail: {
+const { returnDetail, printType } = defineProps({
+  returnDetail: {
     type: Object,
     required: true,
   },
   printType: {
     type: String,
     required: false,
-    default: PRINT_TYPE.HQ.ORDER_DRAFT,
+    default: PRINT_TYPE.HQ.RETURN_DRAFT,
   },
 });
 const show = defineModel('show', { type: Boolean, required: true });
 
 const title = computed(() => {
-  if (printType === PRINT_TYPE.HQ.ORDER_DRAFT) return '주문 요청서';
-  if (printType === PRINT_TYPE.HQ.ORDER_INVOICE) return '거래 명세서';
+  if (printType === PRINT_TYPE.HQ.RETURN_DRAFT) return '반품 요청서';
+  if (printType === PRINT_TYPE.HQ.RETURN_INVOICE) return '거래취소 명세서';
   return '';
 });
 
@@ -55,19 +55,5 @@ const exportDocument = () => {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-
-  .invoice-table {
-    .hq {
-      background-color: #f4fce3;
-    }
-
-    .fc {
-      background-color: #fff5f5;
-    }
-
-    th.type {
-      writing-mode: vertical-lr;
-    }
-  }
 }
 </style>

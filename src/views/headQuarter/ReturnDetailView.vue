@@ -23,7 +23,13 @@
           size="small"
           @click="clickRejectDraft"
         />
-        <!-- <Button label="주문요청서 출력" variant="outlined" size="small" @click="clickPrintOrder" /> -->
+        <Button
+          label="반품요청서 출력"
+          variant="outlined"
+          size="small"
+          :disabled="!isShowPrintDraft"
+          @click="clickPrintDraft"
+        />
         <!-- <Button
           label="거래명세서 출력"
           variant="outlined"
@@ -51,39 +57,7 @@
       :approval-lines="approverList"
     />
 
-    <AppTableStyled>
-      <tbody>
-        <tr>
-          <th>반품요청지점</th>
-          <td>{{ returnDetail.franchiseName }}</td>
-          <th>반품요청일</th>
-          <td>{{ returnDetail.createdAt }}</td>
-          <th>반품담당자</th>
-          <td>{{ returnDetail.memberName }}</td>
-        </tr>
-        <tr>
-          <th>반품사유</th>
-          <td colspan="5" class="align-center">{{ formatKoReturnReason(returnDetail.reason) }}</td>
-        </tr>
-        <tr>
-          <th>반품 상세사유</th>
-          <td colspan="5" class="align-center">{{ returnDetail.explanation }}</td>
-        </tr>
-        <tr>
-          <th :rowspan="returnDetail.returningItemList.length + 1">반품품목</th>
-          <th>품목코드</th>
-          <th colspan="2">품목명</th>
-          <th>카테고리</th>
-          <th>수량</th>
-        </tr>
-        <tr v-for="returnItem in returnDetail.returningItemList" :key="returnItem.itemCode">
-          <td class="align-center">{{ returnItem.itemUniqueCode }}</td>
-          <td class="align-center" colspan="2">{{ returnItem.itemName }}</td>
-          <td class="align-center">{{ returnItem.superCategory }} - {{ returnItem.subCategory }}</td>
-          <td class="align-center">{{ returnItem.quantity.toLocaleString() }}</td>
-        </tr>
-      </tbody>
-    </AppTableStyled>
+    <ReturnDetailTable :return-detail="returnDetail" />
 
     <div v-if="returnDetail.returningImageList.length > 0">
       <AppLabel use-margin-bottom label="반품 품목 사진" />
@@ -100,6 +74,7 @@
     />
 
     <DynamicDialog />
+    <PrintReturnPdfPreviewModal v-model:show="showPrintPdf" :return-detail="returnDetail" :print-type="printType" />
   </div>
 </template>
 
@@ -111,16 +86,18 @@ import { useRoute, useRouter } from 'vue-router';
 import AppImageList from '@/components/common/AppImageList.vue';
 import AppLabel from '@/components/common/AppLabel.vue';
 import AppLabelText from '@/components/common/AppLabelText.vue';
-import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
 import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
+import PrintReturnPdfPreviewModal from '@/components/headQuarter/PrintReturnPdfPreviewModal.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQReturnApi from '@/utils/api/HQReturnApi';
-import { APPROVAL_STATUS, DRAFT_KIND, DRAFTER_APPROVED, RETURN_STATUS } from '@/utils/constant';
-import { formatKoReturnReason, formatKoReturnStatus } from '@/utils/format';
+import { DRAFT_KIND, DRAFTER_APPROVED, PRINT_TYPE, RETURN_STATUS, RETURN_STEP_LIST } from '@/utils/constant';
+import { formatKoReturnStatus } from '@/utils/format';
 import { getReturnStatusSeverity } from '@/utils/helper';
+
+import ReturnDetailTable from './ReturnDetailTable.vue';
 
 const ApprovalRequestModalBody = defineAsyncComponent(
   () => import('@/components/headQuarter/ApprovalRequestModalBody.vue'),
@@ -137,6 +114,8 @@ const { showConfirm } = useAppConfirmModal();
 
 const returnDetail = ref(null);
 const approverList = ref([]);
+const showPrintPdf = ref(false);
+const printType = ref(PRINT_TYPE.HQ.RETURN_DRAFT);
 
 const isShowRequestApproval = computed(() => {
   // 신규요청 상태이거나
@@ -148,6 +127,11 @@ const isShowRequestApproval = computed(() => {
 });
 const isShowCancelRequestApproval = computed(() => {
   return returnDetail.value.memberName === userStore.username && !isShowRequestApproval.value;
+});
+const isShowPrintDraft = computed(() => {
+  // 승인 이후 단계면 출력 가능
+  const approveStepIndex = RETURN_STEP_LIST.indexOf(RETURN_STATUS.APPROVED);
+  return RETURN_STEP_LIST.indexOf(returnDetail.value.status) >= approveStepIndex;
 });
 
 const hqReturnApi = new HQReturnApi();
@@ -255,6 +239,11 @@ const clickRejectDraft = () => {
       handleRejectDraft(comment);
     },
   });
+};
+
+const clickPrintDraft = () => {
+  printType.value = PRINT_TYPE.HQ.RETURN_DRAFT;
+  showPrintPdf.value = true;
 };
 
 onMounted(() => {
