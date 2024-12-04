@@ -298,7 +298,7 @@ export const formatKoReturnStatus = status => {
       return '반품처리중';
 
     case RETURN_STATUS.CANCELED:
-      return '반품취소';
+      return '취소';
 
     case RETURN_STATUS.APPROVED:
       return '반품승인';

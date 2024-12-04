@@ -91,11 +91,13 @@ export const getDrafterApprovedStatusSeverity = drafterApproved => {
 export const getReturnStatusSeverity = status => {
   switch (status) {
     case RETURN_STATUS.REQUESTED:
+      return 'secondary';
+
     case RETURN_STATUS.PENDING:
       return 'warn';
 
     case RETURN_STATUS.APPROVED:
-      return 'secondary';
+      return 'primary';
 
     case RETURN_STATUS.CANCELED:
     case RETURN_STATUS.REJECTED:

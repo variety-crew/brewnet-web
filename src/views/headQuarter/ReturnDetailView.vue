@@ -139,18 +139,15 @@ const returnDetail = ref(null);
 const approverList = ref([]);
 
 const isShowRequestApproval = computed(() => {
-  // REQUESTED 상태이거나
-  // 기안자가 결재취소한 상태이거나
+  // 신규요청 상태이거나
+  // 결재라인이 아무것도 없을 때 (결재취소)
   return (
     returnDetail.value.status === RETURN_STATUS.REQUESTED ||
-    (returnDetail.value.status === RETURN_STATUS.PENDING && returnDetail.value.memberName)
+    (returnDetail.value.status === RETURN_STATUS.PENDING && approverList.value.length === 0)
   );
 });
 const isShowCancelRequestApproval = computed(() => {
-  return (
-    returnDetail.value.memberName === userStore.username &&
-    returnDetail.value.approvalStatus === APPROVAL_STATUS.UNCONFIRMED
-  );
+  return returnDetail.value.memberName === userStore.username && !isShowRequestApproval.value;
 });
 
 const hqReturnApi = new HQReturnApi();
