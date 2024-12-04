@@ -85,12 +85,12 @@
       </tbody>
     </AppTableStyled>
 
-    <div>
+    <div v-if="returnDetail.returningImageList.length > 0">
       <AppLabel use-margin-bottom label="반품 품목 사진" />
       <AppImageList :images="returnDetail.returningImageList" />
     </div>
 
-    <AppLabelText v-if="returnDetail.memberName" label="기안자 비고사항" :text="returnDetail.comment || ''" />
+    <AppLabelText v-if="returnDetail.memberName" label="기안자 비고사항" :text="returnDetail.comment || '(비어있음)'" />
 
     <DraftApprovalHistoryTable
       :approval-lines="approverList"
