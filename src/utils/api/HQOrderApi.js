@@ -112,6 +112,11 @@ export default class HQOrderApi extends BaseApiService {
     });
   }
 
+  // 기안자가 주문반려
+  rejectDraft({ orderCode, comment }) {
+    return this.post(`/reject/${orderCode}`, { reason: comment });
+  }
+
   //
   // DELETE
   //

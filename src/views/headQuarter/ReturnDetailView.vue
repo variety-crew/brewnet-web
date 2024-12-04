@@ -91,6 +91,7 @@ import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
 import PrintReturnPdfPreviewModal from '@/components/headQuarter/PrintReturnPdfPreviewModal.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
+import { useUserStore } from '@/stores/user';
 import HQReturnApi from '@/utils/api/HQReturnApi';
 import { DRAFT_KIND, DRAFTER_APPROVED, PRINT_TYPE, RETURN_STATUS, RETURN_STEP_LIST } from '@/utils/constant';
 import { formatKoReturnStatus } from '@/utils/format';
@@ -109,6 +110,7 @@ const router = useRouter();
 const { openModal } = useModal();
 const toast = useToast();
 const { showConfirm } = useAppConfirmModal();
+const userStore = useUserStore();
 
 const returnDetail = ref(null);
 const approverList = ref([]);
@@ -128,7 +130,11 @@ const isShowRequestApproval = computed(() => {
   );
 });
 const isShowCancelRequestApproval = computed(() => {
-  return returnDetail.value.status === RETURN_STATUS.PENDING && approverList.value.length > 0;
+  return (
+    returnDetail.value.memberName === userStore.username &&
+    returnDetail.value.status === RETURN_STATUS.PENDING &&
+    approverList.value.length > 0
+  );
 });
 const isShowPrintDraft = computed(() => {
   // 승인 이후 단계면 출력 가능
