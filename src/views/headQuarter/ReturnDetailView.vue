@@ -91,7 +91,6 @@ import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
 import PrintReturnPdfPreviewModal from '@/components/headQuarter/PrintReturnPdfPreviewModal.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
-import { useUserStore } from '@/stores/user';
 import HQReturnApi from '@/utils/api/HQReturnApi';
 import { DRAFT_KIND, DRAFTER_APPROVED, PRINT_TYPE, RETURN_STATUS, RETURN_STEP_LIST } from '@/utils/constant';
 import { formatKoReturnStatus } from '@/utils/format';
@@ -108,7 +107,6 @@ const route = useRoute();
 const { returnCode } = route.params;
 const router = useRouter();
 const { openModal } = useModal();
-const userStore = useUserStore();
 const toast = useToast();
 const { showConfirm } = useAppConfirmModal();
 
@@ -117,6 +115,10 @@ const approverList = ref([]);
 const showPrintPdf = ref(false);
 const printType = ref(PRINT_TYPE.HQ.RETURN_DRAFT);
 
+const isBeforeApproved = computed(() => {
+  const approveStepIndex = RETURN_STEP_LIST.indexOf(RETURN_STATUS.APPROVED);
+  return RETURN_STEP_LIST.indexOf(returnDetail.value.status) < approveStepIndex;
+});
 const isShowRequestApproval = computed(() => {
   // 신규요청 상태이거나
   // 결재라인이 아무것도 없을 때 (결재취소)
@@ -126,12 +128,11 @@ const isShowRequestApproval = computed(() => {
   );
 });
 const isShowCancelRequestApproval = computed(() => {
-  return returnDetail.value.memberName === userStore.username && !isShowRequestApproval.value;
+  return returnDetail.value.status === RETURN_STATUS.PENDING && approverList.value.length > 0;
 });
 const isShowPrintDraft = computed(() => {
   // 승인 이후 단계면 출력 가능
-  const approveStepIndex = RETURN_STEP_LIST.indexOf(RETURN_STATUS.APPROVED);
-  return RETURN_STEP_LIST.indexOf(returnDetail.value.status) >= approveStepIndex;
+  return !isBeforeApproved.value;
 });
 
 const hqReturnApi = new HQReturnApi();
