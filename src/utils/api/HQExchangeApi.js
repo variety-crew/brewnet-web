@@ -86,7 +86,7 @@ export default class HQExchangeApi extends BaseApiService {
   }
 
   // 교환 결재이력 조회
-  getExchangeApprovalLines(exchangeCode) {
+  getExchangeApproverList(exchangeCode) {
     return this.get(`/approver/${exchangeCode}`);
   }
 
@@ -122,8 +122,36 @@ export default class HQExchangeApi extends BaseApiService {
   // POST
   //
 
+  // 기안자의 교환요청 승인/반려
+  requestApproval({ exchangeCode, approved, comment, approverCodeList }) {
+    return this.post(`/${exchangeCode}/drafter-approve`, {
+      approval: approved,
+      comment,
+      approverCodeList,
+    });
+  }
+
+  // 기안자의 교환요청 취소
+  cancelRequestApproval(exchangeCode) {
+    console.log('exchangeCode', exchangeCode);
+    return this.post(`/cancel-approve/${exchangeCode}`);
+  }
+
   // 책임자의 결재 승인/반려
   managerApprove({ exchangeCode, approval, comment }) {
     return this.post(`/${exchangeCode}/manager-approve`, { approval, comment });
+  }
+
+  // 타부서 교환처리내역 처리 - 교환완료
+  completeExchange(exchangeStockHistoryCode) {
+    return this.post(`/other/complete/${exchangeStockHistoryCode}`);
+  }
+
+  // 결재자의 결재 승인/반려
+  approval({ exchangeCode, approved, comment }) {
+    return this.post(`/${exchangeCode}/manager-approve`, {
+      approval: approved,
+      comment,
+    });
   }
 }

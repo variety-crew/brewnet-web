@@ -37,6 +37,7 @@ import { defineAsyncComponent } from 'vue';
 
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
+import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
 import HQReturnApi from '@/utils/api/HQReturnApi';
 import SuperOrderApi from '@/utils/api/SuperOrderApi';
@@ -80,6 +81,7 @@ const { openModal } = useModal();
 const hqPurchaseApi = new HQPurchaseApi();
 const superOrderApi = new SuperOrderApi();
 const hqReturnApi = new HQReturnApi();
+const hqExchangeApi = new HQExchangeApi();
 
 // 내 결재가 필요한 단계인가?
 const isNeedMyApproval = (approverCode, approvedStatus) => {
@@ -117,13 +119,13 @@ const doingApproval = async (approved, comment) => {
   } else if (draftKind === DRAFT_KIND.EXCHANGE) {
     // 교환에 대한 결재 진행
     if (approved === APPROVER_APPROVED_STATUS.APPROVED) {
-      await superExchangeApi.managerApprove({
+      await hqExchangeApi.managerApprove({
         exchangeCode: draftCode,
         approval: APPROVER_APPROVED_STATUS.APPROVED,
         comment,
       });
     } else if (approved === APPROVER_APPROVED_STATUS.REJECTED) {
-      await superExchangeApi.managerApprove({
+      await hqExchangeApi.managerApprove({
         exchangeCode: draftCode,
         approval: APPROVER_APPROVED_STATUS.REJECTED,
         comment,
