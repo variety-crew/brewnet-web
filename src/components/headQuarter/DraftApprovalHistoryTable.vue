@@ -38,6 +38,7 @@ import { defineAsyncComponent } from 'vue';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQPurchaseApi from '@/utils/api/HQPurchaseApi';
+import HQReturnApi from '@/utils/api/HQReturnApi';
 import SuperOrderApi from '@/utils/api/SuperOrderApi';
 import { APPROVER_APPROVED_STATUS, DRAFT_KIND } from '@/utils/constant';
 import { formatKoApproverApprovedStatus, formatKoEmployeePosition } from '@/utils/format';
@@ -78,6 +79,7 @@ const { openModal } = useModal();
 
 const hqPurchaseApi = new HQPurchaseApi();
 const superOrderApi = new SuperOrderApi();
+const hqReturnApi = new HQReturnApi();
 
 // 내 결재가 필요한 단계인가?
 const isNeedMyApproval = (approverCode, approvedStatus) => {
@@ -116,6 +118,7 @@ const doingApproval = async (approved, comment) => {
     // 교환에 대한 결재 진행
   } else if (draftKind === DRAFT_KIND.RETURN) {
     // 반품에 대한 결재 진행
+    await hqReturnApi.approval({ returnCode: draftCode, approved, comment });
   }
 
   toast.add({ severity: 'success', summary: '처리 성공', detail: successMeg || '결재가 저장되었습니다.', life: 3000 });

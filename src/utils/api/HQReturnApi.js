@@ -73,4 +73,12 @@ export default class HQReturnApi extends BaseApiService {
   cancelRequestApproval(returnCode) {
     return this.post(`/cancel-approve/${returnCode}`);
   }
+
+  // 결재자의 결재처리
+  approval({ returnCode, approved, comment }) {
+    return this.post(`/${returnCode}/manager-approve`, {
+      approval: approved,
+      comment,
+    });
+  }
 }
