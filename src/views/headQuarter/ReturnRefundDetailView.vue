@@ -10,7 +10,20 @@
         :to="{ name: 'hq:order:return:other-dept' }"
       />
 
-      <Button label="환불 처리 완료" size="small" @click="clickRefundConfirmed" />
+      <Button
+        v-if="refundDetail.confirmed === OTHER_DEPT_CHECK_STATUS.UNCONFIRMED"
+        label="환불 처리 완료로 변경"
+        size="small"
+        variant="outlined"
+        @click="clickRefundConfirmed"
+      />
+      <Tag
+        v-else-if="refundDetail.confirmed === OTHER_DEPT_CHECK_STATUS.CONFIRMED"
+        :value="formatKoOtherDeptCheckStatus(refundDetail.confirmed)"
+        size="small"
+        rounded
+        :severity="getReturnStockCheckStatusSeverity(refundDetail.confirmed)"
+      />
     </div>
     <div>
       <h3 class="mb-3">반품요청 상세</h3>
@@ -81,7 +94,9 @@ import { useRoute } from 'vue-router';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQReturnApi from '@/utils/api/HQReturnApi';
-import { formatKoReturnReason } from '@/utils/format';
+import { OTHER_DEPT_CHECK_STATUS } from '@/utils/constant';
+import { formatKoOtherDeptCheckStatus, formatKoReturnReason } from '@/utils/format';
+import { getReturnStockCheckStatusSeverity } from '@/utils/helper';
 
 const route = useRoute();
 const { detailCode } = route.params;
@@ -129,6 +144,7 @@ onMounted(() => {
   .top-area {
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 }
 </style>

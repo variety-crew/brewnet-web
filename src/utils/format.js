@@ -460,7 +460,7 @@ export const formatKoReturnRefundStatus = status => {
 };
 
 export const formatKoOtherDeptCheckStatus = status => {
-  if (status === OTHER_DEPT_CHECK_STATUS.CONFIRMED) return '재고조정완료';
+  if (status === OTHER_DEPT_CHECK_STATUS.CONFIRMED) return '확인완료';
   if (status === OTHER_DEPT_CHECK_STATUS.UNCONFIRMED) return '미확인';
   return '';
 };

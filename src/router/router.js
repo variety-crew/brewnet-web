@@ -174,7 +174,7 @@ const routes = [
             },
           },
           {
-            path: 'return/stock/:detailCode/detail',
+            path: 'return/refund/:detailCode/detail',
             name: 'hq:order:return:refund-detail',
             component: () => import('@/views/headQuarter/ReturnRefundDetailView.vue'),
             meta: {
