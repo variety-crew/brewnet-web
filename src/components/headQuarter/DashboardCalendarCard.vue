@@ -5,7 +5,7 @@
     </template>
     <template #content>
       <FullCalendar
-        ref="fullcalendar"
+        ref="fullCalendar"
         :options="{
           plugins: [dayGridPlugin],
           initialView: 'dayGridMonth',
@@ -44,6 +44,11 @@ const orderPriceEvents = computed(() => {
     start: e.date,
   }));
 });
+const fullCalendar = ref(); // DOM ref
+const calendarApi = computed(() => {
+  if (!fullCalendar.value) return null;
+  return fullCalendar.value.getApi();
+});
 
 const hqStatisticsApi = new HQStatisticsApi();
 
@@ -61,6 +66,15 @@ const onSetDates = dateInfo => {
     orderData.value = data;
   });
 };
+
+const updateCalendarSize = () => {
+  if (!calendarApi.value) return;
+  console.log('calendar size update');
+  calendarApi.value.updateSize();
+};
+
+// parent 컴포넌트에서 사용할 수 있도록 설정
+defineExpose({ updateCalendarSize });
 </script>
 
 <style scoped>

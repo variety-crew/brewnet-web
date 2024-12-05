@@ -58,6 +58,8 @@ import { formatKoApprovalStatus, formatKoDraftKind } from '@/utils/format';
 
 import DashboardTable from './DashboardTable.vue';
 
+const emit = defineEmits(['fetchedData']);
+
 const { clickGoDetail } = useDraftNavigation();
 
 const paginatedDraftList = ref([]);
@@ -72,6 +74,8 @@ onMounted(() => {
     .then(data => {
       paginatedDraftList.value = data.content;
       totalElements.value = data.totalElements;
+
+      emit('fetchedData');
     })
     .catch(e => {
       errMsg.value = e.message;
@@ -87,13 +91,6 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-
-  .ellipsis {
-    max-width: 100px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
   }
 }
 </style>

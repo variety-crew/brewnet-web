@@ -32,7 +32,7 @@
             <tr v-for="newOrder in paginatedNewOrderList" :key="newOrder.orderCode">
               <td>{{ newOrder.orderCode }}</td>
               <td>{{ newOrder.franchiseName }}</td>
-              <td>{{ newOrder.itemName }}</td>
+              <td class="ellipsis">{{ newOrder.itemName }}</td>
               <td>{{ (newOrder.totalPrice * 1.1).toLocaleString() }}</td>
               <td>{{ newOrder.createdAt }}</td>
               <td>
@@ -65,6 +65,8 @@ import HQStatisticsApi from '@/utils/api/HQStatisticsApi';
 
 import DashboardTable from './DashboardTable.vue';
 
+const emit = defineEmits(['fetchedData']);
+
 const paginatedNewOrderList = ref([]);
 const totalElements = ref(0);
 const errMsg = ref('');
@@ -77,6 +79,8 @@ onMounted(() => {
     .then(data => {
       paginatedNewOrderList.value = data.content;
       totalElements.value = data.totalElements;
+
+      emit('fetchedData');
     })
     .catch(e => {
       errMsg.value = e.message;
