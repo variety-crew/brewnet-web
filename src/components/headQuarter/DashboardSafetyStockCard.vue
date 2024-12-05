@@ -33,7 +33,7 @@
           <template v-else>
             <tr v-for="warningSafetyStock in paginatedWarningSafetyStockList" :key="warningSafetyStock.itemCode">
               <td>{{ warningSafetyStock.itemCode }}</td>
-              <td>{{ warningSafetyStock.itemName }}</td>
+              <td class="ellipsis">{{ warningSafetyStock.itemName }}</td>
               <td>{{ warningSafetyStock.availableStock.toLocaleString() }}</td>
               <td>{{ warningSafetyStock.safeStock.toLocaleString() }}</td>
               <td>{{ warningSafetyStock.availableMinusSafeStock.toLocaleString() }}</td>

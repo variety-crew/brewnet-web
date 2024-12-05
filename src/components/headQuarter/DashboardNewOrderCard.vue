@@ -32,7 +32,7 @@
             <tr v-for="newOrder in paginatedNewOrderList" :key="newOrder.orderCode">
               <td>{{ newOrder.orderCode }}</td>
               <td>{{ newOrder.franchiseName }}</td>
-              <td>{{ newOrder.itemName }}</td>
+              <td class="ellipsis">{{ newOrder.itemName }}</td>
               <td>{{ (newOrder.totalPrice * 1.1).toLocaleString() }}</td>
               <td>{{ newOrder.createdAt }}</td>
               <td>
