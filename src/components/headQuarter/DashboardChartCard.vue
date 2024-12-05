@@ -11,38 +11,36 @@
       </div>
 
       <div class="chart-area">
-        <div class="chart">
-          <Bar
-            :options="{ responsive: false }"
-            :data="{
-              labels: ['주문', '교환', '반품'],
-              datasets: [
-                {
-                  label: '주문/교환/반품 수',
-                  data: [orderCount, exchangeCount, returnCount],
-                  backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-                  borderColor: ['rgb(54, 162, 235)', 'rgb(255, 205, 86)', 'rgb(255, 99, 132)'],
-                  borderWidth: 1,
-                },
-              ],
-            }"
-          />
-          <Pie
-            :options="{ responsive: false }"
-            :data="{
-              labels: pieChartLabels,
-              datasets: [
-                {
-                  backgroundColor: pieChartColors,
-                  data: pieChartData,
-                },
-              ],
-            }"
-          />
-        </div>
+        <Bar
+          :options="{ responsive: false }"
+          :data="{
+            labels: ['주문', '교환', '반품'],
+            datasets: [
+              {
+                label: '주문/교환/반품 수',
+                data: [orderCount, exchangeCount, returnCount],
+                backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                borderColor: ['rgb(54, 162, 235)', 'rgb(255, 205, 86)', 'rgb(255, 99, 132)'],
+                borderWidth: 1,
+              },
+            ],
+          }"
+        />
+        <Pie
+          :options="{ responsive: false }"
+          :data="{
+            labels: pieChartLabels,
+            datasets: [
+              {
+                backgroundColor: pieChartColors,
+                data: pieChartData,
+              },
+            ],
+          }"
+        />
 
         <div>
-          <h2 class="mb-3">주문 건수 TOP 10 상품</h2>
+          <h4 class="mb-3">주문 건수 TOP 10 상품</h4>
           <ul class="top-10-list">
             <li
               v-for="(statistics, index) in itemStatistics"
@@ -136,13 +134,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 70px;
-
-    .chart {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+    gap: 24px;
   }
 
   .top-10-list {
@@ -166,7 +158,8 @@ onMounted(() => {
     }
 
     li.first {
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: bold;
     }
 
     li.second {
