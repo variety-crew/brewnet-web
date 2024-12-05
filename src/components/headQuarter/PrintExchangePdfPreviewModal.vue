@@ -20,9 +20,9 @@
 <script setup>
 import { computed } from 'vue';
 
+import ExchangeDetailTable from '@/components/headQuarter/ExchangeDetailTable.vue';
 import { PRINT_TYPE } from '@/utils/constant';
 import PrintPDFManager from '@/utils/PrintPDFManager';
-import ExchangeDetailTable from '@/views/headQuarter/ExchangeDetailTable.vue';
 
 import InvoicePdfTable from './InvoicePdfTable.vue';
 
