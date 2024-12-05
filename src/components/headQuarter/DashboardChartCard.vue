@@ -9,39 +9,46 @@
         </div>
         <h3 style="visibility: hidden">주문 통계</h3>
       </div>
+
       <div class="chart-area">
-        <Bar
-          :options="{ responsive: false }"
-          :data="{
-            labels: ['주문', '교환', '반품'],
-            datasets: [
-              {
-                label: '주문/교환/반품 수',
-                data: [orderCount, exchangeCount, returnCount],
-                backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-                borderColor: ['rgb(54, 162, 235)', 'rgb(255, 205, 86)', 'rgb(255, 99, 132)'],
-                borderWidth: 1,
-              },
-            ],
-          }"
-        />
-        <Pie
-          :options="{ responsive: false }"
-          :data="{
-            labels: pieChartLabels,
-            datasets: [
-              {
-                backgroundColor: pieChartColors,
-                data: pieChartData,
-              },
-            ],
-          }"
-        />
+        <div class="chart">
+          <Bar
+            :options="{ responsive: false }"
+            :data="{
+              labels: ['주문', '교환', '반품'],
+              datasets: [
+                {
+                  label: '주문/교환/반품 수',
+                  data: [orderCount, exchangeCount, returnCount],
+                  backgroundColor: ['rgba(54, 162, 235, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                  borderColor: ['rgb(54, 162, 235)', 'rgb(255, 205, 86)', 'rgb(255, 99, 132)'],
+                  borderWidth: 1,
+                },
+              ],
+            }"
+          />
+          <Pie
+            :options="{ responsive: false }"
+            :data="{
+              labels: pieChartLabels,
+              datasets: [
+                {
+                  backgroundColor: pieChartColors,
+                  data: pieChartData,
+                },
+              ],
+            }"
+          />
+        </div>
 
         <div>
-          <h4>주문 건수 TOP 10 상품</h4>
+          <h2 class="mb-3">주문 건수 TOP 10 상품</h2>
           <ul class="top-10-list">
-            <li v-for="(statistics, index) in itemStatistics" :key="statistics.itemName">
+            <li
+              v-for="(statistics, index) in itemStatistics"
+              :key="statistics.itemName"
+              :class="{ first: index === 0, second: index === 1, third: index === 2 }"
+            >
               {{ index + 1 }}. {{ statistics.itemName }}({{ statistics.itemPercent }}%,
               {{ statistics.itemCount.toLocaleString() }}건)
             </li>
@@ -116,7 +123,7 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
 
   .select-date {
@@ -129,7 +136,13 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 70px;
+
+    .chart {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
   }
 
   .top-10-list {
@@ -144,6 +157,20 @@ onMounted(() => {
       color: var(--p-surface-500);
       font-size: 14px;
       line-height: 1.6;
+    }
+
+    li.first,
+    li.second,
+    li.third {
+      color: var(--p-primary-600);
+    }
+
+    li.first {
+      font-size: 20px;
+    }
+
+    li.second {
+      font-size: 16px;
     }
   }
 }
