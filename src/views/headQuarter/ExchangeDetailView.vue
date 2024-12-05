@@ -96,6 +96,7 @@ import AppLabel from '@/components/common/AppLabel.vue';
 import AppLabelText from '@/components/common/AppLabelText.vue';
 import DraftApprovalHistoryTable from '@/components/headQuarter/DraftApprovalHistoryTable.vue';
 import DraftApprovalLine from '@/components/headQuarter/DraftApprovalLine.vue';
+import ExchangeDetailTable from '@/components/headQuarter/ExchangeDetailTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
@@ -103,8 +104,6 @@ import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { DRAFT_KIND, DRAFTER_APPROVED, PRINT_TYPE, EXCHANGE_STATUS, EXCHANGE_STEP_LIST } from '@/utils/constant';
 import { formatKoExchangeStatus } from '@/utils/format';
 import { getExchangeStatusSeverity } from '@/utils/helper';
-
-import ExchangeDetailTable from './ExchangeDetailTable.vue';
 
 // import PrintExchangePdfPreviewModal from '@/components/headQuarter/PrintExchangePdfPreviewModal.vue';
 
