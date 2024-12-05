@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import { fileURLToPath, URL } from 'node:url';
 import Components from 'unplugin-vue-components/vite';
 import { defineConfig } from 'vite';
+import removeConsole from 'vite-plugin-remove-console';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,6 +12,7 @@ export default defineConfig({
     Components({
       resolvers: [PrimeVueResolver()],
     }),
+    removeConsole(),
   ],
   resolve: {
     alias: {
