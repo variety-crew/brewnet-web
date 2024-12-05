@@ -66,6 +66,8 @@ import HQStatisticsApi from '@/utils/api/HQStatisticsApi';
 
 import DashboardTable from './DashboardTable.vue';
 
+const emit = defineEmits(['fetchedData']);
+
 const paginatedWarningSafetyStockList = ref([]);
 const totalElements = ref(0);
 const errMsg = ref('');
@@ -78,6 +80,8 @@ onMounted(() => {
     .then(data => {
       paginatedWarningSafetyStockList.value = data.content;
       totalElements.value = data.totalElements;
+
+      emit('fetchedData');
     })
     .catch(e => {
       errMsg.value = e.message;

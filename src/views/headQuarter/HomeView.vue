@@ -4,12 +4,12 @@
     <div class="content">
       <div class="left">
         <DashboardChartCard />
-        <DashboardCalendarCard />
+        <DashboardCalendarCard ref="dashboardCalendarCard" />
       </div>
       <div class="right">
-        <DashboardMyApprovalWaitCard />
-        <DashboardNewOrderCard />
-        <DashboardSafetyStockCard />
+        <DashboardMyApprovalWaitCard @fetched-data="onFetchedData" />
+        <DashboardNewOrderCard @fetched-data="onFetchedData" />
+        <DashboardSafetyStockCard @fetched-data="onFetchedData" />
       </div>
     </div>
 
@@ -18,6 +18,8 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import DashboardCalendarCard from '@/components/headQuarter/DashboardCalendarCard.vue';
 import DashboardChartCard from '@/components/headQuarter/DashboardChartCard.vue';
@@ -25,6 +27,12 @@ import DashboardMyApprovalWaitCard from '@/components/headQuarter/DashboardMyApp
 import DashboardNewOrderCard from '@/components/headQuarter/DashboardNewOrderCard.vue';
 import DashboardSafetyStockCard from '@/components/headQuarter/DashboardSafetyStockCard.vue';
 import PageTitle from '@/components/headQuarter/PageTitle.vue';
+
+const dashboardCalendarCard = ref();
+
+const onFetchedData = () => {
+  dashboardCalendarCard.value.updateCalendarSize();
+};
 </script>
 
 <style scoped>
