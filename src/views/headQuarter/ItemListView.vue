@@ -69,6 +69,10 @@ const getItems = () => {
     .then(data => {
       paginatedItems.value = data.content;
       totalElements.value = data.totalElements;
+    })
+    .catch(err => {
+      paginatedItems.value = [];
+      totalElements.value = 0;
     });
 };
 
