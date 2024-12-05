@@ -1,57 +1,54 @@
 <template>
-  <AppTableStyled full-width>
+  <AppTableStyled>
     <tbody>
       <tr>
-        <th>교환요청일자</th>
-        <td>{{ exchangeDetail.createdAt }}</td>
         <th>교환요청지점</th>
         <td>{{ exchangeDetail.franchiseName }}</td>
-        <th>교환사유</th>
-        <td>{{ exchangeDetail.reason }}</td>
+        <th>교환요청일</th>
+        <td colspan="2">{{ exchangeDetail.createdAt }}</td>
         <th>교환담당자</th>
         <td>{{ exchangeDetail.memberName }}</td>
       </tr>
       <tr>
-        <th>교환 상세 사유</th>
-        <td colspan="7">{{ exchangeDetail.explanation }}</td>
+        <th>교환사유</th>
+        <td colspan="6" class="align-center">{{ formatKoExchangeReason(exchangeDetail.reason) }}</td>
       </tr>
       <tr>
-        <th>비고사항</th>
-        <td colspan="7">{{ exchangeDetail.comment }}</td>
+        <th>교환 상세사유</th>
+        <td colspan="6" class="align-center">{{ exchangeDetail.explanation }}</td>
       </tr>
       <tr>
+        <th :rowspan="exchangeDetail.exchangeItemList.length + 1">교환품목</th>
         <th>품목코드</th>
-        <th colspan="3">품목명</th>
-        <th colspan="2">카테고리</th>
-        <th colspan="2">수량</th>
+        <th colspan="2">품목명</th>
+        <th>카테고리</th>
+        <th>수량</th>
+        <th>부분 합계</th>
       </tr>
-      <tr v-for="item in exchangeDetail.exchangeItemList" :key="item.itemUniqueCode">
-        <td class="align-center">{{ item.itemUniqueCode }}</td>
-        <td colspan="3">{{ item.itemName }}</td>
-        <td colspan="2">{{ item.superCategory + ' > ' + item.subCategory }}</td>
-        <td colspan="2" class="align-right">{{ item.quantity.toLocaleString() }}</td>
-      </tr>
-      <tr>
-        <th colspan="1">이미지</th>
-        <td colspan="8">
-          <div v-for="(image, index) in exchangeDetail.exchangeImageList" :key="index">
-            <Image :src="image" alt="교환 상품 이미지" width="200" preview />
-          </div>
-        </td>
+      <tr v-for="exchangeItem in exchangeDetail.exchangeItemList" :key="exchangeItem.itemCode">
+        <td class="align-center">{{ exchangeItem.itemUniqueCode }}</td>
+        <td class="align-center" colspan="2">{{ exchangeItem.itemName }}</td>
+        <td class="align-center">{{ exchangeItem.superCategory }} - {{ exchangeItem.subCategory }}</td>
+        <td class="align-center">{{ exchangeItem.quantity.toLocaleString() }}</td>
+        <td class="align-right">{{ cancelInvoice ? '-' : '' }}{{ exchangeItem.partSumPrice.toLocaleString() }}</td>
       </tr>
     </tbody>
   </AppTableStyled>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import AppTableStyled from '@/components/common/AppTableStyled.vue';
+import { formatKoExchangeReason } from '@/utils/format';
 
-import AppTableStyled from '../common/AppTableStyled.vue';
-
-const { exchangeDetail } = defineProps({
+const { exchangeDetail, cancelInvoice } = defineProps({
   exchangeDetail: {
     type: Object,
     required: true,
+  },
+  cancelInvoice: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 </script>
