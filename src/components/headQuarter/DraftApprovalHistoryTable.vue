@@ -16,7 +16,7 @@
           <td class="align-center">{{ formatKoEmployeePosition(approvalLine.positionName) }}</td>
           <td class="align-center">{{ approvalLine.approverName }}</td>
           <td class="align-center">
-            <template v-if="isNeedMyApproval(approvalLine.approverCode, approvalLine.approval)">
+            <template v-if="isNeedMyApproval(approvalLine.approverCode, approvalLine.approved)">
               <Button label="결재 진행" size="small" @click="clickDoApproval" />
             </template>
             <template v-else>
