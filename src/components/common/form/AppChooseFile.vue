@@ -1,7 +1,7 @@
 <template>
   <AppFormField :label="label" :label-position="labelPosition">
     <Button size="small" label="파일 선택" variant="outlined" severity="secondary" @click="clickChoose" />
-    <input ref="inputRef" type="file" accept="image/*" style="display: none" @change="changeFile" />
+    <input ref="inputRef" type="file" accept="image/jpeg, image/png" style="display: none" @change="changeFile" />
   </AppFormField>
 </template>
 

@@ -112,7 +112,7 @@ const columns = [
     field: 'itemName',
     header: '품목명',
   },
-  { field: 'quantity', header: '입고수량' },
+  { field: 'quantity', header: '입고수량', render: data => data.quantity.toLocaleString() },
   { field: 'storageName', header: '입고창고' },
   { field: 'correspondentName', header: '거래처' },
   { field: 'createdAt', header: '발주일자' },

@@ -13,6 +13,9 @@ import {
   APPROVER_APPROVED_STATUS,
   DELIVERY_STATUS,
   RETURN_REASON,
+  RETURN_STOCK_STATUS,
+  OTHER_DEPT_CHECK_STATUS,
+  RETURN_REFUND_STATUS,
   EXCHANGE_OTHER_STATUS,
   CONFIRMED_STATUS,
 } from './constant';
@@ -80,10 +83,10 @@ export const formatKoExchangeStatus = status => {
       return '교환요청';
 
     case EXCHANGE_STATUS.PENDING:
-      return '진행중';
+      return '교환처리중';
 
     case EXCHANGE_STATUS.CANCELED:
-      return '교환취소';
+      return '취소';
 
     case EXCHANGE_STATUS.APPROVED:
       return '교환승인';
@@ -225,7 +228,7 @@ export const formatKoOrderStatus = status => {
       return '주문요청';
 
     case ORDER_STATUS.PENDING:
-      return '진행중';
+      return '처리중';
 
     case ORDER_STATUS.CANCELED:
       return '주문취소';
@@ -289,6 +292,25 @@ export const formatKoSearchCriteria = criteria => {
     case SEARCH_CRITERIA.RETURN_CODE:
       return '반품코드';
 
+    case SEARCH_CRITERIA.RETURN_FRANCHISE_NAME:
+      return '반품지점';
+
+    case SEARCH_CRITERIA.RETURN_MANAGER_NAME:
+    case SEARCH_CRITERIA.RETURN_MANGER_IN_OTHER_DEPT:
+      return '반품담당자';
+
+    case SEARCH_CRITERIA.RETURN_STOCK_DEPT_MANAGER:
+      return '재고담당자';
+
+    case SEARCH_CRITERIA.RETURN_STOCK_DEPT_RETURN_CODE:
+      return '재고처리코드';
+
+    case SEARCH_CRITERIA.RETURN_ACCOUNT_DEPT_MANAGER:
+      return '환불담당자';
+
+    case SEARCH_CRITERIA.RETURN_ACCOUNT_DEPT_RETURN_CODE:
+      return '환불처리코드';
+
     default:
       return '';
   }
@@ -303,7 +325,7 @@ export const formatKoReturnStatus = status => {
       return '반품처리중';
 
     case RETURN_STATUS.CANCELED:
-      return '반품취소';
+      return '취소';
 
     case RETURN_STATUS.APPROVED:
       return '반품승인';
@@ -414,6 +436,22 @@ export const formatKoReturnReason = reason => {
       return '';
   }
 };
+
+export const formatKoReturnStockStatus = status => {
+  switch (status) {
+    case RETURN_STOCK_STATUS.TOTAL_INBOUND:
+      return '전체입고';
+
+    case RETURN_STOCK_STATUS.TOTAL_DISPOSAL:
+      return '전체폐기';
+
+    case RETURN_STOCK_STATUS.PARTIAL_INBOUND:
+      return '부분입고';
+
+    default:
+      return '';
+  }
+};
 export const formatKoExchangeOtherStatus = status => {
   switch (status) {
     case EXCHANGE_OTHER_STATUS.TOTAL_INBOUND:
@@ -430,36 +468,58 @@ export const formatKoExchangeOtherStatus = status => {
   }
 };
 
-export const formatKoReturningOtherStatus = status => {
+export const formatKoReturnRefundStatus = status => {
   switch (status) {
-    case RETURNING_OTHER_STATUS.TOTAL_INBOUND:
-      return '전체입고';
+    case RETURN_REFUND_STATUS.TOTAL_REFUND:
+      return '전체환불';
 
-    case RETURNING_OTHER_STATUS.TOTAL_DISPOSAL:
-      return '전체폐기';
+    case RETURN_REFUND_STATUS.PARTIAL_REFUND:
+      return '부분환불';
 
-    case RETURNING_OTHER_STATUS.PARTIAL_INBOUND:
-      return '부분입고';
+    case RETURN_REFUND_STATUS.NON_REFUNDABLE:
+      return '환불불가';
 
     default:
       return '';
   }
 };
 
-export const formatKoRefundOtherStatus = status => {
-  switch (status) {
-    case REFUND_OTHER_STATUS.TOTAL_REFUND:
-      return '전체환불';
+// export const formatKoReturningOtherStatus = status => {
+//   switch (status) {
+//     case RETURNING_OTHER_STATUS.TOTAL_INBOUND:
+//       return '전체입고';
 
-    case REFUND_OTHER_STATUS.PARTIAL_REFUND:
-      return '부분환불';
+//     case RETURNING_OTHER_STATUS.TOTAL_DISPOSAL:
+//       return '전체폐기';
 
-    case REFUND_OTHER_STATUS.NON_REFUNDABLE:
-      return '환불불가';
+//     case RETURNING_OTHER_STATUS.PARTIAL_INBOUND:
+//       return '부분입고';
 
-    default:
-      return '';
-  }
+//     default:
+//       return '';
+//   }
+// };
+
+// export const formatKoRefundOtherStatus = status => {
+//   switch (status) {
+//     case REFUND_OTHER_STATUS.TOTAL_REFUND:
+//       return '전체환불';
+
+//     case REFUND_OTHER_STATUS.PARTIAL_REFUND:
+//       return '부분환불';
+
+//     case REFUND_OTHER_STATUS.NON_REFUNDABLE:
+//       return '환불불가';
+
+//     default:
+//       return '';
+//   }
+// };
+
+export const formatKoOtherDeptCheckStatus = status => {
+  if (status === OTHER_DEPT_CHECK_STATUS.CONFIRMED) return '확인완료';
+  if (status === OTHER_DEPT_CHECK_STATUS.UNCONFIRMED) return '미확인';
+  return '';
 };
 
 export const formatKoConfirmedStatus = status => {

@@ -76,6 +76,14 @@ function clickGoDetail(data) {
 }
 
 const columns = [
+  { field: 'exchangeCode', header: '교환번호', sortable: true },
+  { field: 'franchiseName', header: '교환요청지점' },
+  { field: 'itemName', header: '교환품목' },
+  {
+    field: 'reason',
+    header: '교환사유',
+    render: data => formatKoExchangeReason(data.reason),
+  },
   {
     field: 'status',
     header: '교환상태',
@@ -86,21 +94,8 @@ const columns = [
       },
     },
   },
-  { field: 'exchangeCode', header: '교환번호', sortable: true },
-  { field: 'franchiseName', header: '교환요청지점' },
-  { field: 'itemName', header: '교환품목명' },
-  {
-    field: 'reason',
-    header: '교환사유',
-    render: data => formatKoExchangeReason(data.reason),
-    template: {
-      tag: {
-        getSeverity: data => getExchangeStatusSeverity(data.status),
-      },
-    },
-  },
   { field: 'memberCode', header: '교환담당자' },
-  { field: 'createdAt', header: '교환요청일자' },
+  { field: 'createdAt', header: '교환요청일' },
   {
     field: '',
     header: '',
@@ -162,7 +157,13 @@ const onExportExcel = () => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
       const headerNames = columns.filter(e => e.field).map(e => e.header); // 헤더명
 
-      const excelManager = new ExcelManager(rows, orderedFields);
+      const tableRows = rows.map(row => ({
+        ...row,
+        status: formatKoExchangeStatus(row.status),
+        reason: formatKoExchangeReason(row.reason),
+      }));
+
+      const excelManager = new ExcelManager(tableRows, orderedFields);
       excelManager.setHeaderNames(headerNames);
       excelManager.export(`교환목록${dayjs().format('YYMMDD')}`);
     })
