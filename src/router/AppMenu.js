@@ -50,7 +50,7 @@ export default class AppMenu {
           label: '교환',
           items: [
             this.#makeMenu('교환요청 관리', 'hq:order:exchange:list'),
-            this.#makeMenu('교환처리 확인', 'hq:order:exchange:other-list'),
+            this.#makeMenu('교환 처리내역 조회', 'hq:order:exchange:other-list'),
           ],
         },
         {

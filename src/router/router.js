@@ -146,7 +146,7 @@ const routes = [
             name: 'hq:order:exchange:other-list',
             component: () => import('@/views/headQuarter/ExchangeOtherListView.vue'),
             meta: {
-              breadcrumb: '교환처리 확인',
+              breadcrumb: '교환 처리내역 조회',
             },
           },
           {
