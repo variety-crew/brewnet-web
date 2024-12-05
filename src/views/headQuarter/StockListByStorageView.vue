@@ -82,33 +82,58 @@ function changeStock(data) {
   });
 }
 
+const getCellHighlightColor = data => {
+  if (data.availableStock <= data.safetyStock) return 'danger';
+  return undefined;
+};
+
 const columns = [
-  { field: 'itemUniqueCode', header: '품목코드', sortable: true },
-  { field: 'itemName', header: '품목명', sortable: true },
+  {
+    field: 'itemUniqueCode',
+    header: '품목코드',
+    sortable: true,
+    getHighlightColor: getCellHighlightColor,
+  },
+  {
+    field: 'itemName',
+    header: '품목명',
+    sortable: true,
+    getHighlightColor: getCellHighlightColor,
+  },
   {
     field: 'availableStock',
     header: '가용재고',
     render: data => data.availableStock.toLocaleString(),
     alignment: 'right',
+    getHighlightColor: getCellHighlightColor,
   },
-  { field: 'inStock', header: '입고예정재고', render: data => data.inStock.toLocaleString(), alignment: 'right' },
+  {
+    field: 'inStock',
+    header: '입고예정재고',
+    render: data => data.inStock.toLocaleString(),
+    alignment: 'right',
+    getHighlightColor: getCellHighlightColor,
+  },
   {
     field: 'safetyStock',
     header: '안전재고값',
     render: data => data.safetyStock.toLocaleString(),
     alignment: 'right',
+    getHighlightColor: getCellHighlightColor,
   },
   {
     field: 'outStock',
     header: '출고예정재고',
     render: data => data.outStock.toLocaleString(),
     alignment: 'right',
+    getHighlightColor: getCellHighlightColor,
   },
   {
     field: 'currentStock',
     header: '현재재고',
     render: data => data.currentStock.toLocaleString(),
     alignment: 'right',
+    getHighlightColor: getCellHighlightColor,
   },
   {
     field: '',
