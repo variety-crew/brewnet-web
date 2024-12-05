@@ -5,7 +5,7 @@ export default class AppMenu {
     this.#makeMenu('주문/교환/반품', 'hq:order'),
     this.#makeMenu('가맹점/거래처', 'hq:partner'),
     this.#makeMenu('창고/품목', 'hq:stock'),
-    this.#makeMenu('전자결재', 'hq:approval'),
+    // this.#makeMenu('전자결재', 'hq:approval'),
     this.#makeMenu('게시판', 'hq:board'),
     this.#makeMenu('시스템설정', 'hq:settings'),
   ];
