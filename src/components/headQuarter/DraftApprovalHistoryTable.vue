@@ -4,7 +4,7 @@
     <AppTableStyled full-width>
       <thead>
         <tr>
-          <th>직급</th>
+          <th>직위</th>
           <th>결재자</th>
           <th>결재상태</th>
           <th>비고사항</th>
@@ -64,7 +64,7 @@ const { draftKind, draftCode, approvalLines } = defineProps({
   /**
    * approvalLines: [{
    *   approverCode: number,     // 결재자의 멤버코드
-   *   positionName: string,     // 결재자의 직급 (enum)
+   *   positionName: string,     // 결재자의 직위 (enum)
    *   approverName: string,     // 결재자명
    *   approved: string,         // 결재자의 approved 상태
    *   comment: string,          // 결재자의 comment
