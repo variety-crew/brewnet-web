@@ -28,7 +28,6 @@ const { uploadFiles: noticeImagesFiles, onRemove, onChangeFiles } = useFiles();
 
 const title = ref('');
 const content = ref('');
-const inputRef = ref();
 const editMode = ref(false);
 
 const masterNoticeApi = new MasterNoticeApi();

@@ -4,6 +4,7 @@ import FileUtil from '@/utils/FileUtil';
 
 export function useFiles() {
   const uploadFiles = ref([]);
+
   const fileUtil = new FileUtil();
 
   const onChangeFiles = async event => {
