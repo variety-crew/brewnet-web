@@ -57,7 +57,8 @@ export default class AppMenu {
           label: '반품',
           items: [
             this.#makeMenu('반품요청 관리', 'hq:order:return:list'),
-            this.#makeMenu('반품 처리내역 조회', 'hq:order:return:other-dept'),
+            this.#makeMenu('반품 처리내역 조회', 'hq:order:return:other-dept-stock'),
+            this.#makeMenu('환불 처리내역 조회', 'hq:order:return:other-dept-refund'),
           ],
         },
       ];

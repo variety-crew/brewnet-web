@@ -2,15 +2,6 @@
   <div v-if="refundDetail" class="return-refund-detail">
     <div class="top-area">
       <Button
-        label="돌아가기"
-        size="small"
-        variant="outlined"
-        severity="secondary"
-        as="router-link"
-        :to="{ name: 'hq:order:return:other-dept' }"
-      />
-
-      <Button
         v-if="refundDetail.confirmed === OTHER_DEPT_CHECK_STATUS.UNCONFIRMED"
         label="환불 처리 완료로 변경"
         size="small"
@@ -143,7 +134,7 @@ onMounted(() => {
 
   .top-area {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
   }
 }

@@ -32,7 +32,6 @@
             :disabled="!isCompleted"
             @click="clickPrintInvoice"
           />
-          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
 
           <!-- 기안 담당자인 경우에만 결재요청취소 버튼 표시 -->
           <Button
@@ -183,10 +182,6 @@ const clickPrintOrder = () => {
 const clickPrintInvoice = () => {
   printType.value = PRINT_TYPE.HQ.ORDER_INVOICE;
   showPrintPdf.value = true;
-};
-
-const clickGoToList = () => {
-  router.replace({ name: 'hq:order:list' });
 };
 
 const cancelOrder = () => {

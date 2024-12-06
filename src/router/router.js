@@ -81,6 +81,7 @@ const routes = [
             component: () => import('@/views/headQuarter/PurchaseDetailView.vue'),
             meta: {
               breadcrumb: '발주 상세',
+              backTo: true,
             },
           },
           {
@@ -123,6 +124,7 @@ const routes = [
             component: () => import('@/views/headQuarter/OrderDetailView.vue'),
             meta: {
               breadcrumb: '주문요청 상세',
+              backTo: true,
             },
           },
           {
@@ -139,6 +141,7 @@ const routes = [
             component: () => import('@/views/headQuarter/ExchangeDetailView.vue'),
             meta: {
               breadcrumb: '교환요청 상세',
+              backTo: true,
             },
           },
           {
@@ -155,6 +158,7 @@ const routes = [
             component: () => import('@/views/headQuarter/ExchangeOtherDetailView.vue'),
             meta: {
               breadcrumb: '교환처리 상세',
+              backTo: true,
             },
           },
           {
@@ -171,14 +175,23 @@ const routes = [
             component: () => import('@/views/headQuarter/ReturnDetailView.vue'),
             meta: {
               breadcrumb: '반품요청 상세',
+              backTo: true,
             },
           },
           {
-            path: 'return/other-dept',
-            name: 'hq:order:return:other-dept',
-            component: () => import('@/views/headQuarter/ReturnOtherDeptView.vue'),
+            path: 'return/stock/list',
+            name: 'hq:order:return:other-dept-stock',
+            component: () => import('@/views/headQuarter/ReturnOtherStockDeptView.vue'),
             meta: {
               breadcrumb: '반품 처리내역 조회',
+            },
+          },
+          {
+            path: 'return/refund/list',
+            name: 'hq:order:return:other-dept-refund',
+            component: () => import('@/views/headQuarter/ReturnOtherAccountDeptView.vue'),
+            meta: {
+              breadcrumb: '환불 처리내역 조회',
             },
           },
           {
@@ -187,6 +200,7 @@ const routes = [
             component: () => import('@/views/headQuarter/ReturnStockDetailView.vue'),
             meta: {
               breadcrumb: '반품 재고처리 상세',
+              backTo: true,
             },
           },
           {
@@ -195,6 +209,7 @@ const routes = [
             component: () => import('@/views/headQuarter/ReturnRefundDetailView.vue'),
             meta: {
               breadcrumb: '반품 환불처리 상세',
+              backTo: true,
             },
           },
         ],
@@ -229,6 +244,7 @@ const routes = [
             component: () => import('@/views/headQuarter/FranchiseFormView.vue'),
             meta: {
               breadcrumb: '가맹점 수정',
+              backTo: true,
             },
           },
           {
@@ -253,6 +269,7 @@ const routes = [
             component: () => import('@/views/headQuarter/FranchiseAccountFormView.vue'),
             meta: {
               breadcrumb: '가맹점 계정 수정',
+              backTo: true,
             },
           },
           {
@@ -277,6 +294,7 @@ const routes = [
             component: () => import('@/views/headQuarter/CorrespondentFormView.vue'),
             meta: {
               breadcrumb: '거래처 수정',
+              backTo: true,
             },
           },
         ],
@@ -311,6 +329,7 @@ const routes = [
             component: () => import('@/views/headQuarter/StorageDetailView.vue'),
             meta: {
               breadcrumb: '창고 상세보기',
+              backTo: true,
             },
           },
           {
@@ -327,6 +346,7 @@ const routes = [
             component: () => import('@/views/headQuarter/StorageFormView.vue'),
             meta: {
               breadcrumb: '창고 수정',
+              backTo: true,
             },
           },
           {
@@ -359,6 +379,7 @@ const routes = [
             component: () => import('@/views/headQuarter/ItemFormView.vue'),
             meta: {
               breadcrumb: '품목 수정',
+              backTo: true,
             },
           },
           {
@@ -398,6 +419,7 @@ const routes = [
             component: () => import('@/views/headQuarter/NoticeDetailView.vue'),
             meta: {
               breadcrumb: '공지사항 상세',
+              backTo: true,
             },
           },
           {
@@ -414,6 +436,7 @@ const routes = [
             component: () => import('@/views/headQuarter/NoticeFormView.vue'),
             meta: {
               breadcrumb: '공지사항 수정',
+              backTo: true,
             },
           },
         ],
@@ -448,6 +471,7 @@ const routes = [
             component: () => import('@/views/headQuarter/EmployeeFormView.vue'),
             meta: {
               breadcrumb: '임직원 수정',
+              backTo: true,
             },
           },
           {

@@ -30,7 +30,6 @@
           :disabled="!isApproved"
           @click="clickPrintPurchase"
         />
-        <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
         <Button
           v-if="canDelete"
           label="삭제"
@@ -172,10 +171,6 @@ const clickSendPurchase = () => {
 
 const clickPrintPurchase = () => {
   showPrintPdf.value = true;
-};
-
-const clickGoToList = () => {
-  router.replace({ name: 'hq:purchase:list' });
 };
 
 const canDelete = computed(() => {

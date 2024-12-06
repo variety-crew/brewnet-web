@@ -34,16 +34,15 @@ import dayjs from 'dayjs';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import AppTable from '@/components/common/AppTable.vue';
+import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
+import AppInputText from '@/components/common/form/AppInputText.vue';
+import AppSelect from '@/components/common/form/AppSelect.vue';
+import SearchArea from '@/components/common/SearchArea.vue';
 import HQReturnApi from '@/utils/api/HQReturnApi';
 import { CRITERIA_RETURN_STOCK_DEPT_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import { formatKoOtherDeptCheckStatus, formatKoReturnStockStatus, formatKoSearchCriteria } from '@/utils/format';
 import { getReturnStockCheckStatusSeverity, makeSelectOption } from '@/utils/helper';
-
-import AppTable from '../common/AppTable.vue';
-import AppDateRangePicker from '../common/form/AppDateRangePicker.vue';
-import AppInputText from '../common/form/AppInputText.vue';
-import AppSelect from '../common/form/AppSelect.vue';
-import SearchArea from '../common/SearchArea.vue';
 
 const router = useRouter();
 
