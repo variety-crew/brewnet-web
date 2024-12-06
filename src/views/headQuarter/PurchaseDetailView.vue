@@ -1,107 +1,105 @@
 <template>
-  <div class="purchase-detail-container">
-    <template v-if="purchaseDetail">
-      <div class="top-area">
-        <Tag
-          rounded
-          :value="formatKoApprovalStatus(purchaseDetail.allApproved)"
-          :severity="getApprovalStatusSeverity(purchaseDetail.allApproved)"
-          class="mb-1"
-        />
-
-        <div class="top-buttons">
-          <Button
-            label="발주서 출력"
-            variant="outlined"
-            size="small"
-            :disabled="!isApproved"
-            @click="clickPrintPurchaseDocument"
-          />
-          <Button
-            label="구매품의서 전송(회계)"
-            variant="outlined"
-            size="small"
-            :disabled="isAlreadySend || !isApproved"
-            @click="clickSendPurchase"
-          />
-          <Button
-            label="구매품의서 출력"
-            variant="outlined"
-            size="small"
-            :disabled="!isApproved"
-            @click="clickPrintPurchase"
-          />
-          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
-          <Button
-            v-if="canDelete"
-            label="삭제"
-            severity="danger"
-            size="small"
-            variant="outlined"
-            :disabled="disabledDeleteButton"
-            @click="clickDelete"
-          />
-        </div>
-      </div>
-
-      <div class="body-area">
-        <h1>구매품의서</h1>
-
-        <DraftApprovalLine
-          class="approval-line-table"
-          :draft-manager-name="purchaseDetail.memberName"
-          :approval-lines="purchaseApprovalLines"
-        />
-
-        <AppTableStyled full-width>
-          <tbody>
-            <tr>
-              <th>거래처</th>
-              <td>{{ purchaseDetail.correspondentName }}</td>
-              <th>입고창고</th>
-              <td>{{ purchaseDetail.storageName }}</td>
-              <th>발주일자</th>
-              <td>{{ purchaseDetail.createdAt }}</td>
-              <th>담당자</th>
-              <td>{{ purchaseDetail.memberName }}</td>
-            </tr>
-            <tr>
-              <th>품목코드</th>
-              <th colspan="3">품목명</th>
-              <th>수량</th>
-              <th>단가</th>
-              <th>공급가액</th>
-              <th>부가세</th>
-            </tr>
-            <tr v-for="item in purchaseDetail.items" :key="item.itemCode">
-              <td class="align-center">{{ item.itemCode }}</td>
-              <td colspan="3">{{ item.itemName }}</td>
-              <td class="align-center">{{ item.quantity.toLocaleString() }}</td>
-              <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
-              <td class="align-right">{{ item.purchaseSum.toLocaleString() }}</td>
-              <td class="align-right">{{ item.purchaseVat.toLocaleString() }}</td>
-            </tr>
-            <tr>
-              <th>총 발주금액</th>
-              <td colspan="5" class="align-center">{{ purchaseDetail.totalPrice.toLocaleString() }}</td>
-              <td class="align-right">{{ purchaseDetail.sumPrice.toLocaleString() }}</td>
-              <td class="align-right">{{ purchaseDetail.vatPrice.toLocaleString() }}</td>
-            </tr>
-            <tr style="height: 100px">
-              <th>첨언</th>
-              <td colspan="7" class="align-center">{{ purchaseDetail.memberComment }}</td>
-            </tr>
-          </tbody>
-        </AppTableStyled>
-      </div>
-
-      <DraftApprovalHistoryTable
-        :approval-lines="purchaseApprovalLines"
-        :draft-kind="DRAFT_KIND.PURCHASE"
-        :draft-code="purchaseCode"
-        @complete-approval="onCompleteApproval"
+  <div v-if="purchaseDetail" class="purchase-detail-container">
+    <div class="top-area">
+      <Tag
+        rounded
+        :value="formatKoApprovalStatus(purchaseDetail.allApproved)"
+        :severity="getApprovalStatusSeverity(purchaseDetail.allApproved)"
+        class="mb-1"
       />
-    </template>
+
+      <div class="top-buttons">
+        <Button
+          label="발주서 출력"
+          variant="outlined"
+          size="small"
+          :disabled="!isApproved"
+          @click="clickPrintPurchaseDocument"
+        />
+        <Button
+          label="구매품의서 전송(회계)"
+          variant="outlined"
+          size="small"
+          :disabled="isAlreadySend || !isApproved"
+          @click="clickSendPurchase"
+        />
+        <Button
+          label="구매품의서 출력"
+          variant="outlined"
+          size="small"
+          :disabled="!isApproved"
+          @click="clickPrintPurchase"
+        />
+        <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
+        <Button
+          v-if="canDelete"
+          label="삭제"
+          severity="danger"
+          size="small"
+          variant="outlined"
+          :disabled="disabledDeleteButton"
+          @click="clickDelete"
+        />
+      </div>
+    </div>
+
+    <div class="body-area">
+      <h1>구매품의서</h1>
+
+      <DraftApprovalLine
+        class="approval-line-table"
+        :draft-manager-name="purchaseDetail.memberName"
+        :approval-lines="purchaseApprovalLines"
+      />
+
+      <AppTableStyled full-width>
+        <tbody>
+          <tr>
+            <th>거래처</th>
+            <td>{{ purchaseDetail.correspondentName }}</td>
+            <th>입고창고</th>
+            <td>{{ purchaseDetail.storageName }}</td>
+            <th>발주일자</th>
+            <td>{{ purchaseDetail.createdAt }}</td>
+            <th>담당자</th>
+            <td>{{ purchaseDetail.memberName }}</td>
+          </tr>
+          <tr>
+            <th>품목코드</th>
+            <th colspan="3">품목명</th>
+            <th>수량</th>
+            <th>단가</th>
+            <th>공급가액</th>
+            <th>부가세</th>
+          </tr>
+          <tr v-for="item in purchaseDetail.items" :key="item.itemCode">
+            <td class="align-center">{{ item.itemCode }}</td>
+            <td colspan="3">{{ item.itemName }}</td>
+            <td class="align-center">{{ item.quantity.toLocaleString() }}</td>
+            <td class="align-right">{{ item.purchasePrice.toLocaleString() }}</td>
+            <td class="align-right">{{ item.purchaseSum.toLocaleString() }}</td>
+            <td class="align-right">{{ item.purchaseVat.toLocaleString() }}</td>
+          </tr>
+          <tr>
+            <th>총 발주금액</th>
+            <td colspan="5" class="align-center">{{ purchaseDetail.totalPrice.toLocaleString() }}</td>
+            <td class="align-right">{{ purchaseDetail.sumPrice.toLocaleString() }}</td>
+            <td class="align-right">{{ purchaseDetail.vatPrice.toLocaleString() }}</td>
+          </tr>
+          <tr style="height: 100px">
+            <th>첨언</th>
+            <td colspan="7" class="align-center">{{ purchaseDetail.memberComment }}</td>
+          </tr>
+        </tbody>
+      </AppTableStyled>
+    </div>
+
+    <DraftApprovalHistoryTable
+      :approval-lines="purchaseApprovalLines"
+      :draft-kind="DRAFT_KIND.PURCHASE"
+      :draft-code="purchaseCode"
+      @complete-approval="onCompleteApproval"
+    />
 
     <DynamicDialog />
 
