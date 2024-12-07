@@ -58,10 +58,19 @@ export default class BaseApiService {
 
         // logging
         const parsedUrl = new URL(requestUrl);
-        console.log(
-          `REQUEST: ${parsedUrl.protocol}//${parsedUrl.host}${parsedUrl.pathname}\nMETHOD: ${fetchOptions.method}\nQUERY  : ${parsedUrl.search}\n\nRESPONSE`,
-          responseData,
-        );
+        console.group(`Request: ${fetchOptions.method} ${parsedUrl.pathname}`);
+        console.group('QueryParams');
+        const printQuery = {};
+        parsedUrl.searchParams.forEach((value, key) => {
+          printQuery[key] = value;
+        });
+        console.table(printQuery);
+        console.groupEnd();
+        console.group('Response Data');
+        console.table({ status: responseData.status, message: responseData.message });
+        console.dir(responseData.result, { depth: null });
+        console.groupEnd();
+        console.groupEnd();
 
         return responseData.result;
       } else {
