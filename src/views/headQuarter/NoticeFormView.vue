@@ -75,7 +75,6 @@ const onSubmit = async () => {
     router.replace({ name: 'hq:board:notice:list' });
   } catch (e) {
     // 오류 발생
-    console.log(e);
   }
 };
 
