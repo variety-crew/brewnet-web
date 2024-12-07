@@ -104,7 +104,7 @@ const columns = [
   },
   { field: 'orderCode', header: '주문번호', sortable: true },
   { field: 'orderFranchise', header: '주문지점', render: data => data.orderFranchise.franchiseName },
-  { field: 'orderItemList', header: '주문품목명', render: data => makeOrderItemSummary(data.orderItemList) },
+  { field: 'orderItemList', header: '주문상품명', render: data => makeOrderItemSummary(data.orderItemList) },
   { field: 'sumPrice', header: '주문금액', alignment: 'right', render: data => data.sumPrice.toLocaleString() },
   {
     field: 'approvalStatus',

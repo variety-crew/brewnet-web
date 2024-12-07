@@ -6,7 +6,7 @@
       :paginated-data="mustBuyItems"
       :rows-per-page="pageSize"
       :add-button="{
-        label: '필수구매품목 등록',
+        label: '필수구매상품 등록',
         clickHandler: clickAddMustBuy,
       }"
       @reload="onReload"
@@ -70,7 +70,7 @@ const columns = [
           clickHandler: data => {
             openModal({
               component: AddMustBuyItemModalBody,
-              header: '필수구매품목 정보 수정',
+              header: '필수구매상품 정보 수정',
               data: {
                 itemData: data,
               },
@@ -103,7 +103,7 @@ const onReload = () => {
 const clickAddMustBuy = () => {
   openModal({
     component: AddMustBuyItemModalBody,
-    header: '필수구매품목 지정',
+    header: '필수구매상품 지정',
     onClose: opt => {
       const callbackParams = opt.data;
       if (!callbackParams) return;

@@ -57,7 +57,7 @@ export default class HQPurchaseApi extends BaseApiService {
     return this.get(`/${purchaseCode}/approval-line`);
   }
 
-  // 전체 입고품목 목록 조회(발주 품목)
+  // 전체 입고상품 목록 조회(발주 상품)
   getInStockItems({
     page = 1,
     pageSize = 15,

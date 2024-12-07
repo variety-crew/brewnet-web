@@ -24,8 +24,8 @@
       </tr>
 
       <tr>
-        <th>품목코드</th>
-        <th colspan="3">품목명</th>
+        <th>상품코드</th>
+        <th colspan="3">상품명</th>
         <th colspan="2">카테고리</th>
         <th colspan="1">재입고수량</th>
         <th colspan="1">전체수량</th>

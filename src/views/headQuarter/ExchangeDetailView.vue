@@ -59,7 +59,7 @@
     <ExchangeDetailTable :exchange-detail="exchangeDetail" />
 
     <div v-if="exchangeDetail.exchangeImageList.length > 0">
-      <AppLabel use-margin-bottom label="교환 품목 사진" />
+      <AppLabel use-margin-bottom label="교환 상품 사진" />
       <AppImageList :images="exchangeDetail.exchangeImageList" />
     </div>
 

@@ -70,8 +70,8 @@ const getItems = () => {
 
 const columns = [
   { field: 'categoryName', header: '카테고리' },
-  { field: 'itemUniqueCode', header: '품목코드' },
-  { field: 'name', header: '품목명' },
+  { field: 'itemUniqueCode', header: '상품코드' },
+  { field: 'name', header: '상품명' },
   { field: 'sellingPrice', header: '판매단가', render: data => data.sellingPrice.toLocaleString(), alignment: 'right' },
   {
     field: 'purchasePrice',
@@ -118,7 +118,7 @@ const clickSave = async () => {
         quantity: quantity.value,
         dueDate: dueDate.value,
       });
-      successMsg = '필수구매품목 정보가 수정되었습니다.';
+      successMsg = '필수구매상품 정보가 수정되었습니다.';
     } else {
       // 생성모드
       await hqItemMustBuyApi.setMustBuy({
@@ -126,7 +126,7 @@ const clickSave = async () => {
         quantity: quantity.value,
         dueDate: dueDate.value,
       });
-      successMsg = '필수구매품목이 등록되었습니다.';
+      successMsg = '필수구매상품이 등록되었습니다.';
     }
 
     if (!successMsg) return;

@@ -4,7 +4,7 @@ export default class AppMenu {
     this.#makeMenu('발주', 'hq:purchase'),
     this.#makeMenu('주문/교환/반품', 'hq:order'),
     this.#makeMenu('가맹점/거래처', 'hq:partner'),
-    this.#makeMenu('창고/품목', 'hq:stock'),
+    this.#makeMenu('창고/상품', 'hq:stock'),
     // this.#makeMenu('전자결재', 'hq:approval'),
     this.#makeMenu('게시판', 'hq:board'),
     this.#makeMenu('시스템설정', 'hq:settings'),
@@ -147,12 +147,12 @@ export default class AppMenu {
           ],
         },
         {
-          label: '품목',
+          label: '상품',
           items: [
-            this.#makeMenu('품목 카테고리 관리', 'hq:stock:item-category'),
-            this.#makeMenu('품목 조회', 'hq:stock:item:list'),
-            this.#makeMenu('품목 등록', 'hq:stock:item:create'),
-            this.#makeMenu('필수구매품목 관리', 'hq:stock:item-must-buy:list'),
+            this.#makeMenu('상품 카테고리 관리', 'hq:stock:item-category'),
+            this.#makeMenu('상품 조회', 'hq:stock:item:list'),
+            this.#makeMenu('상품 등록', 'hq:stock:item:create'),
+            this.#makeMenu('필수구매상품 관리', 'hq:stock:item-must-buy:list'),
           ],
         },
       ];

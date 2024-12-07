@@ -12,11 +12,11 @@
         <td>{{ orderDetail.doneDate }}</td>
       </tr>
       <tr>
-        <th colspan="8">주문품목</th>
+        <th colspan="8">주문상품</th>
       </tr>
       <tr>
-        <th>품목코드</th>
-        <th colspan="3">품목명</th>
+        <th>상품코드</th>
+        <th colspan="3">상품명</th>
         <th>수량</th>
         <th>단가</th>
         <th>주문금액</th>

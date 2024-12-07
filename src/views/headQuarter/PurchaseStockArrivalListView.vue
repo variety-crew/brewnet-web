@@ -106,11 +106,11 @@ const columns = [
   },
   {
     field: 'itemUniqueCode',
-    header: '품목코드',
+    header: '상품코드',
   },
   {
     field: 'itemName',
-    header: '품목명',
+    header: '상품명',
   },
   { field: 'quantity', header: '입고수량', render: data => data.quantity.toLocaleString() },
   { field: 'storageName', header: '입고창고' },

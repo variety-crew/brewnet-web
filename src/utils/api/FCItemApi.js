@@ -9,7 +9,7 @@ export default class FCItemApi extends BaseApiService {
   // GET
   //
 
-  // 필수구매품목 조회
+  // 필수구매상품 조회
   getMustBuyItems() {
     return this.get('/must-buy');
   }

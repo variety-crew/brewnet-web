@@ -18,9 +18,9 @@
         <td colspan="6" class="align-center">{{ exchangeDetail.explanation }}</td>
       </tr>
       <tr>
-        <th :rowspan="exchangeDetail.exchangeItemList.length + 1">교환품목</th>
-        <th>품목코드</th>
-        <th colspan="2">품목명</th>
+        <th :rowspan="exchangeDetail.exchangeItemList.length + 1">교환상품</th>
+        <th>상품코드</th>
+        <th colspan="2">상품명</th>
         <th>카테고리</th>
         <th>수량</th>
         <th>부분 합계</th>

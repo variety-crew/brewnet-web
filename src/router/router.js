@@ -304,7 +304,7 @@ const routes = [
         name: 'hq:stock',
         component: () => import('@/components/headQuarter/HeadQuarterPageBody.vue'),
         meta: {
-          breadcrumb: '창고/품목',
+          breadcrumb: '창고/상품',
         },
         children: [
           {
@@ -354,7 +354,7 @@ const routes = [
             name: 'hq:stock:item-category',
             component: () => import('@/views/headQuarter/ItemCategoryView.vue'),
             meta: {
-              breadcrumb: '품목 카테고리 관리',
+              breadcrumb: '상품 카테고리 관리',
             },
           },
           {
@@ -362,7 +362,7 @@ const routes = [
             name: 'hq:stock:item:list',
             component: () => import('@/views/headQuarter/ItemListView.vue'),
             meta: {
-              breadcrumb: '품목 조회',
+              breadcrumb: '상품 조회',
             },
           },
           {
@@ -370,7 +370,7 @@ const routes = [
             name: 'hq:stock:item:create',
             component: () => import('@/views/headQuarter/ItemFormView.vue'),
             meta: {
-              breadcrumb: '품목 등록',
+              breadcrumb: '상품 등록',
             },
           },
           {
@@ -378,7 +378,7 @@ const routes = [
             name: 'hq:stock:item:edit',
             component: () => import('@/views/headQuarter/ItemFormView.vue'),
             meta: {
-              breadcrumb: '품목 수정',
+              breadcrumb: '상품 수정',
               backTo: true,
             },
           },
@@ -387,7 +387,7 @@ const routes = [
             name: 'hq:stock:item-must-buy:list',
             component: () => import('@/views/headQuarter/ItemMustBuyListView.vue'),
             meta: {
-              breadcrumb: '필수구매품목 관리',
+              breadcrumb: '필수구매상품 관리',
             },
           },
         ],

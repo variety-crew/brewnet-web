@@ -55,8 +55,8 @@
     <AppTableStyled>
       <thead>
         <tr>
-          <th>품목코드</th>
-          <th>품목명</th>
+          <th>상품코드</th>
+          <th>상품명</th>
           <th>카테고리</th>
           <th>전체수량</th>
           <th>환불액</th>

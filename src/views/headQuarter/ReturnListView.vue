@@ -90,7 +90,7 @@ const getReturnList = () => {
 const columns = [
   { field: 'returningCode', header: '반품코드' },
   { field: 'franchiseName', header: '반품요청지점' },
-  { field: 'itemName', header: '반품품목' },
+  { field: 'itemName', header: '반품상품' },
   { field: 'reason', header: '반품사유', render: data => formatKoReturnReason(data.reason) },
   {
     field: 'status',

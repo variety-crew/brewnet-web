@@ -9,7 +9,7 @@
         full-width
         :initial-value="selectedStorage"
       />
-      <AppInputText v-model="criteria.keyword" placeholder="품목명으로 검색" class="criteria keyword" />
+      <AppInputText v-model="criteria.keyword" placeholder="상품명으로 검색" class="criteria keyword" />
     </SearchArea>
 
     <AppTable
@@ -90,13 +90,13 @@ const getCellHighlightColor = data => {
 const columns = [
   {
     field: 'itemUniqueCode',
-    header: '품목코드',
+    header: '상품코드',
     sortable: true,
     getHighlightColor: getCellHighlightColor,
   },
   {
     field: 'itemName',
-    header: '품목명',
+    header: '상품명',
     sortable: true,
     getHighlightColor: getCellHighlightColor,
   },

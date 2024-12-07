@@ -59,7 +59,7 @@
     <ReturnDetailTable :return-detail="returnDetail" />
 
     <div v-if="returnDetail.returningImageList.length > 0">
-      <AppLabel use-margin-bottom label="반품 품목 사진" />
+      <AppLabel use-margin-bottom label="반품 상품 사진" />
       <AppImageList :images="returnDetail.returningImageList" />
     </div>
 

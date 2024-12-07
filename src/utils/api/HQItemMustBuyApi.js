@@ -11,7 +11,7 @@ export default class HQItemMustBuyApi extends BaseApiService {
   // GET
   //
 
-  // 필수 구매 품목 조회
+  // 필수 구매 상품 조회
   getMustBuyItems() {
     return this.get('');
   }
@@ -20,7 +20,7 @@ export default class HQItemMustBuyApi extends BaseApiService {
   // POST
   //
 
-  // 필수 구매 품목 지정
+  // 필수 구매 상품 지정
   setMustBuy({ itemCode, quantity, dueDate }) {
     return this.post(`/set/${itemCode}`, { quantity, dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm:ss') });
   }
@@ -29,7 +29,7 @@ export default class HQItemMustBuyApi extends BaseApiService {
   // PATCH
   //
 
-  // 필수 구매 품목 수정
+  // 필수 구매 상품 수정
   editMustBuy({ itemCode, quantity, dueDate }) {
     return this.patch(`/update/${itemCode}`, { quantity, dueDate: dayjs(dueDate).format('YYYY-MM-DD HH:mm:ss') });
   }
