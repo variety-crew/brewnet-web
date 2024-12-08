@@ -1,3 +1,6 @@
+/*
+ * DataTable
+ */
 .p-datatable-header-cell {
     &.p-datatable-column-sorted {
         color: inherit;
