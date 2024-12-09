@@ -8,23 +8,13 @@
     </IconField>
 
     <!-- 패스워드 -->
-    <IconField>
-      <InputIcon class="pi pi-lock" />
-      <InputText
-        :value="password"
-        placeholder="비밀번호 입력"
-        fluid
-        class="input"
-        :type="isEyeOpen ? 'text' : 'password'"
-        @keypress="onPressPassword"
-        @input="onInputPassword"
-      />
-      <InputIcon :class="`pi ${isEyeOpen ? 'pi-eye' : 'pi-eye-slash'}`" @click="clickEyeIcon" />
-    </IconField>
-
-    <Popover ref="popOverCapsLock" :dismissable="false">
-      <p>CapsLock이 켜져있습니다.</p>
-    </Popover>
+    <AppInputPassword
+      v-model="password"
+      placeholder="비밀번호 입력"
+      full-width
+      :small-size="false"
+      text-align="center"
+    />
 
     <div class="middle">
       <div class="save-auth-area">
@@ -45,6 +35,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppLabel from '@/components/common/AppLabel.vue';
+import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import { useUserStore } from '@/stores/user';
 import AuthApi from '@/utils/api/AuthApi';
 import MemberApi from '@/utils/api/MemberApi';
@@ -58,30 +49,10 @@ const toast = useToast();
 const id = ref('');
 const password = ref('');
 const saveAuth = ref(false);
-const popOverCapsLock = ref();
-const isEyeOpen = ref(false);
 
 const localStorageUtil = new LocalStorageUtil();
 const authApi = new AuthApi();
 const memberApi = new MemberApi();
-
-// Caps Lock 상태 체크
-const onPressPassword = event => {
-  const isOnCapsLock = event.getModifierState('CapsLock');
-  if (isOnCapsLock) {
-    popOverCapsLock.value.show(event);
-  } else {
-    popOverCapsLock.value.hide();
-  }
-};
-
-const clickEyeIcon = () => {
-  isEyeOpen.value = !isEyeOpen.value;
-};
-
-const onInputPassword = event => {
-  password.value = event.target.value;
-};
 
 const checkForm = () => {
   try {
