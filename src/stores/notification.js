@@ -25,7 +25,7 @@ export const useNotificationStore = defineStore(
           return;
         }
 
-        memberNotifications.push(newMessageData);
+        memberNotifications.unshift(newMessageData); // 앞쪽에 추가
       } else {
         // 신규 추가
         notificationBox.value[memberCode] = [newMessageData];
