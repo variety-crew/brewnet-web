@@ -17,7 +17,7 @@ export const useNotificationStore = defineStore(
       const memberNotifications = getMemberNotifications(memberCode);
       const newMessageData = { message, isRead: false };
 
-      if (memberNotifications) {
+      if (memberNotifications.length > 0) {
         // 이미 있다면 기존 배열에 추가
         if (memberNotifications.length === MAX_SIZE) {
           memberNotifications.pop();
