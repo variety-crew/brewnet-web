@@ -3,7 +3,6 @@
 
   <AppConfirmModal />
   <Toast position="top-center" />
-  <Toast group="notification" position="bottom-right" />
   <BigImageModal />
 </template>
 
