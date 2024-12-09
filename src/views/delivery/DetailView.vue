@@ -221,8 +221,8 @@ onMounted(() => {
 
   .step-list {
     list-style-type: none;
-    padding: 0;
-    width: 500px;
+    padding: 0 20px;
+    width: 100vw;
     align-self: center;
     margin-bottom: 32px;
 
