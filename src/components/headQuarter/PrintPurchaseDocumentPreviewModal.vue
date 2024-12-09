@@ -68,8 +68,8 @@
       <AppTableStyled full-width>
         <tbody>
           <tr>
-            <th colspan="2">품목코드</th>
-            <th colspan="4">품목명</th>
+            <th colspan="2">상품코드</th>
+            <th colspan="4">상품명</th>
             <th colspan="2">단가</th>
             <th colspan="3">수량</th>
             <th colspan="3">공급가</th>

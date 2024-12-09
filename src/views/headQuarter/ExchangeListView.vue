@@ -78,7 +78,7 @@ function clickGoDetail(data) {
 const columns = [
   { field: 'exchangeCode', header: '교환번호', sortable: true },
   { field: 'franchiseName', header: '교환요청지점' },
-  { field: 'itemName', header: '교환품목' },
+  { field: 'itemName', header: '교환상품' },
   {
     field: 'reason',
     header: '교환사유',

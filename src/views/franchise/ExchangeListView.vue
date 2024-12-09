@@ -83,7 +83,7 @@ const columns = [
     },
   },
   { field: 'exchangeCode', header: '주문번호' },
-  { field: 'itemName', header: '주문품목명' },
+  { field: 'itemName', header: '주문상품명' },
   {
     field: 'sumPrice',
     header: '주문금액',

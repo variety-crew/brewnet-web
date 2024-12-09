@@ -58,7 +58,7 @@
             </template>
             <template v-else>
               <tr>
-                <td colspan="7" class="empty-td">발주 품목을 선택해주세요.</td>
+                <td colspan="7" class="empty-td">발주 상품을 선택해주세요.</td>
               </tr>
             </template>
           </tbody>
@@ -138,7 +138,7 @@ const approvalUserSuggestions = computed(() => {
   return approverCandidates.value.map(e => makeAutocompleteSuggestion(e.approverCode, e.approverName));
 });
 
-const tableHeader = ref(['', '품목코드', '품목명', '수량', '단가', '공급가액', '부가세']);
+const tableHeader = ref(['', '상품코드', '상품명', '수량', '단가', '공급가액', '부가세']);
 const selectedItems = ref([]); // 선택된 상품(코드)들
 const totalSupplyValue = ref(0);
 const totalTaxValue = ref(0);
@@ -192,7 +192,7 @@ const checkForm = () => {
   try {
     if (!selectedSupplier.value) throw new Error('거래처를 선택해주세요.');
     if (!selectedStorage.value) throw new Error('입고창고를 선택해주세요.');
-    if (selectedItems.value.length === 0) throw new Error('발주 품목을 입력해주세요.');
+    if (selectedItems.value.length === 0) throw new Error('발주 상품을 입력해주세요.');
     if (totalSupplyValue.value === 0) throw new Error('수량을 입력해주세요.');
     if (!selectedApprovalUser.value) throw new Error('결재자를 선택해주세요');
 

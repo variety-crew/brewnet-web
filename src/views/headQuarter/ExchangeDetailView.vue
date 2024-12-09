@@ -7,7 +7,6 @@
         class="status"
       />
       <div class="top-buttons">
-        <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
         <Button
           v-if="isShowRequestApproval"
           label="결재요청"
@@ -60,7 +59,7 @@
     <ExchangeDetailTable :exchange-detail="exchangeDetail" />
 
     <div v-if="exchangeDetail.exchangeImageList.length > 0">
-      <AppLabel use-margin-bottom label="교환 품목 사진" />
+      <AppLabel use-margin-bottom label="교환 상품 사진" />
       <AppImageList :images="exchangeDetail.exchangeImageList" />
     </div>
 
@@ -160,10 +159,6 @@ const getPageData = () => {
 
 const onCompleteApproval = () => {
   getPageData();
-};
-
-const clickGoToList = () => {
-  router.push({ name: 'hq:order:exchange:list' });
 };
 
 const handleRequestApproval = (approverCode, comment) => {

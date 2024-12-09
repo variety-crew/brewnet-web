@@ -32,7 +32,7 @@ export default class FCReturnApi extends BaseApiService {
     return this.get('/available-orders');
   }
 
-  // 반품할 품목 조회
+  // 반품할 상품 조회
   getAvailableOrderItemsList(orderCode) {
     return this.get(`/available-items/${orderCode}`);
   }

@@ -105,7 +105,7 @@ const columns = [
   { field: 'id', header: '아이디' },
   { field: 'email', header: '이메일' },
   { field: 'contact', header: '휴대폰번호' },
-  { field: 'positionName', header: '직급', render: data => formatKoEmployeePosition(data.positionName) },
+  { field: 'positionName', header: '직위', render: data => formatKoEmployeePosition(data.positionName) },
   {
     field: 'role',
     header: '권한',

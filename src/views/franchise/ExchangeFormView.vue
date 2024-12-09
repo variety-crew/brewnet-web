@@ -14,8 +14,8 @@
           <th>
             <Checkbox v-model="allCheck" binary size="small" />
           </th>
-          <th>품목코드</th>
-          <th>품목명</th>
+          <th>상품코드</th>
+          <th>상품명</th>
           <th>수량</th>
           <th>단가</th>
           <th>주문금액</th>
@@ -44,7 +44,7 @@
           </tr>
         </template>
         <tr v-else>
-          <td colspan="6">교환가능한 품목이 없습니다.</td>
+          <td colspan="6">교환가능한 상품이 없습니다.</td>
         </tr>
       </tbody>
       <tfoot>
@@ -61,7 +61,7 @@
     </div>
 
     <div>
-      <AppLabel label="교환 품목 사진을 올려주세요." use-margin-bottom />
+      <AppLabel label="교환 상품 사진을 올려주세요." use-margin-bottom />
       <AppChooseFileList :upload-images="uploadFiles" @change-files="onChangeFiles" @remove-image="onRemove" />
     </div>
 
@@ -127,10 +127,10 @@ const onCompleteInputOrderCode = event => {
 const checkForm = () => {
   try {
     if (!selectedOrder.value || !selectedOrder.value.code) throw new Error('교환할 주문을 입력해주세요');
-    if (checkedOrderItemCodeList.value.length === 0) throw new Error('교환신청할 품목을 선택해주세요');
+    if (checkedOrderItemCodeList.value.length === 0) throw new Error('교환신청할 상품을 선택해주세요');
     if (!reason.value) throw new Error('교환사유를 선택해주세요');
     if (!explanation.value) throw new Error('교환사유를 상세하게 작성해주세요.');
-    if (uploadFiles.value.length === 0) throw new Error('품목 상태를 확인할 이미지를 첨부해주세요.');
+    if (uploadFiles.value.length === 0) throw new Error('상품 상태를 확인할 이미지를 첨부해주세요.');
 
     return true;
   } catch (e) {
@@ -164,7 +164,7 @@ watch(selectedOrder, newSelectedOrder => {
 
     console.log('***exchange newSelectedOrderCode:', newSelectedOrderCode);
 
-    // 교환 가능한 품목 조회
+    // 교환 가능한 상품 조회
     fcExchangeApi.getAvailableItems(newSelectedOrderCode).then(data => {
       availableOrderItems.value = data;
     });

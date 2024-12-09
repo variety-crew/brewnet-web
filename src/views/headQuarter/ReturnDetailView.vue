@@ -7,7 +7,6 @@
         class="status"
       />
       <div class="top-buttons">
-        <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
         <Button
           v-if="isShowRequestApproval"
           label="결재요청"
@@ -60,7 +59,7 @@
     <ReturnDetailTable :return-detail="returnDetail" />
 
     <div v-if="returnDetail.returningImageList.length > 0">
-      <AppLabel use-margin-bottom label="반품 품목 사진" />
+      <AppLabel use-margin-bottom label="반품 상품 사진" />
       <AppImageList :images="returnDetail.returningImageList" />
     </div>
 
@@ -157,10 +156,6 @@ const getPageData = () => {
 
 const onCompleteApproval = () => {
   getPageData();
-};
-
-const clickGoToList = () => {
-  router.push({ name: 'hq:order:return:list' });
 };
 
 const handleRequestApproval = (approverCode, comment) => {
