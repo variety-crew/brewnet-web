@@ -41,6 +41,7 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppTabs from '@/components/common/AppTabs.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
@@ -173,6 +174,10 @@ const getOrders = () => {
     .then(data => {
       totalElements.value = data.totalElements;
       paginatedOrders.value = data.content;
+    })
+    .catch(() => {
+      totalElements.value = 0;
+      paginatedOrders.value = [];
     });
 };
 
