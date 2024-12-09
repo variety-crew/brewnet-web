@@ -2,7 +2,7 @@
   <div class="order-form-container">
     <div class="top-area">
       <div class="must-buy" :style="{ visibility: mustBuyItems.length > 0 ? 'visible' : 'hidden' }">
-        <Message severity="warn" icon="pi pi-megaphone" size="small">필수구매품목 안내</Message>
+        <Message severity="warn" icon="pi pi-megaphone" size="small">필수구매상품 안내</Message>
         <Message
           v-for="mustBuyItem in mustBuyItems"
           :key="mustBuyItem.itemCode"
@@ -81,7 +81,7 @@ const toast = useToast();
 const router = useRouter();
 const { showConfirm } = useAppConfirmModal();
 
-const tableHeader = ref(['', '품목코드', '품목명', '수량', '단가', '공급가액', '부가세']);
+const tableHeader = ref(['', '상품코드', '상품명', '수량', '단가', '공급가액', '부가세']);
 const selectedItems = ref([]); // 선택된 상품(코드)들
 const totalSupplyValue = ref(0);
 const totalTaxValue = ref(0);

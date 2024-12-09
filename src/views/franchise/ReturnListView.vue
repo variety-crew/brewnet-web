@@ -92,7 +92,7 @@ const columns = [
   },
   { field: 'orderCode', header: '주문코드' },
   { field: 'returningCode', header: '반품코드' },
-  { field: 'itemName', header: '주문품목명' },
+  { field: 'itemName', header: '주문상품명' },
   { field: 'sumPrice', header: '주문금액', render: data => data.sumPrice.toLocaleString() },
   { field: 'createdAt', header: '반품신청일자' },
   { field: 'completedAt', header: '완료일자' },

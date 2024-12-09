@@ -22,12 +22,12 @@
     <AppLabelText label="주문코드" :text="exchangeDetail.orderCode" />
 
     <div>
-      <AppLabel use-margin-bottom label="교환 품목" />
+      <AppLabel use-margin-bottom label="교환 상품" />
       <AppTableStyled>
         <thead>
           <tr>
-            <th>품목코드</th>
-            <th>품목명</th>
+            <th>상품코드</th>
+            <th>상품명</th>
             <th>수량</th>
             <th>단가</th>
             <th>주문금액</th>

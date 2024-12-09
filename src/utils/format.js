@@ -253,11 +253,11 @@ export const formatKoOrderStatus = status => {
 export const formatKoSearchCriteria = criteria => {
   switch (criteria) {
     case SEARCH_CRITERIA.ITEM_UNIQUE_CODE:
-      return '품목코드';
+      return '상품코드';
 
     case SEARCH_CRITERIA.ITEM_NAME:
     case SEARCH_CRITERIA.RETURN_ITEM_NAME:
-      return '품목명';
+      return '상품명';
 
     case SEARCH_CRITERIA.CORRESPONDENT_NAME:
       return '거래처명';

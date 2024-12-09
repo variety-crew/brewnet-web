@@ -90,7 +90,7 @@ const columns = [
   { field: 'orderCode', header: '주문번호' },
   {
     field: 'orderItemList',
-    header: '주문품목명',
+    header: '주문상품명',
     render: data => data.orderItemList.map(item => item.name).join(', '),
   },
   {

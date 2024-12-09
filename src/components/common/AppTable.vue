@@ -125,15 +125,12 @@
           <div v-else class="empty-image">없음</div>
         </template>
 
-        <!-- 
-        
-        다른 템플릿을 넣고 싶으면 여기 사이에 넣어주세요
-        
-        -->
-
-        <!-- template은 따로 없지만 render가 있는 경우 -->
-        <template v-else-if="col.render" #body="{ data }">
-          {{ col.render(data) }}
+        <!-- 그 외 경우 -->
+        <template v-else #body="{ data }">
+          <div :class="{ danger: col.getHighlightColor && col.getHighlightColor(data) === 'danger' }">
+            <!-- render 함수가 있다면 실행 -->
+            {{ col.render ? col.render(data) : data[col.field] }}
+          </div>
         </template>
       </Column>
     </DataTable>
@@ -190,7 +187,8 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *       getSrc: (data: T) => string         // 이미지 src
    *     }
    *   }
-   *   alignment: string              // 정렬 ('left', 'center', 'right')
+   *   alignment: string                       // 정렬 ('left', 'center', 'right')
+   *   getHighlightColor: (data: T) => string  // 강조할 색상 (가능한 return 값: 'danger')
    * }]
    */
 
@@ -254,6 +252,10 @@ const onSort = event => {
   .app-table-column {
     & .hidden {
       display: none;
+    }
+
+    & .danger {
+      color: #f03e3e;
     }
   }
 

@@ -28,7 +28,6 @@ const { uploadFiles: noticeImagesFiles, onRemove, onChangeFiles } = useFiles();
 
 const title = ref('');
 const content = ref('');
-const inputRef = ref();
 const editMode = ref(false);
 
 const masterNoticeApi = new MasterNoticeApi();
@@ -76,7 +75,6 @@ const onSubmit = async () => {
     router.replace({ name: 'hq:board:notice:list' });
   } catch (e) {
     // 오류 발생
-    console.log(e);
   }
 };
 
