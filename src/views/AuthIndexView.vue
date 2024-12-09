@@ -19,6 +19,7 @@
 import { RouterView } from 'vue-router';
 
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+console.log('bfe');
 </script>
 
 <style scoped>
