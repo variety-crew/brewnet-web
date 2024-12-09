@@ -22,13 +22,15 @@ const { fullWidth } = defineProps({
 
   :slotted(th) {
     background-color: var(--p-surface-100);
-    padding: 5px 10px;
+    padding: 5px;
     border: 1px solid var(--p-surface-400);
+    font-size: 0.9rem;
   }
 
   :slotted(td) {
-    padding: 5px 10px;
+    padding: 5px;
     border: 1px solid var(--p-surface-400);
+    font-size: 0.9rem;
   }
 
   :slotted(td.align-center) {

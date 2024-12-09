@@ -25,7 +25,7 @@ const { labelFor, label, useMarginBottom } = defineProps({
 
 <style scoped>
 label.app-label {
-  font-size: 14px;
+  font-size: 0.9rem;
   color: var(--p-surface-600);
   display: inline-block;
 

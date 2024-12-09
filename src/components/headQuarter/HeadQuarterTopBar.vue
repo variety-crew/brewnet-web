@@ -18,6 +18,7 @@
             as="router-link"
             :to="{ name: menu.routerName }"
             active-class="topbar-link-active"
+            size="small"
           />
         </div>
 
@@ -182,8 +183,8 @@ const removeNoti = targetIndex => {
 <style scoped>
 .hq-navbar {
   .logo {
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     object-fit: contain;
   }
