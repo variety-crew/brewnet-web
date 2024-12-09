@@ -2,7 +2,7 @@
   <RouterView />
 
   <AppConfirmModal />
-  <Toast position="top-center" :breakpoints="{ '1199px': '500px', '575px': '90vw' }" />
+  <Toast position="top-center" :breakpoints="toastBreakpoints" />
   <BigImageModal />
 </template>
 
@@ -25,6 +25,18 @@ const notificationStore = useNotificationStore();
 
 let eventSource = null;
 let isSubscribed = ref(false);
+
+const toastBreakpoints = {
+  '1024px': {
+    width: 'initial', // 1024px 이하일 때
+  },
+  '768px': {
+    width: '50vw', // 768px 이하일 때
+  },
+  '480px': {
+    width: '80vw', // 480px 이하일 때
+  },
+};
 
 function handleApiError(customEvent) {
   toast.add({ severity: 'error', summary: '에러', detail: customEvent.detail, life: 3000 });
