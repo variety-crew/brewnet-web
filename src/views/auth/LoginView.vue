@@ -4,6 +4,7 @@
     <IconField>
       <InputIcon class="pi pi-user" />
       <InputText v-model="id" placeholder="아이디 입력" fluid class="input" />
+      <InputIcon class="pi pi-user" style="visibility: hidden" />
     </IconField>
 
     <!-- 패스워드 -->
@@ -14,9 +15,10 @@
         placeholder="비밀번호 입력"
         fluid
         class="input"
-        type="password"
+        :type="isEyeOpen ? 'text' : 'password'"
         @keypress="onPressPassword"
       />
+      <InputIcon :class="`pi ${isEyeOpen ? 'pi-eye' : 'pi-eye-slash'}`" @click="clickEyeIcon" />
     </IconField>
 
     <Popover ref="popOverCapsLock" :dismissable="false">
@@ -56,6 +58,7 @@ const id = ref('');
 const password = ref('');
 const saveAuth = ref(false);
 const popOverCapsLock = ref();
+const isEyeOpen = ref(false);
 
 const localStorageUtil = new LocalStorageUtil();
 const authApi = new AuthApi();
@@ -69,6 +72,10 @@ const onPressPassword = event => {
   } else {
     popOverCapsLock.value.hide();
   }
+};
+
+const clickEyeIcon = () => {
+  isEyeOpen.value = !isEyeOpen.value;
 };
 
 const checkForm = () => {
