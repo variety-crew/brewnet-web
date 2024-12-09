@@ -149,7 +149,7 @@ const clickRequestExchange = () => {
       exchangeItemList: checkedOrderItemCodeList.value,
       reason: reason.value,
       explanation: explanation.value,
-      sumPrice: checkedOrderItemCodeList.value.reduce((acc, current) => acc + current.partSumPrice, 0),
+      sumPrice: totalPrice.value,
       imageFiles: uploadFiles.value.map(e => e.file),
     })
     .then(() => {
