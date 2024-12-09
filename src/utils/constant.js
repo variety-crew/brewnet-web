@@ -304,3 +304,10 @@ export const CONFIRMED_STATUS = {
   CONFIRMED: 'CONFIRMED',
   UNCONFIRMED: 'UNCONFIRMED',
 };
+
+// userType
+export const USER_TYPE = {
+  HEADQUARTERS: 'hq',
+  FRANCHISE: 'fc',
+  DELIVERY: 'd',
+};

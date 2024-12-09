@@ -3,19 +3,29 @@
 
   <AppConfirmModal />
   <Toast position="top-center" />
+  <Toast group="notification" position="bottom-right" />
   <BigImageModal />
 </template>
 
 <script setup>
+import { EventSourcePolyfill } from 'event-source-polyfill';
 import { useToast } from 'primevue';
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { RouterView } from 'vue-router';
 
 import AppConfirmModal from './components/common/AppConfirmModal.vue';
 import BigImageModal from './components/common/BigImageModal.vue';
+import { useNotificationStore } from './stores/notification';
+import { useUserStore } from './stores/user';
+import { USER_TYPE } from './utils/constant';
 import DOMEvent from './utils/domEvent';
 
 const toast = useToast();
+const userStore = useUserStore();
+const notificationStore = useNotificationStore();
+
+let eventSource = null;
+let isSubscribed = ref(false);
 
 function handleApiError(customEvent) {
   toast.add({ severity: 'error', summary: '에러', detail: customEvent.detail, life: 3000 });
@@ -24,6 +34,86 @@ function handleApiError(customEvent) {
 function handleApiSuccess(customEvent) {
   toast.add({ severity: 'success', summary: '처리 성공', detail: customEvent.detail, life: 3000 });
 }
+
+function handleSSE(sseEvent) {
+  const { data } = sseEvent; // 서버에서 string 메시지로 보내줌
+
+  toast.add({ severity: 'secondary', summary: '알림', detail: data, group: 'notification' });
+  notificationStore.addMessage(userStore.memberCode, data);
+}
+
+// SSE 구독 처리
+function subscribeSSE(token) {
+  if (isSubscribed.value) return; // 이미 구독되어 있다면 return
+
+  console.log('구독 진행합니다.');
+
+  const eventSourceUrl = `${import.meta.env.VITE_SERVER_URL}/api/v1/sse/subscribe`;
+  eventSource = new EventSourcePolyfill(eventSourceUrl, {
+    headers: {
+      Authorization: token,
+    },
+  });
+  eventSource.onopen = () => {
+    isSubscribed.value = true;
+  };
+
+  // event name마다 어떻게 처리할건지 정의
+
+  // 공통 구독 (배송기사 제외)
+  eventSource.addEventListener('Order Delivery Completed', handleSSE); // 주문 배송 완료
+  eventSource.addEventListener('Create Notice', handleSSE); // 공지사항 작성
+
+  // 본사 구독
+  if (userStore.userType === USER_TYPE.HEADQUARTERS) {
+    eventSource.addEventListener('request approval of purchase', handleSSE); // 발주 등록 시 결재요청 (결재자에게 알림)
+    eventSource.addEventListener('approve purchase', handleSSE); // 발주 결재 승인 (기안자에게 알림)
+    eventSource.addEventListener('reject purchase', handleSSE); // 발주 결재 반려 (기안자에게 알림)
+
+    eventSource.addEventListener('ReturnApprovalReqEvent', handleSSE); // 반품 결재요청 (결재자에게 알림)
+    eventSource.addEventListener('ExchangeApprovalReqEvent', handleSSE); // 교환 결재요청 (결재자에게 알림)
+  }
+
+  // 프랜차이즈 구독
+  if (userStore.userType === USER_TYPE.FRANCHISE) {
+    eventSource.addEventListener('ReturnRejectionEvent', handleSSE); // 반품 거절됨 (가맹점 모든 회원에게 알림)
+    eventSource.addEventListener('ReturnApprovedEvent', handleSSE); // 반품 승인됨 (가맹점 모든 회원에게 알림)
+
+    eventSource.addEventListener('ExchangeRejectionEvent', handleSSE); // 교환 거절됨 (가맹점 모든 회원에게 알림)
+    eventSource.addEventListener('ExchangeApprovedEvent', handleSSE); // 교환 승인됨 (가맹점 모든 회원에게 알림)
+  }
+
+  eventSource.onerror = e => {};
+}
+
+function unsubscribeSSE() {
+  if (!isSubscribed.value) return; // 이미 구독해제되어있다면 return
+
+  if (eventSource) {
+    eventSource.close();
+    isSubscribed.value = false;
+  }
+}
+
+watch(
+  () => userStore.accessToken,
+  newAccessToken => {
+    if (newAccessToken) {
+      subscribeSSE(newAccessToken);
+    } else {
+      unsubscribeSSE();
+    }
+  },
+  { immediate: true },
+);
+
+watch(isSubscribed, newIsSubscribed => {
+  if (newIsSubscribed) {
+    console.log('SSE 구독됨');
+  } else {
+    console.log('SSE 구독 해제됨');
+  }
+});
 
 onMounted(() => {
   DOMEvent.subscribeApiError(handleApiError);
@@ -35,6 +125,9 @@ onUnmounted(() => {
   DOMEvent.unsubscribeApiError(handleApiError);
   DOMEvent.unsubscribeApiSuccess(handleApiSuccess);
   // DOMEvent.unsubscribeExpiredToken(handleExpiredToken);
+
+  // 브라우저를 강제로 닫을 경우를 대비
+  unsubscribeSSE();
 });
 </script>
 
