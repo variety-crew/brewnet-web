@@ -11,12 +11,13 @@
     <IconField>
       <InputIcon class="pi pi-lock" />
       <InputText
-        v-model="password"
+        :value="password"
         placeholder="비밀번호 입력"
         fluid
         class="input"
         :type="isEyeOpen ? 'text' : 'password'"
         @keypress="onPressPassword"
+        @input="onInputPassword"
       />
       <InputIcon :class="`pi ${isEyeOpen ? 'pi-eye' : 'pi-eye-slash'}`" @click="clickEyeIcon" />
     </IconField>
@@ -76,6 +77,10 @@ const onPressPassword = event => {
 
 const clickEyeIcon = () => {
   isEyeOpen.value = !isEyeOpen.value;
+};
+
+const onInputPassword = event => {
+  password.value = event.target.value;
 };
 
 const checkForm = () => {
