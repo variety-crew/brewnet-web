@@ -55,7 +55,7 @@
     </template>
   </AppNavbar>
 
-  <Drawer v-model:visible="showNotificationBox" :header="`알림함 (${myNotiList.length})`" position="right">
+  <Drawer v-model:visible="showNotificationBox" header="알림함" position="right">
     <ul class="noti-list">
       <li v-for="(notiItem, i) in myNotiList" :key="notiItem.message" class="noti-list-item">
         <p>
