@@ -63,6 +63,7 @@ function subscribeSSE(token) {
   // 공통 구독 (배송기사 제외)
   eventSource.addEventListener('Order Delivery Completed', handleSSE); // 주문 배송 완료
   eventSource.addEventListener('Create Notice', handleSSE); // 공지사항 작성
+  eventSource.addEventListener('Past', handleSSE); // 지난 알림(못받은 알림)
 
   // 본사 구독
   if (userStore.userType === USER_TYPE.HEADQUARTERS) {
