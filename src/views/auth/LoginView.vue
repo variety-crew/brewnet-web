@@ -9,8 +9,19 @@
     <!-- 패스워드 -->
     <IconField>
       <InputIcon class="pi pi-lock" />
-      <InputText v-model="password" placeholder="비밀번호 입력" fluid class="input" type="password" />
+      <InputText
+        v-model="password"
+        placeholder="비밀번호 입력"
+        fluid
+        class="input"
+        type="password"
+        @keypress="onPressPassword"
+      />
     </IconField>
+
+    <Popover ref="popOverCapsLock" :dismissable="false">
+      <p>CapsLock이 켜져있습니다.</p>
+    </Popover>
 
     <div class="middle">
       <div class="save-auth-area">
@@ -29,16 +40,13 @@ import { jwtDecode } from 'jwt-decode';
 import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { usePreset } from '@primevue/themes';
 
+import AppLabel from '@/components/common/AppLabel.vue';
 import { useUserStore } from '@/stores/user';
 import AuthApi from '@/utils/api/AuthApi';
 import MemberApi from '@/utils/api/MemberApi';
 import { ROLE } from '@/utils/constant';
 import LocalStorageUtil from '@/utils/localStorage';
-import AppPresetFC from '@/assets/AppPresetFC';
-import AppPreset from '@/assets/AppPreset';
-import AppLabel from '@/components/common/AppLabel.vue';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -47,10 +55,21 @@ const toast = useToast();
 const id = ref('');
 const password = ref('');
 const saveAuth = ref(false);
+const popOverCapsLock = ref();
 
 const localStorageUtil = new LocalStorageUtil();
 const authApi = new AuthApi();
 const memberApi = new MemberApi();
+
+// Caps Lock 상태 체크
+const onPressPassword = event => {
+  const isOnCapsLock = event.getModifierState('CapsLock');
+  if (isOnCapsLock) {
+    popOverCapsLock.value.show(event);
+  } else {
+    popOverCapsLock.value.hide();
+  }
+};
 
 const checkForm = () => {
   try {
