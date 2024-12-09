@@ -765,6 +765,12 @@ router.beforeEach((to, from) => {
     return { name: 'd:home' };
   }
 
+  if (to.name === 'auth:index') {
+    return {
+      name: 'auth:login',
+    };
+  }
+
   // 대메뉴 눌렀을 때 default 서브메뉴 선택 - 본사
   if (to.name === 'hq:order') {
     return {
