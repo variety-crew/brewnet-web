@@ -81,6 +81,7 @@
         </div>
       </li>
     </ul>
+    <div v-if="myNotiList.length === 0" class="empty-noti">받은 알림이 없습니다.</div>
   </Drawer>
 </template>
 
