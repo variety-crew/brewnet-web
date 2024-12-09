@@ -2,7 +2,7 @@
   <RouterView />
 
   <AppConfirmModal />
-  <Toast position="top-center" />
+  <Toast position="top-center" :breakpoints="{ '1199px': '500px', '575px': '90vw' }" />
   <BigImageModal />
 </template>
 
