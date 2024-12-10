@@ -51,7 +51,7 @@ import FCOrderApi from '@/utils/api/FCOrderApi';
 import { CRITERIA_FC_ORDER_LIST, ORDER_STATUS, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { formatKoOrderStatus, formatKoSearchCriteria } from '@/utils/format';
-import { getOrderStatusSeverity, makeSelectOption, makeTabs } from '@/utils/helper';
+import { getOrderStatusSeverity, makeOrderItemSummary, makeSelectOption, makeTabs } from '@/utils/helper';
 
 const router = useRouter();
 const toast = useToast();
@@ -108,7 +108,7 @@ const columns = [
   {
     field: 'orderItemList',
     header: '주문상품명',
-    render: data => data.orderItemList.map(item => item.name).join(', '),
+    render: data => makeOrderItemSummary(data.orderItemList),
   },
   {
     field: 'sumPrice',
@@ -194,7 +194,7 @@ const onExportExcel = () => {
       const tableRows = rows.map(row => ({
         ...row,
         recentOrderStatus: formatKoOrderStatus(row.recentOrderStatus),
-        orderItemList: row.orderItemList.map(item => item.name).join(', '),
+        orderItemList: makeOrderItemSummary(row.orderItemList),
         recentOrderStatusCreatedAt:
           row.recentOrderStatus === ORDER_STATUS.SHIPPED ? row.recentOrderStatusCreatedAt : '', // Display only if status is SHIPPED
       }));
