@@ -66,7 +66,7 @@ const breadcrumbs = computed(() => {
 
     .content {
       margin-top: 24px;
-      padding: 0 14px;
+      padding: 0 20px;
     }
 
     .back-to-list-button {
@@ -82,6 +82,7 @@ const breadcrumbs = computed(() => {
     padding-left: 14px;
     padding-bottom: 10px;
     color: var(--p-surface-500);
+    font-size: 0.85rem;
   }
 
   .icon-arrow {

@@ -181,6 +181,10 @@ const clickChangeStatus = data => {
     box-shadow: var(--p-surface-200) 0px 2px 8px 0px;
   }
 
+  .delivery-list-item + .delivery-list-item {
+    margin-top: 16px;
+  }
+
   .location {
     display: flex;
     align-items: center;

@@ -4,13 +4,17 @@
     <IconField>
       <InputIcon class="pi pi-user" />
       <InputText v-model="id" placeholder="아이디 입력" fluid class="input" />
+      <InputIcon class="pi pi-user" style="visibility: hidden" />
     </IconField>
 
     <!-- 패스워드 -->
-    <IconField>
-      <InputIcon class="pi pi-lock" />
-      <InputText v-model="password" placeholder="비밀번호 입력" fluid class="input" type="password" />
-    </IconField>
+    <AppInputPassword
+      v-model="password"
+      placeholder="비밀번호 입력"
+      full-width
+      :small-size="false"
+      text-align="center"
+    />
 
     <div class="middle">
       <div class="save-auth-area">
@@ -29,16 +33,14 @@ import { jwtDecode } from 'jwt-decode';
 import { useToast } from 'primevue';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { usePreset } from '@primevue/themes';
 
+import AppLabel from '@/components/common/AppLabel.vue';
+import AppInputPassword from '@/components/common/form/AppInputPassword.vue';
 import { useUserStore } from '@/stores/user';
 import AuthApi from '@/utils/api/AuthApi';
 import MemberApi from '@/utils/api/MemberApi';
 import { ROLE } from '@/utils/constant';
 import LocalStorageUtil from '@/utils/localStorage';
-import AppPresetFC from '@/assets/AppPresetFC';
-import AppPreset from '@/assets/AppPreset';
-import AppLabel from '@/components/common/AppLabel.vue';
 
 const userStore = useUserStore();
 const router = useRouter();

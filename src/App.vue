@@ -55,6 +55,7 @@ function handleSSE(sseEvent) {
 
 // SSE 구독 처리
 function subscribeSSE(token) {
+  if (userStore.userType === USER_TYPE.DELIVERY) return; // 배송기사는 알림 구독 안함
   if (isSubscribed.value) return; // 이미 구독되어 있다면 return
 
   console.log('구독 진행합니다.');

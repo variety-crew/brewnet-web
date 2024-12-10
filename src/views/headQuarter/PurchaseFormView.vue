@@ -1,6 +1,6 @@
 <template>
   <div class="purchase-form-container">
-    <Button label="등록" class="save-button" @click="clickSave" />
+    <Button label="발주 등록" class="save-button" size="small" @click="clickSave" />
 
     <div class="top-area">
       <AppAutoComplete
@@ -21,6 +21,22 @@
       />
       <AppInputText :model-value="dayjs().format('YYYY-MM-DD')" label="발주일자" disabled />
       <AppInputText :model-value="userStore.username" disabled label="담당자" />
+    </div>
+
+    <div class="approval-area">
+      <h4 class="mb-4">결재 설정</h4>
+      <div class="approval-line mb-3">
+        <AppInputText model-value="발주 결재라인" label="결재자 선택" disabled />
+        <AppAutoComplete
+          v-model="selectedApprovalUser"
+          :suggestions="approvalUserSuggestions"
+          full-width
+          placeholder="임직원명으로 검색"
+          @complete-input="onCompleteInputApprovalUser"
+        />
+      </div>
+
+      <AppInputText v-model="comment" label="첨언" placeholder="비고사항 등 입력" />
     </div>
 
     <template v-if="selectedSupplier">
@@ -45,7 +61,7 @@
                   <Button icon="pi pi-trash" variant="text" rounded severity="secondary" @click="removeItem(item)" />
                 </td>
                 <td class="align-center">{{ item.itemUniqueCode }}</td>
-                <td>{{ item.itemName }}</td>
+                <td class="align-center">{{ item.itemName }}</td>
                 <td>
                   <AppInputText v-model="item.quantity" number-mode text-align="right" />
                 </td>
@@ -76,22 +92,6 @@
     <template v-else>
       <EmptyContent text="거래처를 선택해주세요." />
     </template>
-
-    <AppInputText v-model="comment" label="첨언" placeholder="비고사항 등 입력" />
-
-    <div class="approval-area">
-      <h4 class="mb-4">결재라인 설정</h4>
-      <div class="approval-line">
-        <AppInputText model-value="발주 결재라인" label="결재자 선택" disabled />
-        <AppAutoComplete
-          v-model="selectedApprovalUser"
-          :suggestions="approvalUserSuggestions"
-          full-width
-          placeholder="임직원명으로 검색"
-          @complete-input="onCompleteInputApprovalUser"
-        />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -104,6 +104,7 @@ import { useRouter } from 'vue-router';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import EmptyContent from '@/components/common/EmptyContent.vue';
 import AppAutoComplete from '@/components/common/form/AppAutoComplete.vue';
+import AppInputNumber from '@/components/common/form/AppInputNumber.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import CorrespondentItemTable from '@/components/headQuarter/CorrespondentItemTable.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
@@ -258,7 +259,7 @@ watch(
 .purchase-form-container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 10px;
 
   .top-area {
     display: grid;
@@ -268,7 +269,7 @@ watch(
 
   .table-area {
     display: grid;
-    grid-template-columns: 1fr 1.7fr;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
     align-items: flex-start;
 

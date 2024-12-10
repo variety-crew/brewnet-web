@@ -6,6 +6,7 @@
         v-model:end="criteria.endDate"
         label="작성일자"
         class="criteria created-at"
+        label-position="left"
       />
       <AppInputText v-model="criteria.purchaseCodeKeyword" label="발주코드" />
       <AppInputText v-model="criteria.purchaseMemberKeyword" label="기안자명" />
