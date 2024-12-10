@@ -18,6 +18,8 @@
       <AppInputText v-model="criteria.keyword" />
     </SearchArea>
 
+    <AppTabs v-model="activeTab" :tab-items="tabItems" />
+
     <AppTable
       :columns="columns"
       :total-elements="totalElements"
@@ -33,10 +35,11 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppTabs from '@/components/common/AppTabs.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
@@ -50,7 +53,7 @@ import {
   formatKoReturnStatus,
   formatKoSearchCriteria,
 } from '@/utils/format';
-import { getReturnStatusSeverity, makeSelectOption } from '@/utils/helper';
+import { getReturnStatusSeverity, makeSelectOption, makeTabs } from '@/utils/helper';
 
 const router = useRouter();
 
@@ -69,6 +72,20 @@ const searchOptions = computed(() => {
   return CRITERIA_HQ_RETURN_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
 });
 
+const TAB_ITEM = {
+  ALL: 'ALL',
+  UNCONFIRMED: 'UNCONFIRMED',
+};
+function formatKoTabItem(tabValue) {
+  if (tabValue === TAB_ITEM.ALL) return '전체 반품';
+  if (tabValue === TAB_ITEM.UNCONFIRMED) return '미결재 반품';
+  return 'Tab';
+}
+const activeTab = ref(TAB_ITEM.ALL);
+const tabItems = computed(() => {
+  return [TAB_ITEM.ALL, TAB_ITEM.UNCONFIRMED].map(e => makeTabs(formatKoTabItem(e), e));
+});
+
 const hqReturnApi = new HQReturnApi();
 
 const getReturnList = () => {
@@ -80,6 +97,7 @@ const getReturnList = () => {
       endDate: criteria.value.endDate,
       criteria: criteria.value.criteria,
       keyword: criteria.value.keyword,
+      getConfirmed: activeTab.value === TAB_ITEM.UNCONFIRMED,
     })
     .then(data => {
       paginatedReturnList.value = data.content;
@@ -142,11 +160,12 @@ const onChangePage = event => {
 
 const onExportExcel = () => {
   hqReturnApi
-    .getAllExchangeList({
+    .getAllReturnList({
       startDate: criteria.value.startDate,
       endDate: criteria.value.endDate,
       criteria: criteria.value.criteria,
       keyword: criteria.value.keyword,
+      getConfirmed: activeTab.value === TAB_ITEM.UNCONFIRMED,
     })
     .then(rows => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field);
@@ -165,6 +184,11 @@ const onExportExcel = () => {
 };
 
 onMounted(() => {
+  getReturnList();
+});
+
+// 탭이 변경되면 API 호출
+watch(activeTab, newActiveTab => {
   getReturnList();
 });
 </script>
