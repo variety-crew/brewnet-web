@@ -31,7 +31,7 @@
     >
       <template #header>
         <div class="table-header">
-          <p>총 {{ totalElements || 0 }}건</p>
+          <p class="total-elements">총 {{ totalElements || 0 }}건</p>
 
           <div class="right">
             <AppSelect
@@ -84,6 +84,11 @@
               'text-align': col.alignment || 'center',
             },
           },
+          columnTitle: {
+            style: {
+              'font-size': '0.9rem',
+            },
+          },
         }"
         class="app-table-column"
       >
@@ -127,7 +132,10 @@
 
         <!-- 그 외 경우 -->
         <template v-else #body="{ data }">
-          <div :class="{ danger: col.getHighlightColor && col.getHighlightColor(data) === 'danger' }">
+          <div
+            class="simple-text"
+            :class="{ danger: col.getHighlightColor && col.getHighlightColor(data) === 'danger' }"
+          >
             <!-- render 함수가 있다면 실행 -->
             {{ col.render ? col.render(data) : data[col.field] }}
           </div>
@@ -136,7 +144,21 @@
     </DataTable>
 
     <!-- 페이지네이션 -->
-    <Paginator :rows="rowsPerPage" :total-records="totalElements" @page="emit('changePage', $event)"></Paginator>
+    <Paginator
+      :rows="rowsPerPage"
+      :total-records="totalElements"
+      :pt="{
+        page: {
+          style: {
+            borderRadius: '50%',
+            minWidth: 0,
+            width: '2rem',
+            height: '2rem',
+          },
+        },
+      }"
+      @page="emit('changePage', $event)"
+    ></Paginator>
   </div>
 </template>
 
@@ -247,6 +269,10 @@ const onSort = event => {
       align-items: center;
       gap: 10px;
     }
+
+    .total-elements {
+      font-size: 0.85rem;
+    }
   }
 
   .app-table-column {
@@ -274,6 +300,14 @@ const onSort = event => {
   .empty-image {
     font-size: 14px;
     color: var(--p-surface-400);
+  }
+
+  .simple-text {
+    font-size: 0.9rem;
+  }
+
+  .p-tag {
+    font-size: 0.8rem;
   }
 }
 </style>

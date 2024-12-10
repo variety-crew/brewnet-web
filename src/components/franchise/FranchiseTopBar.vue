@@ -39,7 +39,7 @@
           <Menu id="overlay_menu" ref="userMenu" :model="userMenus" :popup="true" />
         </div>
 
-        <Button
+        <!-- <Button
           type="button"
           label="알림함"
           icon="pi pi-bell"
@@ -50,7 +50,7 @@
           severity="secondary"
           rounded
           @click="openNotificationBox"
-        />
+        /> -->
       </nav>
     </template>
   </AppNavbar>
@@ -81,6 +81,7 @@
         </div>
       </li>
     </ul>
+    <div v-if="myNotiList.length === 0" class="empty-noti">받은 알림이 없습니다.</div>
   </Drawer>
 </template>
 

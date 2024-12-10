@@ -55,15 +55,16 @@
         <tbody>
           <tr>
             <th>거래처</th>
-            <td>{{ purchaseDetail.correspondentName }}</td>
+            <td class="align-center">{{ purchaseDetail.correspondentName }}</td>
             <th>입고창고</th>
-            <td>{{ purchaseDetail.storageName }}</td>
+            <td class="align-center">{{ purchaseDetail.storageName }}</td>
             <th>발주일자</th>
-            <td>{{ purchaseDetail.createdAt }}</td>
+            <td class="align-center">{{ purchaseDetail.createdAt }}</td>
             <th>담당자</th>
-            <td>{{ purchaseDetail.memberName }}</td>
+            <td class="align-center" colspan="2">{{ purchaseDetail.memberName }}</td>
           </tr>
           <tr>
+            <th :rowspan="purchaseDetail.items.length + 2">발주상품</th>
             <th>상품코드</th>
             <th colspan="3">상품명</th>
             <th>수량</th>
@@ -87,7 +88,7 @@
           </tr>
           <tr style="height: 100px">
             <th>첨언</th>
-            <td colspan="7" class="align-center">{{ purchaseDetail.memberComment }}</td>
+            <td colspan="8" class="align-center">{{ purchaseDetail.memberComment }}</td>
           </tr>
         </tbody>
       </AppTableStyled>

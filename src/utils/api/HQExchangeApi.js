@@ -18,6 +18,7 @@ export default class HQExchangeApi extends BaseApiService {
     endDate = dayjs().format('YYYY-MM-DD'),
     criteria,
     keyword,
+    getConfirmed = false, // false: 전체조회, true: 미결재건 조회
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
@@ -41,6 +42,8 @@ export default class HQExchangeApi extends BaseApiService {
       searchParams.append('searchWord', keyword);
     }
 
+    searchParams.append('getConfirmed', getConfirmed);
+
     return this.get(`/excel-data?${searchParams.toString()}`);
   }
 
@@ -52,6 +55,7 @@ export default class HQExchangeApi extends BaseApiService {
     endDate = dayjs().format('YYYY-MM-DD'),
     criteria,
     keyword,
+    getConfirmed = false, // false: 전체조회, true: 미결재건 조회
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
@@ -76,6 +80,8 @@ export default class HQExchangeApi extends BaseApiService {
       searchParams.append('searchFilter', criteria);
       searchParams.append('searchWord', keyword);
     }
+
+    searchParams.append('getConfirmed', getConfirmed);
 
     return this.get(`/search?${searchParams.toString()}`);
   }

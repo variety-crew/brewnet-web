@@ -11,6 +11,7 @@ export default defineConfig({
     vue(),
     Components({
       resolvers: [PrimeVueResolver()],
+      dts: false, // components.d.ts 파일 생성 방지
     }),
     removeConsole(),
   ],

@@ -33,7 +33,7 @@
           label="거래취소명세서 출력"
           variant="outlined"
           size="small"
-          :disabled="returnDetail.status !== RETURN_STATUS.COMPLETED"
+          :disabled="!enablePrintInvoice"
           @click="clickPrintInvoice"
         />
 
@@ -137,6 +137,9 @@ const isShowCancelRequestApproval = computed(() => {
 });
 const isShowPrintDraft = computed(() => {
   // 승인 이후 단계면 출력 가능
+  return !isBeforeApproved.value;
+});
+const enablePrintInvoice = computed(() => {
   return !isBeforeApproved.value;
 });
 

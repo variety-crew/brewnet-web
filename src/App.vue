@@ -55,6 +55,7 @@ function handleSSE(sseEvent) {
 
 // SSE 구독 처리
 function subscribeSSE(token) {
+  if (userStore.userType === USER_TYPE.DELIVERY) return; // 배송기사는 알림 구독 안함
   if (isSubscribed.value) return; // 이미 구독되어 있다면 return
 
   console.log('구독 진행합니다.');
@@ -107,25 +108,25 @@ function unsubscribeSSE() {
   }
 }
 
-watch(
-  () => userStore.accessToken,
-  newAccessToken => {
-    if (newAccessToken) {
-      subscribeSSE(newAccessToken);
-    } else {
-      unsubscribeSSE();
-    }
-  },
-  { immediate: true },
-);
+// watch(
+//   () => userStore.accessToken,
+//   newAccessToken => {
+//     if (newAccessToken) {
+//       subscribeSSE(newAccessToken);
+//     } else {
+//       unsubscribeSSE();
+//     }
+//   },
+//   { immediate: true },
+// );
 
-watch(isSubscribed, newIsSubscribed => {
-  if (newIsSubscribed) {
-    console.log('SSE 구독됨');
-  } else {
-    console.log('SSE 구독 해제됨');
-  }
-});
+// watch(isSubscribed, newIsSubscribed => {
+//   if (newIsSubscribed) {
+//     console.log('SSE 구독됨');
+//   } else {
+//     console.log('SSE 구독 해제됨');
+//   }
+// });
 
 onMounted(() => {
   DOMEvent.subscribeApiError(handleApiError);
@@ -139,7 +140,7 @@ onUnmounted(() => {
   // DOMEvent.unsubscribeExpiredToken(handleExpiredToken);
 
   // 브라우저를 강제로 닫을 경우를 대비
-  unsubscribeSSE();
+  // unsubscribeSSE();
 });
 </script>
 

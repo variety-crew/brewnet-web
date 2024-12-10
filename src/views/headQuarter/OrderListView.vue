@@ -17,6 +17,8 @@
       <AppInputText id="input_name_keyword" v-model="criteria.keyword" label="검색어" />
     </SearchArea>
 
+    <AppTabs v-model="activeTab" :tab-items="tabItems" />
+
     <AppTable
       :paginated-data="paginatedOrders"
       :columns="columns"
@@ -35,10 +37,11 @@
 <script setup>
 import dayjs from 'dayjs';
 import { useToast } from 'primevue';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppTabs from '@/components/common/AppTabs.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
@@ -53,6 +56,7 @@ import {
   getApprovalStatusSeverity,
   makeSelectOption,
   makeOrderItemSummary,
+  makeTabs,
 } from '@/utils/helper';
 
 const router = useRouter();
@@ -61,6 +65,20 @@ const toast = useToast();
 const totalElements = ref(0);
 const page = ref(0);
 const size = ref(15);
+
+const TAB_ITEM = {
+  ALL: 'ALL',
+  UNCONFIRMED: 'UNCONFIRMED',
+};
+function formatKoTabItem(tabValue) {
+  if (tabValue === TAB_ITEM.ALL) return '전체 주문';
+  if (tabValue === TAB_ITEM.UNCONFIRMED) return '미결재 주문';
+  return 'Tab';
+}
+const activeTab = ref(TAB_ITEM.ALL);
+const tabItems = computed(() => {
+  return [TAB_ITEM.ALL, TAB_ITEM.UNCONFIRMED].map(e => makeTabs(formatKoTabItem(e), e));
+});
 
 const getInitialCriteria = () => ({
   startDate: dayjs().subtract(1, 'year').toDate(),
@@ -151,10 +169,15 @@ const getOrders = () => {
       endDate: criteria.value.endDate,
       criteria: criteria.value.criteria,
       keyword: criteria.value.keyword,
+      filter: activeTab.value === TAB_ITEM.UNCONFIRMED ? TAB_ITEM.UNCONFIRMED : undefined,
     })
     .then(data => {
       totalElements.value = data.totalElements;
       paginatedOrders.value = data.content;
+    })
+    .catch(() => {
+      totalElements.value = 0;
+      paginatedOrders.value = [];
     });
 };
 
@@ -208,6 +231,11 @@ const onExportExcel = () => {
 };
 
 onMounted(() => {
+  getOrders();
+});
+
+// 탭이 변경되면 API 호출
+watch(activeTab, newActiveTab => {
   getOrders();
 });
 </script>

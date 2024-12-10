@@ -1,7 +1,7 @@
 <template>
   <div class="app-label-text-container">
     <AppLabel :label="label" />
-    <p>{{ text }}</p>
+    <p class="text">{{ text }}</p>
   </div>
 </template>
 
@@ -26,5 +26,9 @@ const { label, text } = defineProps({
   display: flex;
   flex-direction: column;
   gap: 5px;
+
+  .text {
+    font-size: 0.9rem;
+  }
 }
 </style>

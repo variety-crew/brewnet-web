@@ -13,7 +13,15 @@ export default class HQReturnApi extends BaseApiService {
   //
 
   // 반품요청 목록 조회
-  getReturnList({ page = 0, pageSize = 15, startDate, endDate, criteria, keyword }) {
+  getReturnList({
+    page = 0,
+    pageSize = 15,
+    startDate,
+    endDate,
+    criteria,
+    keyword,
+    getConfirmed = false, // false: 전체조회, true: 미결재건 조회
+  }) {
     const searchParams = new URLSearchParams();
     searchParams.append('page', page);
     searchParams.append('size', pageSize);
@@ -25,15 +33,18 @@ export default class HQReturnApi extends BaseApiService {
       searchParams.append('searchWord', keyword);
     }
 
+    searchParams.append('getConfirmed', getConfirmed);
+
     return this.get(`/search?${searchParams.toString()}`);
   }
 
-  // 전체 교환 목록 (엑셀 다운로드용)
-  getAllExchangeList({
+  // 전체 반품 목록 (엑셀 다운로드용)
+  getAllReturnList({
     startDate = dayjs().subtract(1, 'year').format('YYYY-MM-DD'),
     endDate = dayjs().format('YYYY-MM-DD'),
     criteria,
     keyword,
+    getConfirmed,
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('startDate', dayjs(startDate).format('YYYY-MM-DD'));
@@ -43,6 +54,8 @@ export default class HQReturnApi extends BaseApiService {
       searchParams.append('searchFilter', criteria);
       searchParams.append('searchWord', keyword);
     }
+
+    searchParams.append('getConfirmed', getConfirmed);
 
     return this.get(`/excel-data?${searchParams.toString()}`);
   }
