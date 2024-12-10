@@ -1,5 +1,6 @@
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
+  color-scheme: light only;
   /* --blue: rgb(blue, blue, blue) */
 }
 

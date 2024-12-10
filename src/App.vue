@@ -48,6 +48,7 @@ function handleApiSuccess(customEvent) {
 
 function handleSSE(sseEvent) {
   const { data } = sseEvent; // 서버에서 string 메시지로 보내줌
+  console.dir(sseEvent);
 
   toast.add({ severity: 'secondary', summary: '알림', detail: data, group: 'notification' });
   notificationStore.addMessage(userStore.memberCode, data);
@@ -68,6 +69,9 @@ function subscribeSSE(token) {
   });
   eventSource.onopen = () => {
     isSubscribed.value = true;
+  };
+  eventSource.onmessage = event => {
+    console.dir(event);
   };
 
   // event name마다 어떻게 처리할건지 정의
