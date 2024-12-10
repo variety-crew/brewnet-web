@@ -39,7 +39,7 @@
           <Menu id="overlay_menu" ref="userMenu" :model="userMenus" :popup="true" />
         </div>
 
-        <Button
+        <!-- <Button
           type="button"
           label="알림함"
           icon="pi pi-bell"
@@ -50,7 +50,7 @@
           severity="secondary"
           rounded
           @click="openNotificationBox"
-        />
+        /> -->
       </nav>
     </template>
   </AppNavbar>
