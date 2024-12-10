@@ -29,13 +29,6 @@
           :disabled="!isShowPrintDraft"
           @click="clickPrintDraft"
         />
-        <Button
-          label="거래취소명세서 출력"
-          variant="outlined"
-          :disabled="exchangeDetail.status !== EXCHANGE_STATUS.COMPLETED"
-          size="small"
-          @click="clickPrintInvoice"
-        />
 
         <Button
           v-if="isShowCancelRequestApproval"
