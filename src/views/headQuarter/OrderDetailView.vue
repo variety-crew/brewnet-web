@@ -29,7 +29,7 @@
             label="거래명세서 출력"
             variant="outlined"
             size="small"
-            :disabled="!isCompleted"
+            :disabled="!enableInvoice"
             @click="clickPrintInvoice"
           />
 
@@ -84,7 +84,7 @@ import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import { useUserStore } from '@/stores/user';
 import HQOrderApi from '@/utils/api/HQOrderApi';
-import { DRAFT_KIND, ORDER_STATUS, PRINT_TYPE } from '@/utils/constant';
+import { DRAFT_KIND, ORDER_STATUS, ORDER_STEP_LIST, PRINT_TYPE } from '@/utils/constant';
 import { formatKoOrderStatus } from '@/utils/format';
 import { getOrderStatusSeverity } from '@/utils/helper';
 
@@ -122,8 +122,20 @@ const isShowRequestApproval = computed(() => {
   // 결재라인이 아무것도 없을 때 (결재취소 상태일 때)
   return (
     orderDetail.value.orderStatus === ORDER_STATUS.REQUESTED ||
-    (orderDetail.value.status === ORDER_STATUS.PENDING && orderApprovalLines.value.length === 0)
+    (orderDetail.value.orderStatus === ORDER_STATUS.PENDING && orderApprovalLines.value.length === 0)
   );
+});
+const isBeforeApproved = computed(() => {
+  const approveStepIndex = ORDER_STEP_LIST.indexOf(ORDER_STATUS.APPROVED);
+  const currentStepIndex = ORDER_STEP_LIST.indexOf(orderDetail.value.orderStatus);
+
+  if (currentStepIndex === -1) return null; // 정상 step 목록에 없으면 false
+
+  return currentStepIndex < approveStepIndex;
+});
+const enableInvoice = computed(() => {
+  if (isBeforeApproved.value === null) return false;
+  return !isBeforeApproved.value;
 });
 
 const hqOrderApi = new HQOrderApi();
