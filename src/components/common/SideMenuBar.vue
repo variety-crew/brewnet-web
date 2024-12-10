@@ -30,7 +30,7 @@ const sideMenus = computed(() => {
 <style scoped>
 .side-menu {
   background-color: var(--p-content-background);
-  width: 140px;
+  width: fit-content;
   flex-shrink: 0;
   box-shadow: rgba(0, 0, 0, 0.1) 1px 0px 3px 0px;
   z-index: 2;
