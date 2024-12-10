@@ -23,27 +23,30 @@
           }"
         />
 
-        <Pie
-          :options="{
-            responsive: false,
-            plugins: {
-              legend: {
-                position: 'right',
-                onHover: handlePieChartLegendHover,
-                onLeave: handlePieChartLegendLeave,
+        <div class="pie-container" style="position: relative; width: 400px">
+          <Pie
+            :options="{
+              responsive: true,
+              maintainAspectRatio: false, // 가로 세로 비율 유지 해제(false)
+              plugins: {
+                legend: {
+                  position: 'right',
+                  onHover: handlePieChartLegendHover,
+                  onLeave: handlePieChartLegendLeave,
+                },
               },
-            },
-          }"
-          :data="{
-            labels: pieChartLabels,
-            datasets: [
-              {
-                backgroundColor: pieChartColors,
-                data: pieChartData,
-              },
-            ],
-          }"
-        />
+            }"
+            :data="{
+              labels: pieChartLabels,
+              datasets: [
+                {
+                  backgroundColor: pieChartColors,
+                  data: pieChartData,
+                },
+              ],
+            }"
+          />
+        </div>
 
         <div>
           <h4 class="mb-3">주문 건수 TOP 10 상품</h4>
