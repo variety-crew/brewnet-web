@@ -21,6 +21,7 @@ export default class HQPurchaseApi extends BaseApiService {
     memberName = '',
     correspondentName = '',
     storageName = '',
+    approved,
   }) {
     const searchParams = new URLSearchParams();
     searchParams.append('pageNumber', page);
@@ -42,6 +43,10 @@ export default class HQPurchaseApi extends BaseApiService {
 
     if (storageName) {
       searchParams.append('storageName', storageName);
+    }
+
+    if (approved) {
+      searchParams.append('approved', approved);
     }
 
     return this.get(`?${searchParams.toString()}`);
