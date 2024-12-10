@@ -5,17 +5,21 @@
       <AppDateRangePicker
         v-model:start="criteria.startDate"
         v-model:end="criteria.endDate"
-        label="교환요청일자"
+        label="요청일자"
         class="criteria created-at"
+        label-position="left"
       />
       <AppSelect
         v-model="criteria.criteria"
         label="검색조건"
         :options="searchOptions"
         :initial-value="criteria.criteria"
+        label-position="left"
       />
-      <AppInputText id="input_name_keyword" v-model="criteria.keyword" label="검색어" />
+      <AppInputText id="input_name_keyword" v-model="criteria.keyword" placeholder="검색어를 입력해주세요" />
     </SearchArea>
+
+    <AppTabs v-model="activeTab" :tab-items="tabItems" />
 
     <AppTable
       :paginated-data="paginatedExchanges"
@@ -39,6 +43,7 @@ import { ref, onMounted, computed, watch, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppTable from '@/components/common/AppTable.vue';
+import AppTabs from '@/components/common/AppTabs.vue';
 import AppDateRangePicker from '@/components/common/form/AppDateRangePicker.vue';
 import AppInputText from '@/components/common/form/AppInputText.vue';
 import AppSelect from '@/components/common/form/AppSelect.vue';
@@ -47,7 +52,7 @@ import HQExchangeApi from '@/utils/api/HQExchangeApi';
 import { CRITERIA_HQ_EXCHANGE_LIST, SEARCH_CRITERIA } from '@/utils/constant';
 import ExcelManager from '@/utils/ExcelManager';
 import { formatKoExchangeReason, formatKoExchangeStatus, formatKoSearchCriteria } from '@/utils/format';
-import { getExchangeStatusSeverity, makeSelectOption } from '@/utils/helper';
+import { getExchangeStatusSeverity, makeSelectOption, makeTabs } from '@/utils/helper';
 
 const router = useRouter();
 const toast = useToast();
@@ -69,6 +74,20 @@ const criteria = ref(getInitialCriteria());
 const hqExchangeApi = new HQExchangeApi();
 const searchOptions = computed(() => {
   return CRITERIA_HQ_EXCHANGE_LIST.map(e => makeSelectOption(formatKoSearchCriteria(e), e));
+});
+
+const TAB_ITEM = {
+  ALL: 'ALL',
+  UNCONFIRMED: 'UNCONFIRMED',
+};
+function formatKoTabItem(tabValue) {
+  if (tabValue === TAB_ITEM.ALL) return '전체 교환';
+  if (tabValue === TAB_ITEM.UNCONFIRMED) return '미결재 교환';
+  return 'Tab';
+}
+const activeTab = ref(TAB_ITEM.ALL);
+const tabItems = computed(() => {
+  return [TAB_ITEM.ALL, TAB_ITEM.UNCONFIRMED].map(e => makeTabs(formatKoTabItem(e), e));
 });
 
 function clickGoDetail(data) {
@@ -119,6 +138,7 @@ const getExchanges = () => {
       endDate: criteria.value.endDate,
       criteria: criteria.value.criteria,
       keyword: criteria.value.keyword,
+      getConfirmed: activeTab.value === TAB_ITEM.UNCONFIRMED,
     })
     .then(data => {
       totalElements.value = data.totalElements;
@@ -152,6 +172,7 @@ const onExportExcel = () => {
       endDate: criteria.value.endDate,
       criteria: criteria.value.criteria,
       keyword: criteria.value.keyword,
+      getConfirmed: activeTab.value === TAB_ITEM.UNCONFIRMED,
     })
     .then(rows => {
       const orderedFields = columns.filter(e => e.field).map(e => e.field); // 엑셀 컬럼 순서
@@ -173,6 +194,11 @@ const onExportExcel = () => {
 };
 
 onMounted(() => {
+  getExchanges();
+});
+
+// 탭이 변경되면 API 호출
+watch(activeTab, newActiveTab => {
   getExchanges();
 });
 </script>
