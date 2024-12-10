@@ -108,25 +108,25 @@ function unsubscribeSSE() {
   }
 }
 
-watch(
-  () => userStore.accessToken,
-  newAccessToken => {
-    if (newAccessToken) {
-      subscribeSSE(newAccessToken);
-    } else {
-      unsubscribeSSE();
-    }
-  },
-  { immediate: true },
-);
+// watch(
+//   () => userStore.accessToken,
+//   newAccessToken => {
+//     if (newAccessToken) {
+//       subscribeSSE(newAccessToken);
+//     } else {
+//       unsubscribeSSE();
+//     }
+//   },
+//   { immediate: true },
+// );
 
-watch(isSubscribed, newIsSubscribed => {
-  if (newIsSubscribed) {
-    console.log('SSE 구독됨');
-  } else {
-    console.log('SSE 구독 해제됨');
-  }
-});
+// watch(isSubscribed, newIsSubscribed => {
+//   if (newIsSubscribed) {
+//     console.log('SSE 구독됨');
+//   } else {
+//     console.log('SSE 구독 해제됨');
+//   }
+// });
 
 onMounted(() => {
   DOMEvent.subscribeApiError(handleApiError);
@@ -140,7 +140,7 @@ onUnmounted(() => {
   // DOMEvent.unsubscribeExpiredToken(handleExpiredToken);
 
   // 브라우저를 강제로 닫을 경우를 대비
-  unsubscribeSSE();
+  // unsubscribeSSE();
 });
 </script>
 
