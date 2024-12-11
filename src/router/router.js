@@ -590,6 +590,7 @@ const routes = [
             component: () => import('@/views/franchise/OrderDetailView.vue'),
             meta: {
               breadcrumb: '주문 상세',
+              backTo: true,
             },
           },
           {
@@ -614,6 +615,7 @@ const routes = [
             component: () => import('@/views/franchise/ExchangeDetailView.vue'),
             meta: {
               breadcrumb: '교환 상세',
+              backTo: true,
             },
           },
           {
@@ -638,6 +640,7 @@ const routes = [
             component: () => import('@/views/franchise/ReturnDetailView.vue'),
             meta: {
               breadcrumb: '반품 상세',
+              backTo: true,
             },
           },
           {

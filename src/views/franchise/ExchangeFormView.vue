@@ -75,7 +75,7 @@
 <script setup>
 import { useToast } from 'primevue';
 import { computed, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import AppLabel from '@/components/common/AppLabel.vue';
 import AppTableStyled from '@/components/common/AppTableStyled.vue';
@@ -91,6 +91,7 @@ import { makeAutocompleteSuggestion, makeRadioOption } from '@/utils/helper';
 const { uploadFiles, onRemove, onChangeFiles } = useFiles();
 const toast = useToast();
 const router = useRouter();
+const route = useRoute();
 
 const selectedOrder = ref(null);
 const availableOrderItems = ref([]);
@@ -180,17 +181,31 @@ watch(allCheck, newAllCheck => {
     checkedOrderItemCodeList.value = [];
   }
 });
+
+// URL에 orderCode가 있다면 해당 orderCode로 default 설정
+watch(
+  () => route.query,
+  newQuery => {
+    const targetOrderCode = newQuery.orderCode;
+
+    if (targetOrderCode) {
+      selectedOrder.value = makeAutocompleteSuggestion(targetOrderCode, targetOrderCode);
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
 .exchange-form-container {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 24px;
 
   .action-buttons {
     display: flex;
-    justify-content: space-between;
+    gap: 16px;
   }
 }
 </style>
