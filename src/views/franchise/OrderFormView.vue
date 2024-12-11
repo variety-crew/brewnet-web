@@ -192,7 +192,7 @@ onMounted(() => {
 
   .table-area {
     display: grid;
-    grid-template-columns: 1fr 1.7fr;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
     align-items: flex-start;
 
