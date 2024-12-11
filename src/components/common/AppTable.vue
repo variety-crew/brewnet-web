@@ -112,7 +112,13 @@
               :severity="button.getSeverity ? button.getSeverity(data) : undefined"
               :variant="button.getVariant ? button.getVariant(data) : 'text'"
               :disabled="button.getDisabled ? button.getDisabled(data) : undefined"
-              :class="{ hidden: button.getHidden ? button.getHidden(data) : false }"
+              :class="{
+                hidden: button.getHidden
+                  ? button.getHidden(data) // 1. getHidden 메소드 체크
+                  : button.buttonRole
+                    ? isButtonForbidden(button.buttonRole) // 2. buttonRole 체크
+                    : false,
+              }"
               :icon="button.getIcon ? button.getIcon(data) : undefined"
               @click="button.clickHandler ? button.clickHandler(data) : undefined"
             />
@@ -165,6 +171,9 @@
 <script setup>
 import { ref } from 'vue';
 
+import { useUserStore } from '@/stores/user';
+import { ORDERED_HQ_ROLES, ROLE } from '@/utils/constant';
+
 import AppSelect from './form/AppSelect.vue';
 
 const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcelExport, sortingOptions } = defineProps({
@@ -203,6 +212,7 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
    *         getDisabled: (data: T) => boolean // 버튼 disabled 여부
    *         getHidden: (data: T) => boolean   // 버튼 숨기는지?
    *         getIcon: (data: T) => string      // 프라임뷰 아이콘
+   *         buttonRole: ROLE                  // 버튼을 누를 수 있는 최소 멤버 권한
    *       }
    *     ]},
    *     image: {
@@ -243,6 +253,8 @@ const { paginatedData, columns, rowsPerPage, totalElements, addButton, showExcel
 const emit = defineEmits(['changePage', 'reload', 'exportExcel', 'changeSort']);
 const sorting = defineModel('sorting', { type: String, required: false });
 
+const userStore = useUserStore();
+
 const dt = ref();
 const exportCSV = () => {
   dt.value.exportCSV();
@@ -254,6 +266,20 @@ const onClickExportToExcel = () => {
 
 const onSort = event => {
   emit('changeSort', event.sortField, event.sortOrder);
+};
+
+const isButtonForbidden = buttonRole => {
+  const currentMemberRole = userStore.memberRole;
+
+  // 배송기사나 가맹점은 권한 계급 없음
+  if (currentMemberRole === ROLE.DELIVERY || currentMemberRole === ROLE.FRANCHISE) return false;
+
+  const memberRoleOrder = ORDERED_HQ_ROLES.indexOf(currentMemberRole);
+  const buttonRoleOrder = ORDERED_HQ_ROLES.indexOf(buttonRole);
+
+  if (memberRoleOrder === -1) return true; // 알수없는 권한..
+
+  return memberRoleOrder < buttonRoleOrder; // 권한이 더 낮으면 Forbidden
 };
 </script>
 

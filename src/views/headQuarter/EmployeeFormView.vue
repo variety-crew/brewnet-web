@@ -6,8 +6,8 @@
 
     <!-- 비밀번호 -->
     <div v-if="!editMode">
-      <AppInputPassword v-model="password" label="비밀번호" class="mb-2" />
-      <AppInputPassword v-model="confirmPassword" />
+      <AppInputPassword v-model="password" label="비밀번호" class="mb-2" full-width />
+      <AppInputPassword v-model="confirmPassword" full-width />
     </div>
 
     <!-- 성명 -->

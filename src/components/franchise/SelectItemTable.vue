@@ -57,7 +57,7 @@ const columns = [
         {
           getLabel: data => {
             const found = selectedItems.find(e => e.itemCode === data.itemCode);
-            if (found) return '선택취소';
+            if (found) return '취소';
             return '선택';
           },
           clickHandler: data => {
