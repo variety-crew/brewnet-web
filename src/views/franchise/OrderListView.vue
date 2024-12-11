@@ -17,7 +17,7 @@
       <AppInputText id="input_name_keyword" v-model="criteria.keyword" label="검색어" />
     </SearchArea>
 
-    <AppTabs v-model="activeTab" :tab-items="tabItems" />
+    <!-- <AppTabs v-model="activeTab" :tab-items="tabItems" /> -->
 
     <AppTable
       :paginated-data="paginatedOrders"
