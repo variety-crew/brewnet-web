@@ -12,33 +12,45 @@
       </div>
     </template>
     <template #content>
-      <Line
-        :data="{
-          datasets: [
-            {
-              label: '주문 금액',
-              data: orderTotals,
-              borderColor: 'rgb(75, 192, 192)',
-              backgroundColor: 'rgb(75, 192, 192)',
-            },
-          ],
-          labels: chartLabels,
-        }"
-      />
+      <div class="line-chart-container">
+        <Line
+          :options="{
+            responsive: true,
+            // maintainAspectRatio: false, // 가로 세로 비율 유지 해제(false)
+          }"
+          :data="{
+            datasets: [
+              {
+                label: '주문 금액',
+                data: orderTotals,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgb(75, 192, 192)',
+              },
+            ],
+            labels: chartLabels,
+          }"
+        />
+      </div>
 
-      <Line
-        :data="{
-          datasets: [
-            {
-              label: '주문 수',
-              data: orderCounts,
-              backgroundColor: 'rgb(255, 99, 132)',
-              borderColor: 'rgb(255, 99, 132)',
-            },
-          ],
-          labels: chartLabels,
-        }"
-      />
+      <div class="line-chart-container">
+        <Line
+          :options="{
+            responsive: true,
+            // maintainAspectRatio: false, // 가로 세로 비율 유지 해제(false)
+          }"
+          :data="{
+            datasets: [
+              {
+                label: '주문 수',
+                data: orderCounts,
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+              },
+            ],
+            labels: chartLabels,
+          }"
+        />
+      </div>
     </template>
   </Card>
 </template>
@@ -134,6 +146,11 @@ watch(
       align-items: center;
       gap: 10px;
     }
+  }
+
+  .line-chart-container {
+    position: relative;
+    max-height: 450px;
   }
 }
 </style>

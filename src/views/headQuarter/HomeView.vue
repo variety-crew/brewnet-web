@@ -48,11 +48,11 @@ import PageTitle from '@/components/headQuarter/PageTitle.vue';
     margin-top: 20px;
 
     .left {
-      flex-grow: 1;
+      flex: 1 1;
     }
 
     .right {
-      flex-shrink: 0;
+      flex: 1 1;
       display: flex;
       flex-direction: column;
       gap: 16px;
