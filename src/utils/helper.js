@@ -8,6 +8,7 @@ import {
   OTHER_DEPT_CHECK_STATUS,
   EXCHANGE_OTHER_STATUS,
   CONFIRMED_STATUS,
+  ORDERED_HQ_ROLES,
 } from './constant';
 
 // 프라임뷰에 사용될 데이터
@@ -188,4 +189,13 @@ export const getConfirmedStatusSeverity = status => {
     default:
       return 'info';
   }
+};
+
+export const isHQAuthenticated = (memberRole, targetRole) => {
+  const memberRoleOrder = ORDERED_HQ_ROLES.indexOf(memberRole);
+  const targetRoleOrder = ORDERED_HQ_ROLES.indexOf(targetRole);
+
+  if (memberRoleOrder === -1) return false;
+
+  return memberRoleOrder >= targetRoleOrder; // 권한이 더 높으면 통과
 };
