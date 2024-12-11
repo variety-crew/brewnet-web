@@ -29,6 +29,7 @@ import SearchArea from '@/components/common/SearchArea.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import { useModal } from '@/hooks/useModal';
 import MemberApi from '@/utils/api/MemberApi';
+import { ROLE } from '@/utils/constant';
 import { formatKoEmployeePosition, formatKoMemberRole } from '@/utils/format';
 
 const EditMemberRole = defineAsyncComponent(() => import('@/components/headQuarter/EditMemberRoleModalBody.vue'));
@@ -123,6 +124,7 @@ const columns = [
         {
           getLabel: () => '권한설정',
           clickHandler: onClickEditRole,
+          buttonRole: ROLE.MASTER,
         },
         {
           getLabel: () => '삭제',

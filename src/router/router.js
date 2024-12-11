@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import { useUserStore } from '@/stores/user';
+import { ROLE } from '@/utils/constant';
 
 /**
  * meta: {
@@ -236,6 +237,7 @@ const routes = [
             component: () => import('@/views/headQuarter/FranchiseFormView.vue'),
             meta: {
               breadcrumb: '가맹점 등록',
+              auth: ROLE.RESPONSIBLE_ADMIN,
             },
           },
           {
@@ -245,6 +247,7 @@ const routes = [
             meta: {
               breadcrumb: '가맹점 수정',
               backTo: true,
+              auth: ROLE.RESPONSIBLE_ADMIN,
             },
           },
           {
@@ -428,6 +431,7 @@ const routes = [
             component: () => import('@/views/headQuarter/NoticeFormView.vue'),
             meta: {
               breadcrumb: '공지사항 등록',
+              auth: ROLE.MASTER,
             },
           },
           {
@@ -437,6 +441,7 @@ const routes = [
             meta: {
               breadcrumb: '공지사항 수정',
               backTo: true,
+              auth: ROLE.MASTER,
             },
           },
         ],
@@ -496,6 +501,7 @@ const routes = [
             component: () => import('@/views/headQuarter/CompanySealUploadView.vue'),
             meta: {
               breadcrumb: '법인인감 등록',
+              auth: ROLE.MASTER,
             },
           },
           {
@@ -590,6 +596,7 @@ const routes = [
             component: () => import('@/views/franchise/OrderDetailView.vue'),
             meta: {
               breadcrumb: '주문 상세',
+              backTo: true,
             },
           },
           {
@@ -614,6 +621,7 @@ const routes = [
             component: () => import('@/views/franchise/ExchangeDetailView.vue'),
             meta: {
               breadcrumb: '교환 상세',
+              backTo: true,
             },
           },
           {
@@ -638,6 +646,7 @@ const routes = [
             component: () => import('@/views/franchise/ReturnDetailView.vue'),
             meta: {
               breadcrumb: '반품 상세',
+              backTo: true,
             },
           },
           {
