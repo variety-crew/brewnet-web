@@ -9,7 +9,10 @@ export default class AppMenu {
     this.#makeMenu('게시판', 'hq:board'),
     this.#makeMenu('시스템설정', 'hq:settings'),
   ];
-  #fcTopBarMenus = [this.#makeMenu('주문/교환/반품', 'fc:home'), this.#makeMenu('기타사항', 'fc:other')];
+  #fcTopBarMenus = [
+    this.#makeMenu('주문/교환/반품', 'fc:home'),
+    // this.#makeMenu('기타사항', 'fc:other')
+  ];
 
   #makeMenu(label, routerName) {
     return { label, routerName };
