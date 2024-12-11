@@ -107,13 +107,13 @@ const notificationStore = useNotificationStore();
 
 const userMenu = ref();
 const userMenus = ref([
+  // {
+  //   label: '로그아웃',
+  //   icon: 'pi pi-sign-out',
+  //   command: clickLogout,
+  // },
   {
     label: '로그아웃',
-    icon: 'pi pi-sign-out',
-    command: clickLogout,
-  },
-  {
-    label: '강제로그아웃(임시)',
     icon: 'pi pi-sign-out',
     command: clickForceLogout,
   },
