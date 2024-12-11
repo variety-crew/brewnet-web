@@ -12,7 +12,6 @@
           <Button label="주문요청서 출력" variant="outlined" size="small" @click="clickPrintOrder" />
           <Button label="교환" variant="outlined" size="small" :disabled="!isCompleted" @click="clickExchange" />
           <Button label="반품" variant="outlined" size="small" :disabled="!isCompleted" @click="clickReturn" />
-          <Button label="목록으로" size="small" severity="secondary" variant="outlined" @click="clickGoToList" />
           <Button
             label="취소"
             severity="danger"
@@ -68,15 +67,13 @@ const fcOrderApi = new FCOrderApi();
 const { orderCode } = route.params;
 
 const clickExchange = () => {
-  // TODO:: 교환 요청
+  // 교환요청 페이지로 이동
+  router.push({ name: 'fc:home:exchange:form', query: { orderCode } });
 };
 
 const clickReturn = () => {
-  // TODO:: 반품 요청
-};
-
-const clickGoToList = () => {
-  router.replace({ name: 'fc:home:order:list' });
+  // 반품요청 페이지로 이동
+  router.push({ name: 'fc:home:return:form', query: { orderCode } });
 };
 
 const cancelOrder = () => {
