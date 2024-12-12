@@ -4,7 +4,7 @@
       <!-- 상단: 브랜드 이름 고정 -->
       <div class="brand">
         <img src="@/assets/images/logo_no_bg.png" alt="" />
-        <p class="desc">카페 물류 주문관리 시스템 Beta</p>
+        <p class="desc">카페 물류 주문관리 시스템</p>
       </div>
 
       <!-- 하단: 화면 View -->
