@@ -41,7 +41,7 @@
           <th>처리완료일자</th>
           <td>{{ exchangeOtherDetail.createdAt }}</td>
           <th>처리상태</th>
-          <td>{{ exchangeOtherDetail.status }}</td>
+          <td>{{ formatKoExchangeOtherStatus(exchangeOtherDetail.status) }}</td>
           <th>재고담당자</th>
           <td>{{ exchangeOtherDetail.manager }}</td>
         </tr>
