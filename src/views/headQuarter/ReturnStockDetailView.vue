@@ -41,7 +41,7 @@
           <th>처리완료일자</th>
           <td>{{ stockDetail.createdAt }}</td>
           <th>처리상태</th>
-          <td>{{ stockDetail.status }}</td>
+          <td>{{ formatKoReturnStockStatus(stockDetail.status) }}</td>
           <th>재고담당자</th>
           <td>{{ stockDetail.manager }}</td>
         </tr>
@@ -84,7 +84,7 @@ import AppTableStyled from '@/components/common/AppTableStyled.vue';
 import { useAppConfirmModal } from '@/hooks/useAppConfirmModal';
 import HQReturnApi from '@/utils/api/HQReturnApi';
 import { OTHER_DEPT_CHECK_STATUS } from '@/utils/constant';
-import { formatKoOtherDeptCheckStatus, formatKoReturnReason } from '@/utils/format';
+import { formatKoOtherDeptCheckStatus, formatKoReturnReason, formatKoReturnStockStatus } from '@/utils/format';
 import { getReturnStockCheckStatusSeverity } from '@/utils/helper';
 
 const route = useRoute();
