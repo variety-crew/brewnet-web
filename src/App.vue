@@ -66,6 +66,7 @@ function subscribeSSE(token) {
     headers: {
       Authorization: token,
     },
+    heartbeatTimeout: 1000 * 60 * 10, // SSE 재구독 타임아웃을 10분으로 설정
   });
   eventSource.onopen = () => {
     isSubscribed.value = true;
