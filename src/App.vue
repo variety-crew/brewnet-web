@@ -77,27 +77,30 @@ function subscribeSSE(token) {
   // event name마다 어떻게 처리할건지 정의
 
   // 공통 구독 (배송기사 제외)
-  eventSource.addEventListener('Order Delivery Completed', handleSSE); // 주문 배송 완료
-  eventSource.addEventListener('Create Notice', handleSSE); // 공지사항 작성
   eventSource.addEventListener('Past', handleSSE); // 지난 알림(못받은 알림)
 
   // 본사 구독
   if (userStore.userType === USER_TYPE.HEADQUARTERS) {
+    eventSource.addEventListener('Create Notice', handleSSE); // 공지사항 작성 (가맹점은 공지사항 보는 페이지가 없어서 일단 제외)
     eventSource.addEventListener('request approval of purchase', handleSSE); // 발주 등록 시 결재요청 (결재자에게 알림)
     eventSource.addEventListener('approve purchase', handleSSE); // 발주 결재 승인 (기안자에게 알림)
     eventSource.addEventListener('reject purchase', handleSSE); // 발주 결재 반려 (기안자에게 알림)
 
     eventSource.addEventListener('ReturnApprovalReqEvent', handleSSE); // 반품 결재요청 (결재자에게 알림)
     eventSource.addEventListener('ExchangeApprovalReqEvent', handleSSE); // 교환 결재요청 (결재자에게 알림)
+    eventSource.addEventListener('OrderApprovalReqEvent', handleSSE); // 주문결재요청 (본사 결재자에게 알림)
   }
 
   // 프랜차이즈 구독
   if (userStore.userType === USER_TYPE.FRANCHISE) {
     eventSource.addEventListener('ReturnRejectionEvent', handleSSE); // 반품 거절됨 (가맹점 모든 회원에게 알림)
-    eventSource.addEventListener('ReturnApprovedEvent', handleSSE); // 반품 승인됨 (가맹점 모든 회원에게 알림)
+    eventSource.addEventListener('ReturnApprovedEvent', handleSSE); // 반품 최종완료 (가맹점 모든 회원에게 알림)
 
     eventSource.addEventListener('ExchangeRejectionEvent', handleSSE); // 교환 거절됨 (가맹점 모든 회원에게 알림)
-    eventSource.addEventListener('ExchangeApprovedEvent', handleSSE); // 교환 승인됨 (가맹점 모든 회원에게 알림)
+    eventSource.addEventListener('ExchangeApprovedEvent', handleSSE); // 교환 최종완료 (가맹점 모든 회원에게 알림)
+
+    eventSource.addEventListener('OrderRejectionEvent', handleSSE); // 주문반려 (가맹점 모든 회원에게 알림)
+    eventSource.addEventListener('Order Delivery Completed', handleSSE); // 주문 배송 완료
   }
 
   eventSource.onerror = e => {};
